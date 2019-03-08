@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="java 基础概念程序：指令+数据     过程式编程：以指令为中心，数据服务于代码；     对象式编程：以数据为中心，指令服务于数据；  Java 是由Sun 推出的高级程序设计语言 Java是面向对象的，PHP还是采用面向过程的开发方法，Java的性能也优于PHP JAVA运行原理 ：     Java具有跨平台的优点，在Java中引入了虚拟机制概念，即在机器和编译程序之间加入了一层抽象的虚">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat基础">
+<meta property="og:url" content="http://yoursite.com/2019/01/tomcat基础/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="java 基础概念程序：指令+数据     过程式编程：以指令为中心，数据服务于代码；     对象式编程：以数据为中心，指令服务于数据；  Java 是由Sun 推出的高级程序设计语言 Java是面向对象的，PHP还是采用面向过程的开发方法，Java的性能也优于PHP JAVA运行原理 ：     Java具有跨平台的优点，在Java中引入了虚拟机制概念，即在机器和编译程序之间加入了一层抽象的虚">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2019/01/tomcat基础/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/01/tomcat基础/2.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/01/tomcat基础/3.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/01/tomcat基础/4.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/01/tomcat基础/7.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/01/tomcat基础/5.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/01/tomcat基础/8.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/01/tomcat基础/9.jpg">
+<meta property="og:updated_time" content="2019-01-23T08:34:28.686Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tomcat基础">
+<meta name="twitter:description" content="java 基础概念程序：指令+数据     过程式编程：以指令为中心，数据服务于代码；     对象式编程：以数据为中心，指令服务于数据；  Java 是由Sun 推出的高级程序设计语言 Java是面向对象的，PHP还是采用面向过程的开发方法，Java的性能也优于PHP JAVA运行原理 ：     Java具有跨平台的优点，在Java中引入了虚拟机制概念，即在机器和编译程序之间加入了一层抽象的虚">
+<meta name="twitter:image" content="http://yoursite.com/2019/01/tomcat基础/1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/tomcat基础/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>tomcat基础 | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/tomcat基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">tomcat基础
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-14 20:25:25" itemprop="dateCreated datePublished" datetime="2019-01-14T20:25:25+08:00">2019-01-14</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">6.5k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">6 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="java-基础概念"><a href="#java-基础概念" class="headerlink" title="java 基础概念"></a>java 基础概念</h3><pre><code>程序：指令+数据
+    过程式编程：以指令为中心，数据服务于代码；
+    对象式编程：以数据为中心，指令服务于数据；
+
+Java 是由Sun 推出的高级程序设计语言
+Java是面向对象的，PHP还是采用面向过程的开发方法，Java的性能也优于PHP
+JAVA运行原理 ：
+    Java具有跨平台的优点，在Java中引入了虚拟机制概念，即在机器和编译程序之间加入了一层抽象的虚拟的机器。这台虚拟的机器在任何平台上都提供给编译程序一个共同的接口
+
+Java技术为三个方向：
+    J2SE：Standard Edition
+    J2EE：Enterprise Edition
+    J2ME：Mobile Edition
+
+java总体来说就是java语言、java API、jvm等构成。
+    1.jvm：java虚拟机，java的代码都是运行在jvm上，这是java语言跨平台的保证，针对不同的系统jvm也不同，这就实现了同一份代码，通过不同jvm的运行可以让对应的操作系统识别。
+    2.JRE（java running environment）：就是提供给java代码一个运行环境，java代码运行在jvm上，但是开发程序的时候往往除本身代码外会有引入的api，当程序运行时，jvm会加载相关的类，所以一个能保证代码能正常运行的环境是jvm+api（java se api）。
+    3.JDK（java development kit）：java开发环境，JDK=java语言+开发相关的API+JRE。开发环境除了要正常运行程序外（JRE环境），还需要进行开发相关的操作如打包、编译等这类工具。
+</code></pre><p><img src="1.jpg" alt></p>
+<pre><code>JVM 内存结构
+</code></pre><p><img src="2.jpg" alt></p>
+<pre><code>java中通过多线程机制使得多个任务同时执行处理，所有的线程共享JVM内存区域main memory，而每个线程又单独的有自己的工作内存，当线程与内存区域进行交互时，数据从主存拷贝到工作内存，进而交由线程处理
+方法区：线程共享； 用于存储被JVM加载的class信息、常量、静态变量、方法等；
+堆：是jvm所管理的内存中占用空间最大的一部分；也是GC管理的主要区域；存储对象；
+Java栈：线程私有，存储 线程自己的局部变量；
+PC寄存器：线程私有的内存空间，程序的指令指针；
+
+
+java文件执行过程
+    jsp--&gt;jasper--&gt;java--&gt;Javac--.class--&gt;Servlet
+    第一次执行被jsp类库组件jasper加载，jasper组件预处理jsp文件，将里面自身不是代码的内容转换为jar语句,输出结果变成一个纯java文件，包括了响应cgi程序调用，经由javac编译器编译为.class文件，交由servlet去调用jvm运行
+</code></pre><p><img src="3.jpg" alt></p>
+<h3 id="tomcat"><a href="#tomcat" class="headerlink" title="tomcat"></a>tomcat</h3><p><a href="https://tomcat.apache.org/" target="_blank" rel="noopener">官网</a></p>
+<pre><code>Tomcat 类似与一个apache的扩展型，属于apache软件基金会的核心项目，属于开源的轻量级Web应用服务器，是一个优秀的完全由Java语言编写的Servlet容器
+
+JSP:Java Server Page
+    动态网页技术，出现在Servlet技术之后的,它和servle技术一样，都是SUN公司定义的一种用于开发动态web资源的技术。
+    JSP技术的最大的特点在于，写jsp就像在写html，但它相比html而言，html只能为用户提供静态数据，而Jsp技术允许在页面中嵌套java代码，为用户提供动态数据。
+
+Jsp页必须转换成Servlet，才能对请求进行服务，因此Jsp的底层完全是Servlet
+JSP工作原理
+客户端浏览器向服务器端发出request请求，服务端接受请求之后会先检查此JSP文件是否存在
+    1).若不存在，则直接报错；
+    2).若存在，则接着检查所请求的这个JSP文件内容(代码)是否已经被更新，或者是否是JSP文件创建后的第一次被访问
+        ■如果是，那么这个JSP文件将会在服务器端的JSP引擎下转换成一个Servlet的java源文件；接着这个Servlet类会在java编译器的作用下被编译成字节码文件，并装载到JVM中去执行。
+        ■如果不是，则直接由服务器端检索出它对应的Servlet实例来处理。
+注意：
+    JSP 文件不是在服务器启动的时候转换成 Servlet类的。
+    而是在被客户端访问的时候才可能发生转换的(如JSP文件内容没有被更新等，就不再发生Servlet转换)。
+
+Servlet:
+    Servlet是JavaWeb的三大组件之一，它属于动态资源
+    Servlet完全运行在服务器端，因此它不依赖于浏览器。不管浏览器是否支持Java语言，都能请求访问服务器端的Servlet
+</code></pre><p><img src="4.jpg" alt></p>
+<pre><code>CGI:Common Gateway Interface
+    外部应用用程序与HTTP服务器之间的接口协议
+与CGI程序相比，Servlet具有以下优点：
+    Servlet是单实例多线程的运行方式，每个请求在一个独立的线程中运行，而提供服务的Servlet实例只有一个。
+    Servlet具有可升级性，能响应更多的请求，因为Servlet容器使用一个线程而不是操作系统进程，而线程仅占用有限的系统资源。
+    Servlet使用标准的API，被更多的Web服务器所支持。
+    Servlet使用Java语言编写，因此拥有Java程序语言的所有优点，包括容易开发和平台独立性。
+    Servlet可以访问Java平台丰富的类库，使得各种应用的开发更为容易。
+    Servlet容器给Servlet提供额外的功能，如错误处理和安全。
+
+没有权限使用1024以内的端口
+使用http或https协议 8080
+
+常见的网页类型：
+     HTML&amp;HTM：HyperText Markup Language 超文本连接标示语言  .html .html
+     ASP：Active Server Page 动态服务器页面（微软开发）  .asp
+     ASP.net：ASP的下一个版本，也是建立在通用语言上的程序架构，网页后缀如aspx
+     PHP：Hypertext Preprocessor 超级本本预处理语言  .php  .php5  .phps
+     JSP：JAVA Server Pages  Sun Microsystems公司倡导，有点类似ASP技术  .jsp
+</code></pre><h3 id="Tomcat组成"><a href="#Tomcat组成" class="headerlink" title="Tomcat组成"></a>Tomcat组成</h3><p><img src="7.jpg" alt></p>
+<pre><code>Tomcat作为servlet容器,Servlet运行在Tomcat容器当中(如docker镜像运行在docker容器当中)
+catalina 就是Tomcat服务器使用的 Apache实现的servlet容器的名字
+</code></pre><p><img src="5.jpg" alt></p>
+<pre><code>Server：指的就是整个Tomcat服务器,包含多组服务,负责管理和启动各个Service，同时监听8005端口发过来的shutdown命令，用于关闭整个容器
+Service：Tomcat封装的、对外提 供完整的、基于组件的web服务，包含Connectors、Container两个核心组件，以及多个功能组件，各个Service之间是独立的，但是共享同一JVM的资源 
+Connector：Tomcat与外部世界的连接器，监听固定端口接收外部请求，传递给Container,并将Container处理的结果返回给外部
+Container：Catalina，Servlet容器，内部有多层容器组成，用于管理Servlet生命周期，调用servlet相关方法。
+Loader：封装了 Java ClassLoader，用于Container加载类文件； 
+Realm：Tomcat中为web应用程序提供访问认证和角色管理的机制；
+JMX：Java SE中定义技术规范，是一个为应用程序、设备、系统等植入管理功能的框架，通过 JMX 可以远程监控 Tomcat 的运行状态；
+Jasper：Tomcat 的 Jsp 解析引擎，用于将Jsp转换成Java文件，并编译成class文件。
+Session：负责管理和创建session，以及Session的持久化(可自定义)，支持session的集群。
+Pipeline：在容器中充当管道的作用，管道中可以设置各种 valve(阀门)，请求和响应在经由管 道中各个阀门处理，提供了一种灵活可配置的处理请求和响应的机制。
+</code></pre><h4 id="Container组成"><a href="#Container组成" class="headerlink" title="Container组成"></a>Container组成</h4><p><img src="8.jpg" alt></p>
+<pre><code>Engine：Servlet 的顶层容器,包含一个或多个Host子容器；
+Host：虚拟主机，负责web应用的部署和Context的创建；
+Context：Web应用上下文，包含多个Wrapper，负责web配置的解析、管理所有的Web资源；
+Wrapper：最底层的容器，是对Servlet的封装，负责Servlet实例的创 建、执行和销毁。
+
+Service对外提供Web应用服务，而Service核心组件Container的灵魂便是Servlet容器。
+而真正管理Servlet的是Context容器。
+Context容器直接管理Servlet在容器中的包装类Wrapper，一个Web应用对应一个Context容器。
+添加一个Web应用就会创建一个Context容器，并将这个Context容器加入到父容器Host中。
+</code></pre><h3 id="Tomcat的工作模式运行模式"><a href="#Tomcat的工作模式运行模式" class="headerlink" title="Tomcat的工作模式运行模式"></a>Tomcat的工作模式运行模式</h3><pre><code>1.工作模式
+Tomcat作为servlet容器，有三种工作模式：
+    1、独立的servlet容器
+        servlet容器是web服务器的一部分；然而大多数的Web服务器并非基于Java，因此，就有了下面两种Servlet容器的工作模式
+    2、进程内的servlet容器
+        servlet容器是作为web服务器的插件和java容器的实现，web服务器插件在内部地址空间打开一个jvm,使得Java容器可以在此JVM中加载并运行Servlet。
+        反应速度快但伸缩性不足；
+    3、进程外的servlet容器
+        servlet容器运行于web服务器之外的地址空间，并作为web服务器的插件和java容器实现的结合。Web服务器插件和Java容器（在外部JVM中运行）使用IPC机制（通常是TCP/IP）进行通信
+        反应时间不如进程内但伸缩性和稳定性比进程内优；
+进入Tomcat的请求可以根据Tomcat的工作模式分为如下两类：
+    Tomcat作为应用程序服务器：请求来自于前端的web服务器，这可能是Apache, IIS, Nginx等；
+    Tomcat作为独立服务器：请求来自于web浏览器；
+</code></pre><h3 id="Tomcat的运行模式"><a href="#Tomcat的运行模式" class="headerlink" title="Tomcat的运行模式"></a>Tomcat的运行模式</h3><pre><code>Tomcat Connector(连接器)有三种运行模式：
+    bio(blocking I/O)
+        即阻塞式I/O操作，表示Tomcat使用的是传统的Java I/O操作(即java.io包及其子包)
+        一个线程处理一个请求
+        Tomcat7以下版本默认
+        缺点：并发量高时，线程数较多，浪费资源。三种模式中性能也最低
+    nio(new I/O)
+        Java nio是一个基于缓冲区、并能提供非阻塞I/O操作的Java API，因此nio也被看成是non-blocking I/O的缩写。
+        它拥有比传统I/O操作(bio)更好的并发运行性能。
+        利用Java 的异步请求 IO 处理，可以通过少量的线程处理大量的请求。
+        tomcat 8版本及以上默认就是在NIO模式下允许
+    apr(Apache Portable Runtime/Apache可移植运行时)
+        Tomcat将以JNI的形式调用Apache HTTP服务器的核心动态链接库来处理文件读取或网络传输操作，从而大大地提高Tomcat对静态文件的处理性能。
+        Tomcat apr也是在Tomcat上运行高并发应用的首选模式
+        Tomcat7或Tomcat8在Win7或以上的系统中启动默认使用这种方式。
+        Linux如果安装了apr和native，Tomcat直接启动就支持apr
+</code></pre><h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><pre><code>就是类的产生到销毁的过程。
+servlet的生命周期：
+</code></pre><p><img src="9.jpg" alt></p>
+<pre><code>    加载并实例化 –&gt; 初始化 –&gt; 应用阶段（请求处理） –&gt; 销毁
+    1.创建 Servlet 实例。
+    2.Web 容器调用 Servlet 的 init() 方法，对Servlet 进行初始化。
+    3.Servlet初始化后，将一直存在于容器中，用于响应客户端请求。根据客户端的请求方式通过 Servlet 中service() 方法去相应的 goGet(),或 doPost() 方法；
+    4.Web 容器销毁Servlet时，调用Servlet的destroy()方法，通常在关闭Web容器之时销毁Servlet。
+
+扩展： 
+    管理的servlet，商品管理的servlet等，servlet体系结构是建立在java多线程机制之上的，servlet容器会自动使用线程池等技术来支持系统的运行。
+    当servlet被部署在应用服务器中（应用服务器中用于管理Java组件的部分被抽象成为容器）以后，由容器控制servlet的生命周期。
+    除非特殊制定，否则在容器启动的时候，servlet是不会被加载的，servlet只会在第一次请求的时候被加载和实例化。
+    servlet一旦被加载，一般不会从容器中删除，直至应用服务器关闭或重新启动。但当容器做内存回收动作时，servlet有可能被删除。也正是因为这个原因，第一次访问servlet所用的时间要大大多于以后访问所用的时间
+
+jsp的生命周期：
+    转换，编译，加载并实例化，初始化（_jspInit），请求处理（_jspService()调用），销毁（_jspDestory()）。
+        转换：就是web容器将JSP文件转换成一个包含了Servlet类定义的java源文件。
+        编译：把在转换阶段创建的java源文件变异成类文件。
+
+    JSP生命周期其他的四个阶段跟Servlet生命周期相同
+
+注意：
+    在正常情况下，Servlet只会初始化一次，而处理服务会调用多次，销毁也只会调用一次
+    但是如果一个Servlet长时间不使用的话，也会被容器自动销毁，而如果需要再次使用时会重新进行初始化的操作，即在特殊情况下初始化可能会进行多次，销毁也可能进行多次
+</code></pre><h4 id="jsp-servlet的区别和联系"><a href="#jsp-servlet的区别和联系" class="headerlink" title="jsp servlet的区别和联系"></a>jsp servlet的区别和联系</h4><pre><code>JSP在本质上就是SERVLET,但是两者的创建方式不一样.
+Servlet完全是JAVA程序代码构成，擅长于流程控制和事务处理，通过Servlet来生成动态网页很不直观.
+JSP由HTML代码和JSP标签构成，可以方便地编写动态网页.
+因此在实际应用中采用Servlet来控制业务流程，而采用JSP来生成动态网页.
+JSP是Servlet技术的扩展，本质上就是Servlet的简易方式。
+JSP编译后是“类servlet”。
+Servlet和JSP最主要的不同点在于，Servlet的应用逻辑是在Java文件中，并且完全从表示层中的HTML里分离开来。而JSP是Java和HTML组合成一个扩展名为.jsp的文件。
+JSP侧重于视图，Servlet主要用于控制逻辑
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/nginx优化/" rel="next" title="nginx优化">
+                <i class="fa fa-chevron-left"></i> nginx优化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/https机制/" rel="prev" title="https机制">
+                https机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#java-基础概念"><span class="nav-number">1.</span> <span class="nav-text">java 基础概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tomcat"><span class="nav-number">2.</span> <span class="nav-text">tomcat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat组成"><span class="nav-number">3.</span> <span class="nav-text">Tomcat组成</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Container组成"><span class="nav-number">3.1.</span> <span class="nav-text">Container组成</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat的工作模式运行模式"><span class="nav-number">4.</span> <span class="nav-text">Tomcat的工作模式运行模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Tomcat的运行模式"><span class="nav-number">5.</span> <span class="nav-text">Tomcat的运行模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#生命周期"><span class="nav-number">5.1.</span> <span class="nav-text">生命周期</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jsp-servlet的区别和联系"><span class="nav-number">5.2.</span> <span class="nav-text">jsp servlet的区别和联系</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">564k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:33</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="基本网络配置将Linux主机接入到网络，需要配置网络相关设置。 一般包括如下内容：     主机名 IP/netmask     路由：默认网关     DNS服务器         主DNS服务器         次DNS服务器         第三DNS服务器 主机名 hostname 注：linux主机名不具备网络功能，windows主机名具备网络功能 /etc/hosts 主机名存放位置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络配置">
+<meta property="og:url" content="http://yoursite.com/2019/01/网络配置/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="基本网络配置将Linux主机接入到网络，需要配置网络相关设置。 一般包括如下内容：     主机名 IP/netmask     路由：默认网关     DNS服务器         主DNS服务器         次DNS服务器         第三DNS服务器 主机名 hostname 注：linux主机名不具备网络功能，windows主机名具备网络功能 /etc/hosts 主机名存放位置">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-08T16:19:17.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络配置">
+<meta name="twitter:description" content="基本网络配置将Linux主机接入到网络，需要配置网络相关设置。 一般包括如下内容：     主机名 IP/netmask     路由：默认网关     DNS服务器         主DNS服务器         次DNS服务器         第三DNS服务器 主机名 hostname 注：linux主机名不具备网络功能，windows主机名具备网络功能 /etc/hosts 主机名存放位置">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/网络配置/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>网络配置 | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/网络配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">网络配置
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-20 14:58:00" itemprop="dateCreated datePublished" datetime="2019-01-20T14:58:00+08:00">2019-01-20</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">13k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">12 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="基本网络配置"><a href="#基本网络配置" class="headerlink" title="基本网络配置"></a>基本网络配置</h3><pre><code>将Linux主机接入到网络，需要配置网络相关设置。
+一般包括如下内容：
+    主机名 IP/netmask
+    路由：默认网关
+    DNS服务器
+        主DNS服务器
+        次DNS服务器
+        第三DNS服务器
+主机名 hostname
+注：linux主机名不具备网络功能，windows主机名具备网络功能
+/etc/hosts 主机名存放位置
+/etc/sysconfig/network centos6系统中主机名配置文件
+
+centos6：
+    1、临时更改内存中主机名
+        hostname “主机名”
+    2、永久保存主机名：
+    方法1：编辑/etc/sysconfig/network
+        [root@centos6 ~]#vim /etc/sysconfig/network
+        NETWORKING=yes
+        HOSTNAME=centos6.magedu.com
+    更改后需要重启才能生效
+
+    方法2：如果不重启想要生效
+    (1)hostname 主机名 更改内存中主机名
+    虽然该命令临时生效重启系统会失效，但是已经把配置文件做过更改，因此重启依然有效
+    (2)提示符中的主机名仍然没有变动，注销或使用命令exec bash即可更改
+
+centos7：
+    /etc/hostname 该文件是centos7系统主机名配置文件
+    (1)hostnamectl set-hostname 新主机名
+    (2)提示符中主机名没有更改，此时需要注销重登或使用exec bash
+</code></pre><h3 id="CentOS-6网络管理"><a href="#CentOS-6网络管理" class="headerlink" title="CentOS 6网络管理"></a>CentOS 6网络管理</h3><pre><code>接口命名方式：CentOS 6
+    以太网：eth[0,1,2,...]
+    ppp：ppp[0,1,2,...]
+网络接口识别并命名相关的udev配置文件：
+    /etc/udev/rules.d/70-persistent-net.rules
+查看网卡：
+    dmesg |grep –i eth
+    ethtool -i eth0
+卸载网卡驱动：
+    modprobe -r e1000
+    rmmod e1000
+装载网卡驱动：
+    modprobe e1000
+静态指定:
+    ifconfig, route, netstat
+    ip: object {link, addr, route}, ss, tc
+    system-config-network-tui，setup
+    配置文件
+动态分配：
+    DHCP: Dynamic Host Configuration Protocol
+</code></pre><h3 id="CentOS-7网络配置"><a href="#CentOS-7网络配置" class="headerlink" title="CentOS 7网络配置"></a>CentOS 7网络配置</h3><pre><code>网卡名称
+Centos7：systemd对网络设备的命名方式
+    a、如果Firware或Bios为主板上集成的设备提供的索引信息可用 且可预测则根据此所以进行命名 例如eno1
+    b、如果Firware或Bios为主板PCI-E扩展槽所提供提供的索引信息可用 且可预测则根据此所以进行命名 例如ens1
+    c、如果硬件接口的物理位置信息可用 则根据此信息进行命名 例如enps2s0
+    d、如果用户显式启动 也可根据MAC地质进行命名 ex334ad23da
+    e、如上述均不可用 则使用传统命名机制
+采用传统命令方式：
+    a)  编辑/etc/default/grub配置文件 
+    GRUB_CMDLINE_LINUX=&quot;rhgb quiet net.ifnames=0&quot; 
+    或：修改/boot/grub2/grub.cfg 
+    b)  为grub2生成其配置文件 
+        grub2-mkconfig -o /etc/grub2.cfg
+    c)  重启系统
+取消传统命名方式
+    (1)修改/boot/grub2/grub.cfg文件，在第一个linux16行的行尾去掉net.ifnames=0
+    (2)重启设备即可
+
+CentOS 7网络配置工具:
+图形工具：nm-connection-editor 
+字符配置tui工具：nmtui 
+命令行工具：nmcli，ip
+</code></pre><h3 id="ifconfig命令"><a href="#ifconfig命令" class="headerlink" title="ifconfig命令"></a>ifconfig命令</h3><pre><code>    ifconfig [interface] 查看启用的网卡信息
+    ifconfig -a 查看所有网卡信息(包括禁用的网卡)
+    ifconfig IFACE [up|down] 启用|禁用网卡
+    ifconfig interface [aftype] options | address ... 临时给网卡配置ip地址
+    ifconfig IFACE IP/netmask [up]
+    ifconfig IFACE IP netmask NETMASK
+注意：立即生效
+</code></pre><h3 id="route命令"><a href="#route命令" class="headerlink" title="route命令"></a>route命令</h3><pre><code>以数字方式查看路由：route -n
+添加路由：route add
+语法：route add [-net|-host] target [netmask Nm] [gw Gw] [[dev] If]
+    -net：是指网络路由，匹配某个网段
+    -host：是指主机路由，精确匹配某个ip地址
+    target：目标地址或网段
+    gw：gateway，网关
+
+示例：
+目标：192.168.1.3 网关：172.16.0.1
+    route add -host 192.168.1.3 gw 172.16.0.1 dev eth0
+目标：192.168.0.0 网关：172.16.0.1
+    route add -net 192.168.0.0 netmask 255.255.255.0 gw 172.16.0.1 dev eth0
+    或route add -net 192.168.0.0/24 gw 172.16.0.1 dev eth0
+添加默认路由，网关：172.16.0.1
+    route add -net 0.0.0.0 netmask 0.0.0.0 gw 172.16.0.1
+    或route add default gw 172.16.0.1
+
+删除路由：route del
+语法：route del [-net|-host] target [gw Gw] [netmask Nm] [[dev] If]
+
+示例：
+目标：192.168.1.3 网关：172.16.0.1
+    route del -host 192.168.1.3
+目标：192.168.0.0 网关：172.16.0.1
+    route del -net 192.168.0.0 netmask 255.255.255.0
+</code></pre><h3 id="启用路由功能"><a href="#启用路由功能" class="headerlink" title="启用路由功能"></a>启用路由功能</h3><pre><code>暂时开启路由功能(系统重启后值会变回0)
+echo 1 &gt; /proc/sys/net/ipv4/ip_ipforward 由于是内核文件 重启失效
+可以修改/etc/sysctl.conf 使其永久有效 sysctl -p 重新读改过的文件
+sysctl -a | grep “ip_forward”
+</code></pre><h3 id="配置动态路由"><a href="#配置动态路由" class="headerlink" title="配置动态路由"></a>配置动态路由</h3><pre><code>通过守护进程获取动态路由
+    安装quagga包
+    支持多种路由协议：RIP、OSPF和BGP
+    命令vtysh配置
+使用linux系统模拟路由器：
+(1)使用yum安装quagga软件包
+(2)cd /etc/quagga 进入quagga文件夹
+(3)cp ospfd.conf.sample ospfd.sapmle 根据模板复制配置文件
+(4)service ospfd start 开启路由协议
+(5)vtysh 开启命令行模式
+然后即可模拟路由器(思科)进行配置
+</code></pre><h3 id="netstat"><a href="#netstat" class="headerlink" title="netstat"></a>netstat</h3><pre><code>显示网络连接
+netstat通过遍历proc来获取socket信息
+netstat 查看Linux路由表 查看侦听的端口 建立的连接 查看各种协议的统计信息
+    -t –tcp:查看跟tcp协议相关的连接
+    -u, –udp:查看跟udp协议相关的连接
+    -l:查看处于监听状态的连接
+    -a:查看所有状态下的连接
+    -n:以数字的格式显示ip和端口号
+    -p:显示与连接相关的进程的ID
+    -i:显示所有接口的数据统计
+
+常用组合：
+    -tan, -uan, -tnl, -unl
+显示路由表：
+    netstat {--route|-r} [--numeric|-n]
+        -r: 显示内核路由表
+        -n: 数字格式
+显示接口统计数据：
+    netstat {--interfaces|-I|-i} [iface] [--all|-a] [--extend|-e] [--program|-p] [--numeric|-n]
+    netstat -i 显示接口信息
+    netstat –I=IFACE 显示指定的网卡信息
+    ifconfig -s eth0 显示指定的网卡信息
+</code></pre><h3 id="watch"><a href="#watch" class="headerlink" title="watch"></a>watch</h3><pre><code>扫描程序执行结果
+watch -n0.5 &apos;netstat -i eth0&apos; 监控网卡流量状态(每隔0.5s扫描一次该程序)
+watch -n0.5 &apos;netstat -I=eth0&apos; 监控指定网卡流量信息(每隔0.5s扫描一次该程序)
+</code></pre><h3 id="ip"><a href="#ip" class="headerlink" title="ip"></a>ip</h3><pre><code>配置Linux网络属性
+link：只显示数据链路层地址，即mac地址
+addr：对ip地址进行增删改
+route：对路由进行更改
+
+ip route add [ip/net|default] via [ip] {dev [if] src ip}
+ip route del   [ip/net|default]
+ip route    flush   [dev if]    [via]
+ip route show|list 
+注意： 配置完成后重启网络服务 route 添加的内容会被刷掉
+
+例：
+ip route add 192.168.0.0/24 via 172.16.0.1    添加网络路由
+ip route add 192.168.1.13 via 172.16.0.1      添加主机路由
+
+ip link set dev device_name {up|down}:将指定的设备开启或关闭
+ip link set dev device_name multicast {on|off}:启用或者禁用指定设备的多播功能
+ip link set dev device_name name new_name:对指定的设备进行重命名
+ip link set dev device_name mtu mtu_number:设置指定设备的MTU大小
+ip link set dev device_name {up|down}
+ip link show:查看所有设备的属性
+
+例：ip link set dev eth1 down
+
+ip addr [add|del] ip/mask [dev] [ifac] [label LABEL] 
+ip addr flush dev ifac [label LABEL]
+ip addr show 
+
+将多个IP地址绑定到一个NIC上
+    eth0:1 、eth0:2、eth0:3
+ip addr add 172.16.1.1/16 dev eth0 label eth0:0   给网卡eth0设置别名eth0:0
+ip addr del 172.16.1.1/16 dev eth0 label eth0:0   删除网卡别名的ip地址
+ip addr flush dev eth0 label eth0:0     删除网卡eth0的全部别名
+
+ifup/ifdown命令依赖于网卡配置文件,linux系统中新增的网卡没有网卡配置文件，因此使用该命令，需要添加网卡的配置文件
+</code></pre><h3 id="ss"><a href="#ss" class="headerlink" title="ss"></a>ss</h3><pre><code>ss使用netlink与内核tcp_diag模块通信获取socket信息。
+套接字socket文件：同一个主机两个应用程序发送数据，以套接字文件作为中转站，交换数据
+查看建立的连接情况以及状态统计信息
+    -t:所建立的tcp连接
+    -u:所建立的udp连接
+    -n:数字格式显示ip和端口号
+    -l:查看已经处于监听状态的连接
+    -w: 裸套接字相关
+    -x：unix sock相关
+    -p:显示相关进程的pid
+    -m:各个连接所占用的内存信息
+    -a:查看所有状态的信息
+    -e: 扩展的信息
+    -o：计时器信息
+
+常用组合：
+    -tan, -tanl, -tanlp, -uan
+
+ss [OPTION] [state TCP-STATE ] [ EXPRESSION ]
+TCP-STATE：
+    LISTEN: 监听
+    ESTABLISHED：已建立的连接
+    FIN_WAIT_1
+    FIN_WAIT_2
+    SYN_SENT
+    SYN_RECV
+    CLOSED
+EXPRESSION:
+    dport =
+    sport =
+
+示例：&apos;( dport = :ssh or sport = :ssh )&apos;
+ss -o state established &apos;( dport = :6868 or sport = :6868 )&apos;
+ss &apos;( dport = :ssh or sport = :ssh )&apos;
+ss -l 显示本地打开的所有端口
+ss -pl 显示每个进程具体打开的socket
+ss -t -a 显示所有tcp socket
+ss -u -a 显示所有的UDP Socekt
+ss -o state established &apos;( dport = :ssh or sport = :ssh )&apos; 显示所有已建立的ssh连接
+ss -o state established &apos;( dport = :http or sport = :http )&apos; 显示所有已建立的HTTP连接
+ss -s 列出当前socket详细信息
+</code></pre><h3 id="网络配置文件"><a href="#网络配置文件" class="headerlink" title="网络配置文件"></a>网络配置文件</h3><pre><code>IP、MASK、GW、DNS相关配置文件
+/etc/sysconfig/networkscripts/ifcfg-IFACE
+    TYPE=Ethernet
+    BOOTPROTO=none
+    DEFROUTE=yes
+    NAME=ens32
+    UUID=df737a1c-f1fc-4baf-94ca-d2c82b81b7f3
+    PEERDNS=yes
+    DEVICE=ens32
+    ONBOOT=yes
+    IPADDR=192.168.80.40
+    PREFIX=24
+    GATEWAY=192.168.80.2
+    DNS1=192.168.80.2
+
+PEERDNS详解:
+当PEERDNS=yes，且BOOTPROTO=dhcp，从dhcp服务器获取一个dns地址，直接覆盖/etc/resolv.conf文件  
+当PEERDNS=no，且BOOTPROTO=dhcp，从dhcp获取的dns地址，不覆盖/etc/resolv.conf文件，而是由人工指定和维护  
+
+相当于windows系统中网卡设置为自动获取，但是dns可以设置为自动获取和手工指定
+当dns设置为自动获取即为PEERDNS=yes;当dns设置为手工指定即为PEERDNS=no.  
+</code></pre><h3 id="路由相关的配置文件："><a href="#路由相关的配置文件：" class="headerlink" title="路由相关的配置文件："></a>路由相关的配置文件：</h3><pre><code>/etc/sysconfig/networkscripts/route-IFACE
+    10.0.0.0/8 via 72.167.0.1
+        或
+    ADDRESS#=
+    NETMASK#=
+    GATEWAY#=
+</code></pre><h3 id="dns："><a href="#dns：" class="headerlink" title="dns："></a>dns：</h3><pre><code>/etc/reslov.conf
+ /etc/hosts相比优先于DNS文件
+/etc/nsswitch.conf 更改二者的优先级     
+
+正向解析：FQDN--&gt;IP
+    dig -t A FQDN
+    host -t A FQDN
+反向解析：IP--&gt;FQDN
+    dig -x IP
+     host -t PTR IP
+</code></pre><h3 id="nmcli"><a href="#nmcli" class="headerlink" title="nmcli"></a>nmcli</h3><pre><code>nmcli命令
+</code></pre><table>
+<thead>
+<tr>
+<th>命令Command</th>
+<th>用法Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nmcli dev status</td>
+<td>列出所有设备</td>
+</tr>
+<tr>
+<td>nmcli con show</td>
+<td>列出所有连接</td>
+</tr>
+<tr>
+<td>nmcli con up “ethN”</td>
+<td>启用网卡</td>
+</tr>
+<tr>
+<td>nmcli con down “ethN”</td>
+<td>临时禁用网卡；如果ONBOOT=yes，系统重启会重新开启</td>
+</tr>
+<tr>
+<td>nmcli con off</td>
+<td>禁用所有网卡</td>
+</tr>
+<tr>
+<td>nmcli con add…</td>
+<td>增加新的网卡</td>
+</tr>
+<tr>
+<td>nmcli con mod “ethN”</td>
+<td>修改网卡的配置信息</td>
+</tr>
+<tr>
+<td>nmcli con del “ethN”</td>
+<td>删除网卡</td>
+</tr>
+</tbody>
+</table>
+<pre><code>nmcli con mod命令与ifcfg-*文件对应关系
+</code></pre><table>
+<thead>
+<tr>
+<th>nmcli con mod</th>
+<th>ifcfg-*文件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ipv4.method manual</td>
+<td>BOOTPROTO=none</td>
+</tr>
+<tr>
+<td>ipv4.method auto</td>
+<td>BOOTPROTO=dhcp</td>
+</tr>
+<tr>
+<td>ipv4.addresses “192.0.2.1/24 192.0.2.254”</td>
+<td>IPADDR0=192.0.2.1</td>
+</tr>
+<tr>
+<td></td>
+<td>PREFIX0=24</td>
+</tr>
+<tr>
+<td></td>
+<td>GATEWAY0=192.0.2.254</td>
+</tr>
+<tr>
+<td>ipv4.dns 8.8.8.8</td>
+<td>DNS0=8.8.8.8</td>
+</tr>
+<tr>
+<td>ipv4.dns-search example.com</td>
+<td>DOMAIN=example.com</td>
+</tr>
+<tr>
+<td>ipv4.ignore-auto-dns true</td>
+<td>PEERDNS=no</td>
+</tr>
+<tr>
+<td>connection.autoconnect yes</td>
+<td>ONBOOT=yes</td>
+</tr>
+<tr>
+<td>connection.id eth0</td>
+<td>NAME=eth0</td>
+</tr>
+<tr>
+<td>connection.interface-name eth0</td>
+<td>DEVICE=eth0</td>
+</tr>
+<tr>
+<td>802-3-ethernet.mac-address…</td>
+<td>HWADDR…</td>
+</tr>
+</tbody>
+</table>
+<pre><code>例：
+设备即网络接口，连接是对网络接口的配置。一个网络接口可有多个连接配置，但同时只有一个连接配置生效
+显示所有包括不活动连接
+    nmcli con show
+显示所有活动连接
+    nmcli con show --active
+显示网络连接配置
+    nmcli con show ens32
+显示设备状态
+    nmcli dev status
+显示网络接口属性
+    nmcli dev show eth0
+创建新连接eth0，IP自动通过dhcp获取
+    nmcli con add con-name etho type Ethernet ifname eth0
+删除连接
+    nmcli con del default
+创建新连接eth0 ，指定静态IP，不自动连接
+    nmcli con add con-name eth0 ifname eth0 autoconnect no type Ethernet ipv4.addresses 172.25.X.10/24 ipv4.gateway 172.25.X.254
+启用static连接配置
+    nmcli con up eth0
+查看帮助
+    nmcli con add help
+修改连接设置
+nmcli con mod eth0 connection.autoconnect no
+nmcli con mod eth0 ipv4.dns 172.25.X.254
+nmcli con mod eth0 +ipv4.dns 8.8.8.8
+nmcli con mod eth0 -ipv4.dns 8.8.8.8
+nmcli con mod eth0 ipv4.addresses “172.25.X.10/24 172.25.X.254”
+nmcli con mod eth0 +ipv4.addresses 10.10.10.10/16
+DNS设置，存放在/etc/resolv.conf文件中
+    PEERDNS=no 表示当IP通过dhcp自动获取时，dns仍是手动设置，不自动获取。
+    等价于下面命令：
+    nmcli con mod eth0 ipv4.ignore-auto-dns yes
+</code></pre><h3 id="设备别名"><a href="#设备别名" class="headerlink" title="设备别名"></a>设备别名</h3><pre><code>为每个设备别名生成独立的接口配置文件
+关闭NetworkManager服务
+ifcfg-ethX:xxx
+必须使用静态联网
+    DEVICE=eth0:0
+    IPADDR=10.10.10.10
+    NETMASK=255.0.0.0
+    ONPARENT=yes
+注意：service network restart 生效
+参考：/usr/share/doc/initscripts-*/sysconfig.txt
+注意：网卡别名配置文件ifcfg-ethX:xxx必须使用静态地址，而网卡主配置文件ifcfg-ethX既能使用自动获取的ip地址，又能使用静态地址，但如果该网卡存在别名，则必须使用自动获取的ip地址
+</code></pre><h3 id="网络接口配置-bonding"><a href="#网络接口配置-bonding" class="headerlink" title="网络接口配置-bonding"></a>网络接口配置-bonding</h3><pre><code>Bonding
+    将多块网卡绑定同一IP地址对外提供服务，可以实现高可用或者负载均衡。直接给两块网卡设置同一IP地址是不可以的。通过bonding，虚拟一块网卡对外提供连接，物理网卡的被修改为相同的MAC地址
+
+Bonding工作模式：
+
+Mode 0 (balance-rr)
+轮询（Round-robin）策略：两个网卡同时工作，两个网卡交替传输数据。本模式提供负载均衡和容错的能力
+Mode 1 (active-backup)
+活动-备份（主备）策略：只有一个网卡被激活，当活动的网卡失败时才会激活其他网卡。为了避免交换机发生混乱此时绑定的MAC地址只有一个外部端口上可见
+Mode 3 (broadcast)
+广播策略：在所有的网卡上同一时间传送同样的数据,提供容错能力
+active-backup、balance-tlb 和 balance-alb模式不需要交换机的任何特殊配置。其他绑定模式需要配置交换机以便整合链接。如：Cisco 交换机需要在模式 0、2 和 3 中使用 EtherChannel，但在模式4中需要LACP和 EtherChannel
+
+
+方法一：
+    创建bonding设备的配置文件
+    /etc/sysconfig/network-scripts/ifcfg-bond0
+        DEVICE=bond0
+        IPADDR=X.X.X.X
+        PREFIX=XX
+        BOOTPROTO=none
+        BONDING_OPTS= “miimon=100 mode=0”
+    创建被绑定的网卡设备的配置文件
+    /etc/sysconfig/network-scripts/ifcfg-eth0
+        DEVICE=eth0
+        BOOTPROTO=none
+        MASTER=bond0
+        SLAVE=yes
+        USERCTL=no
+    /etc/sysconfig/network-scripts/ifcfg-eth1
+        DEVICE=eth1
+        BOOTPROTO=none
+        MASTER=bond0
+        SLAVE=yes
+        USERCTL=no
+    注意：配置文件创建完成后，需要重启网络服务才能生效
+    miimon 是用来进行链路监测的。
+    如果miimon=100，那么系统每100ms监测一次链路连接状态，如果有一条线路不通就转入另一条线路
+    查看bond0状态：/proc/net/bonding/bond0
+    删除Bond
+        ifconfig bond0 down 禁用bond0网卡
+        rmmod bonding 卸载绑定网卡的驱动程序
+        rm -rf ifconfig-bond0 删除bond0网络配置文件
+
+方法二：nmcli实现bonding
+    添加bonding接口 
+    nmcli con add type bond con-name mybond0 ifname mybond0 mode active-backup 
+    添加从属接口
+    nmcli con add type bond-slave ifname ens7 master mybond0 
+    nmcli con add type bond-slave ifname ens3 master mybond0 
+    注：如无为从属接口提供连接名 则该名称是接口名称加类型构成 
+            要启动绑定 则必须首先启动从属接口
+    nmcli con up bond-slave-eth0 
+    nmcli con up bond-slave-eth1 
+    启动绑定 
+    nmcli con up mybond0
+</code></pre><h3 id="网络组Network-Teaming"><a href="#网络组Network-Teaming" class="headerlink" title="网络组Network Teaming"></a>网络组Network Teaming</h3><pre><code>网络组：是将多个网卡聚合在一起方法，从而实现冗错和提高吞吐量
+网络组不同于旧版中bonding技术，提供更好的性能和扩展性
+网络组由内核驱动和teamd守护进程实现.
+多种方式runner
+    broadcast 广播模式
+    roundrobin 轮询模式
+    activebackup 主备模式
+    loadbalance 负载均衡模式
+    lacp (implements the 802.3ad Link Aggregation Control Protocol)
+
+网络组规则
+    启动网络组接口不会自动启动网络组中的port接口
+    启动网络组接口中的port接口总会自动启动网络组接口
+    禁用网络组接口会自动禁用网络组中的port接口
+    没有port接口的网络组接口可以启动静态IP连接
+    启用DHCP连接时，没有port接口的网络组会等待port接口的加入
+方法一：
+    nmcli connection add type team ifname team0 con-name team0 config {&quot;runner&quot;:{&quot;name&quot;:&quot;activebackup&quot;}}
+    nmcli connection modify team0 ipv4.addresses 172.12.12.0/24
+    nmcli connection modify team0 ipv4.method manual
+    nmcli connection add type team-slave ifname eth1 con-name team0-1 master team0
+    nmcli connection add type team-slave ifname eth2 con-name team0-2 master team0
+    systemctl restart network
+    teamdctl team0 state; nmcli dev dis eth1    查看网络组team0状态
+方法二：
+    cp /usr/share/doc/teamd-1.27/example_ifcfgs/1/* /etc/sysconfig/network-scripts/
+    网络组team0配置文件
+    /etc/sysconfig/network-scripts/ifcfg-team0  
+        DEVICE=team0  
+        DEVICETYPE=Team  
+        TEAM_CONFIG=&quot;{&quot;runner&quot;: {&quot;name&quot;: &quot;broadcast&quot;}}&quot;  
+        BOOTPROTO=none  
+        IPADDR0=172.25.5.100  
+        PREFIX0=24    
+        NAME=team0  
+        ONBOOT=yes  
+    网络组port接口team0-eth*配置文件
+    /etc/sysconfig/network-scripts/ifcfg-team0-eth1  
+        DEVICE=eth1  
+        DEVICETYPE=TeamPort  
+        TEAM_MASTER=team0  
+        NAME=team0-eth1  
+        ONBOOT=yes  
+    systemctl restart network
+    teamdctl team0 state
+
+删除网络组
+    (1)禁用网络组team0
+    nmcli connection down team0
+    (2)查看网络组team0状态
+    teamdctl team0 state
+    nmcli connection show
+    (3)删除网络组port接口team0-port0，team0-port1
+    nmcli connectioni delete team0-eth0
+    nmcli connectioni delete team0-eth1
+    (4)查看网络状态
+    nmcli connection show
+</code></pre><h3 id="测试网络工具"><a href="#测试网络工具" class="headerlink" title="测试网络工具"></a>测试网络工具</h3><pre><code>在命令行下测试网络的连通性
+  显示主机名
+    hostname
+  测试网络连通性
+    ping
+    mtr
+  显示正确的路由表
+    ip route
+确定名称服务器使用：
+  nslookup
+  host
+  dig
+跟踪路由
+  traceroute
+  tracepath
+网络客户端工具
+
+ftp，lftp：子命令：get、mget、ls、help
+
+wget [option]... [URL]...
+可用于下载网络服务器上的文件，支持http，ftp协议，后跟文件完整路径，
+如：wget http://172.20.0.1/pub/file1
+  -q: 静默模式
+  -c: 断点续传
+  -P：保存在指定目录
+  -O: 保存为指定的文件名
+  --limit-rate=: 指定传输速率，单位K,M等
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/网络基础/" rel="next" title="网络基础">
+                <i class="fa fa-chevron-left"></i> 网络基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/tomcat基本配置/" rel="prev" title="tomcat基本配置">
+                tomcat基本配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本网络配置"><span class="nav-number">1.</span> <span class="nav-text">基本网络配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CentOS-6网络管理"><span class="nav-number">2.</span> <span class="nav-text">CentOS 6网络管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CentOS-7网络配置"><span class="nav-number">3.</span> <span class="nav-text">CentOS 7网络配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ifconfig命令"><span class="nav-number">4.</span> <span class="nav-text">ifconfig命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#route命令"><span class="nav-number">5.</span> <span class="nav-text">route命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启用路由功能"><span class="nav-number">6.</span> <span class="nav-text">启用路由功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置动态路由"><span class="nav-number">7.</span> <span class="nav-text">配置动态路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#netstat"><span class="nav-number">8.</span> <span class="nav-text">netstat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#watch"><span class="nav-number">9.</span> <span class="nav-text">watch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ip"><span class="nav-number">10.</span> <span class="nav-text">ip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ss"><span class="nav-number">11.</span> <span class="nav-text">ss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络配置文件"><span class="nav-number">12.</span> <span class="nav-text">网络配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#路由相关的配置文件："><span class="nav-number">13.</span> <span class="nav-text">路由相关的配置文件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dns："><span class="nav-number">14.</span> <span class="nav-text">dns：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nmcli"><span class="nav-number">15.</span> <span class="nav-text">nmcli</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设备别名"><span class="nav-number">16.</span> <span class="nav-text">设备别名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络接口配置-bonding"><span class="nav-number">17.</span> <span class="nav-text">网络接口配置-bonding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络组Network-Teaming"><span class="nav-number">18.</span> <span class="nav-text">网络组Network Teaming</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试网络工具"><span class="nav-number">19.</span> <span class="nav-text">测试网络工具</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">564k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:33</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

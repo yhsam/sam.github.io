@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="安装官方的预制包 1.yum安装 ，需要epel     yum install nginx -y 2.编译安装     yum groupinstall &amp;quot;Development Tools&amp;quot; &amp;quot;Server Platform Development&amp;quot;     yum install pcre-devel openssl-devel zlib-devel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx安装和基础配置">
+<meta property="og:url" content="http://yoursite.com/2019/01/nginx安装和基础配置/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="安装官方的预制包 1.yum安装 ，需要epel     yum install nginx -y 2.编译安装     yum groupinstall &amp;quot;Development Tools&amp;quot; &amp;quot;Server Platform Development&amp;quot;     yum install pcre-devel openssl-devel zlib-devel">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-16T12:47:59.005Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx安装和基础配置">
+<meta name="twitter:description" content="安装官方的预制包 1.yum安装 ，需要epel     yum install nginx -y 2.编译安装     yum groupinstall &amp;quot;Development Tools&amp;quot; &amp;quot;Server Platform Development&amp;quot;     yum install pcre-devel openssl-devel zlib-devel">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/nginx安装和基础配置/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>nginx安装和基础配置 | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/nginx安装和基础配置/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">nginx安装和基础配置
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-01-12 16:15:41" itemprop="dateCreated datePublished" datetime="2019-01-12T16:15:41+08:00">2019-01-12</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">10k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">9 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p><a href="http://nginx.org/packages/centos/7/x86_64/RPMS" target="_blank" rel="noopener">官方的预制包</a></p>
+<pre><code>1.yum安装 ，需要epel
+    yum install nginx -y
+2.编译安装
+    yum groupinstall &quot;Development Tools&quot; &quot;Server Platform Development&quot;
+    yum install pcre-devel openssl-devel zlib-devel    
+    useradd -r nginx
+    ./configure --prefix=/usr/local/nginx --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock --user=nginx --group=nginx --with-http_ssl_module --with-http_v2_module --with-http_dav_module --with-http_stub_status_module --with-threads --with-file-aio
+    make &amp;&amp; make install
+    ln -s /usr/local/nginx/sbin/nginx /usr/bin/nginx
+服务管理
+    可以添加到/etc/init.d或者/usr/lib/systemd/system/下
+    启动，不需要通过systemd
+        nginx
+    可以不重启服务加载配置文件
+        nginx -s reload
+    需要退出时，可以自动等待请求处理结束后
+        nginx -s quit
+    显示nginx的使用帮助
+        nginx -h  
+    显示nginx编译时的选项    
+        nginx -V  
+</code></pre><h3 id="编译安装nginx选项："><a href="#编译安装nginx选项：" class="headerlink" title="编译安装nginx选项："></a>编译安装nginx选项：</h3><pre><code>--prefix=/etc/nginx 安装路径 
+--sbin-path=/usr/sbin/nginx 指明nginx程序文件安装路径 
+--conf-path=/etc/nginx/nginx.conf 主配置文件安装位置 
+--error-log-path=/var/log/nginx/error.log 错误日志文件安装位置
+--http-log-path=/var/log/nginx/access.log 访问日志文件安装位置
+--pid-path=/var/run/nginx.pid 指明pid文件安装位置 
+--lock-path=/var/run/nginx.lock 锁文件安装位置
+--http-client-body-temp-path=/var/cache/nginx/client_temp 客户端body部分的临时文件存放路径，服务器允许客户端使用put方法提交大数据时，临时存放的磁盘路径
+--http-proxy-temp-path=/var/cache/nginx/proxy_temp 作为代理服务器，服务器响应报文的临时文件存放路径 
+--http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp 作为fastcgi代理服务器，服务器响应报文的临时文件存放路径
+--http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp 作为uwsgi代理服务器，服务器响应报文的临时文件存放路径
+--http-scgi-temp-path=/var/cache/nginx/scgi_temp 作为scgi反代服务器，服务器响应报文的临时文件存放路径 
+--user=nginx 指明以那个身份运行worker进程，主控master进程一般由root运行
+--group=nginx --with-http_ssl_module 表示把指定模块编译进来
+</code></pre><h3 id="程序环境"><a href="#程序环境" class="headerlink" title="程序环境"></a>程序环境</h3><pre><code>配置文件的组成部分：
+    主配置文件：nginx.conf
+            include conf.d/*.conf
+    fastcgi， uwsgi，scgi等协议相关的配置文件
+    mime.types：支持的mime类型
+主程序文件：/usr/sbin/nginx
+    Unit File：nginx.service
+</code></pre><h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><pre><code>主配置文件的配置指令：
+    directive value [value2 ...];
+
+    注意：
+    (1) 指令必须以分号结尾；
+    (2) 支持使用配置变量；
+        内建变量：由Nginx模块引入，可直接引用；
+        自定义变量：由用户使用set命令定义；
+            set variable_name value;
+            引用变量：$variable_name
+
+主配置文件结构：
+main block：主配置段，也即全局配置段；
+    event {
+         ...
+            }：事件驱动相关的配置；
+    http {
+                ...
+            }：http/https 协议相关的配置段；
+    mail {
+                ...
+            }
+    stream {
+                ...
+            }
+
+http协议相关的配置结构
+    http {
+        ...：各server的公共配置
+        server {
+             ...
+                }：每个server用于定义一个虚拟主机；
+        server 
+                 ...
+            listen 
+            server_name
+            root
+            alias
+            location [OPERATOR] URL {
+                ...
+                if CONDITION {
+                ...
+                        }
+                    }
+                }
+            }
+</code></pre><h3 id="配置指令"><a href="#配置指令" class="headerlink" title="配置指令"></a>配置指令</h3><pre><code>main配置段常见的配置指令：
+    分类：
+        正常运行必备的配置
+        优化性能相关的配置
+        用于调试及定位问题相关的配置
+        事件驱动相关的配置
+</code></pre><h4 id="正常运行必备的配置："><a href="#正常运行必备的配置：" class="headerlink" title="正常运行必备的配置："></a>正常运行必备的配置：</h4><pre><code>1、user
+    Syntax: user user [group];
+        Default:  user nobody nobody;
+        Context:  main         
+    定义工作进程使用的用户和组凭据。如果省略group，则使用名称等于user的组
+2、pid /PATH/TO/PID_FILE;
+    指定存储nginx主进程进程号码的文件路径；          
+3、include file | mask;
+    指明包含进来的其它配置文件片断；
+4、load_module file;
+    指明要装载的动态模块；
+</code></pre><h4 id="性能优化相关的配置："><a href="#性能优化相关的配置：" class="headerlink" title="性能优化相关的配置："></a>性能优化相关的配置：</h4><pre><code>1、worker_processes number | auto;
+    worker进程的数量；通常应该等于小于当前主机的cpu的物理核心数；
+        auto：当前主机物理CPU核心数；
+2、worker_cpu_affinity cpumask ...;
+    worker_cpu_affinity auto [cpumask];
+    nginx进程的CPU亲缘性；程序就会一直在指定的cpu运行，防止进程在多cpu环境切换，从而避免因切换带来的CPU的L1/L2 cache失效
+    CPU MASK：bit mask
+    00000000：
+    0000 0001：0号CPU
+    0000 0010：1号CPU
+        ... ...
+    0000 0011：0和1号CPU；
+3、worker_priority number;
+            指定worker进程的nice值，设定worker进程优先级；[-20,20]
+4、worker_rlimit_nofile number;
+            worker进程所能够打开的文件数量上限；socket文件数，进程的并发连接数
+            每一个连接都需要打开一个套接字，每一个套接字的维持都需要一个文件描述符
+            默认情况下linux限制每个用户最多同时打开1024个文件
+            对高并发服务器来说都需要修改ulimit数量(ulmit -a/-n number)
+</code></pre><h4 id="调试、定位问题："><a href="#调试、定位问题：" class="headerlink" title="调试、定位问题："></a>调试、定位问题：</h4><pre><code>1、daemon on|off;    
+    是否以守护进程方式运行Nignx；前台、后台
+2、master_process on|off;
+    是否以master/worker模型运行nginx；默认为on；是否开启子进程
+3.nginx日志     
+</code></pre><h4 id="事件驱动相关的配置"><a href="#事件驱动相关的配置" class="headerlink" title="事件驱动相关的配置:"></a>事件驱动相关的配置:</h4><pre><code>events {
+    ...
+        }
+
+1、worker_connections number;
+    每个worker进程所能够打开的最大并发连接数数量；
+        worker_processes * worker_connections
+2、use method;
+    指明并发连接请求的处理方法；
+        use epoll;
+3、accept_mutex on | off;
+    处理新的连接请求的方法；on意味着由各worker轮流处理新请求，Off意味着每个新请求的到达都会通知所有的worker进程；
+</code></pre><h4 id="与套接字相关的配置："><a href="#与套接字相关的配置：" class="headerlink" title="与套接字相关的配置："></a>与套接字相关的配置：</h4><pre><code>配置一个虚拟主机；
+    server {
+        listen address[:PORT]|PORT;
+        server_name SERVER_NAME;
+        root /PATH/TO/DOCUMENT_ROOT; 
+        。。。。                           
+            }
+
+1、listen PORT|address[:port]|unix:/PATH/TO/SOCKET_FILE
+    listen address[:port] [default_server] [ssl] [http2 | spdy] [backlog=number] [rcvbuf=size] [sndbuf=size]
+        default_server：设定为默认虚拟主机，建议旨在一个server上
+        ssl：限制仅能够通过ssl连接提供服务；
+        backlog=number：后援队列长度；
+        rcvbuf=size：接收缓冲区大小；
+        sndbuf=size：发送缓冲区大小；
+        注意：
+            1) 基于port；
+                listen PORT; 指令监听在不同的端口
+            2) 基于ip的虚拟主机
+                listen IP:PORT; IP 地址不同
+            3) 基于hostname
+                server_name fqdn; 指令指向不同的主机名        
+2、server_name name ...;
+    指明虚拟主机的主机名称；后可跟多个由空白字符分隔的字符串；
+        支持*通配任意长度的任意字符；server_name *.magedu.com  www.magedu.*
+        支持~起始的字符做正则表达式模式匹配；server_name ~^www\d+\.magedu\.com$
+        匹配机制：  
+            1) 首先是字符串精确匹配;
+            2) 左侧*通配符；
+            3) 右侧*通配符；
+            4) 正则表达式；一般不要使用，高并发请求时，会降低服务器性能
+3.server_tokens on | off | build | string   (上下文：http, server, location)
+    是否在响应报文的Server首部显示nginx版本
+4、  tcp_nodelay on | off;       (上下文：http, server, location)
+                在keepalived模式下的连接是否启用TCP_NODELAY选项；
+                off，延迟发送，多个请求合并后发送
+                on，不延迟发送        
+            tcp_nopush on|off;          (上下文：http, server, location)
+                在sendfile模式下，是否启用TCP_CORK选项；
+            sendfile on | off;          (上下文：http, server, location)
+                是否启用sendfile功能；在内核中封装报文直接发送，默认off 
+
+            Nagle算法：如果包的大小满足MSS，那么可以立即发送，否则数据会被放到缓冲区，等到已经发送的包被确认了之后才能继续发送
+            设置套接字的TCP_NODELAY选项来完成，这样就禁用了Nagle 算法
+            当使用sendfile函数时，tcp_nopush才起作用，它和指令tcp_nodelay是互斥的。
+            在tcp交互的过程中，当应用程序接收到数据包后马上传送出去，不等待，而tcp_cork选项是数据包不会马上传送出去，等到数据包最大时，一次性的传输出去，这样有助于解决网络堵塞，已经是默认了。
+
+            也就是说tcp_nopush = on 会设置调用tcp_cork方法，这个也是默认的，结果就是数据包不会马上传送出去，等到数据包最大时，一次性的传输出去，这样有助于解决网络堵塞。
+</code></pre><h4 id="定义路径相关的配置："><a href="#定义路径相关的配置：" class="headerlink" title="定义路径相关的配置："></a>定义路径相关的配置：</h4><pre><code>1、root path;    (上下文：http,server,location,if in location）
+    设置web资源路径映射；用于指明用户请求的url所对应的本地文件系统上的文档所在目录路径；
+
+    注意：匹配顺序：location下的root--&gt;server下的root--&gt;http下的root
+2、location [ = | ~ | ~* | ^~ ] uri { ... }. 
+    在一个server中location配置段可存在多个，用于实现从uri到文件系统的路径映射；ngnix会根据用户请求的URI来检查定义的所有location，并找出一个最佳匹配，而后应用其配置；
+        =：对URI做精确匹配；
+        ~：对URI做正则表达式模式匹配，区分字符大小写；
+        ~*：对URI做正则表达式模式匹配，不区分字符大小写；
+        ^~：对URI的左半部分做匹配检查，不区分字符大小写；
+        不带符号：以URI为前缀的所有uri；
+
+        匹配优先级：=, ^~, ～/～*，不带符号；
+
+    例：
+        location = / {
+            [ configuration A ]
+        }
+
+        location / {
+            [ configuration B ]
+        }
+
+        location /documents/ {
+            [ configuration C ]
+        }
+
+        location ^~ /images/ {
+            [ configuration D ]
+        }
+        location ~* \.(gif|jpg|jpeg)$ {
+            [ configuration E ]
+            }
+        “ /”请求将匹配配置A，“ /index.html”请求将匹配配置B，“ /documents/document.html”请求将匹配配置C，
+        “ /images/1.gif”请求将匹配配置D，“ /documents/1.jpg”请求将匹配配置E
+3、alias path;           （上下文：location）
+    定义路径别名，文档映射的另一种机制；仅能用于location上下文；
+
+    注意：location中使用root指令和alias指令的意义不同；
+        (a) root，给定的路径对应于location中的/uri/左侧/；
+        (b) alias，给定的路径对应于location中的/uri/右侧/；
+    注意：
+        如果location后面的URI有/，则alias后面的路径也得有/
+        使用alias标签的目录块中不能使用rewrite的break
+4、index file ...;       (上下文；http, server, location)
+    指定默认网页文件          
+5、error_page code ... [=[response]] uri;  (上下文：http,server,location, if in location)
+    定义错误页
+        error_page 404 /404.html;
+        location = /404.html {
+            root &quot;/www/error_pages&quot;;
+        }                       
+6、try_files file ... uri;       (上下文：server, location)
+    按顺序检查文件是否存在，返回第一个找到的文件或文件夹（结尾加斜线表示为文件夹），如果所有的文件或文件夹都找不到，会进行一个内部重定向到最后一个参数。
+    只有最后一个参数可以引起一个内部重定向，之前的参数只设置内部URI的指向。
+    最后一个参数是回退URI且必须存在，否则会出现内部500错误
+    location /images/ { 
+        try_files $uri /images/default.gif; 
+        }
+    location / { 
+        try_files $uri $uri/index.html $uri.html =404; 
+        }
+</code></pre><h4 id="定义客户端请求的相关配置-上下文-http-server-location"><a href="#定义客户端请求的相关配置-上下文-http-server-location" class="headerlink" title="定义客户端请求的相关配置    (上下文:http,server,location)"></a>定义客户端请求的相关配置    (上下文:http,server,location)</h4><pre><code>1、keepalive_timeout timeout [header_timeout]   
+    设定保持连接的超时时长，0表示禁止长连接；默认为75s；
+2、keepalive_requests number;
+    在一次长连接上所允许请求的资源的最大数量，默认为100; 
+3、keepalive_disable none | browser ...;
+    对哪种浏览器禁用长连接；
+4、send_timeout time;
+    向客户端发送响应报文的超时时长，此处，是指两次写操作之间的间隔时长；
+5、client_body_buffer_size size;
+    用于接收客户端请求报文的body部分的缓冲区大小；默认为16k；超出此大小时，其将被暂存到磁盘上的由client_body_temp_path指令所定义的位置；
+6、client_body_temp_path path [level1 [level2 [level3]]];
+    设定用于存储客户端请求报文的body部分的临时存储路径及子目录结构和数量
+        16进制的数字；
+        client_body_temp_path   /var/tmp/client_body  1 2 2
+            1：表示用一位16进制数字表示一级子目录；0-f
+            2：表示用2位16进程数字表示二级子目录：00-ff
+            2：表示用2位16进程数字表示三级子目录：00-ff
+</code></pre><h4 id="对客户端进行限制的相关配置："><a href="#对客户端进行限制的相关配置：" class="headerlink" title="对客户端进行限制的相关配置："></a>对客户端进行限制的相关配置：</h4><pre><code>1、limit_rate rate;      (上下文:http,server,location,if in location)
+    限制响应给客户端的传输速率，单位是bytes/second，0表示无限制；     
+2、limit_except method .. { ... }    （上下文:location)
+    限制对指定的请求方法之外的其它方法的使用客户端；
+    limit_except GET {
+        allow 192.168.1.0/24;
+         deny  all;
+        }
+</code></pre><h4 id="文件操作优化的配置-上下文：http，server，location"><a href="#文件操作优化的配置-上下文：http，server，location" class="headerlink" title="文件操作优化的配置           (上下文：http，server，location)"></a>文件操作优化的配置           (上下文：http，server，location)</h4><pre><code>1、aio on | off | threads[=pool];
+            是否启用aio功能；aio：异步IO
+2、directio size | off;
+            在Linux主机启用O_DIRECT标记，此处意味文件大于等于给定的大小时使用，例如directio 4m;
+3、open_file_cache off;   禁用缓存
+    open_file_cache max=N [inactive=time];
+    nginx可以缓存以下三种信息：
+        (1) 文件的描述符、文件大小和最近一次的修改时间；
+        (2) 打开的目录结构；
+        (3) 没有找到的或者没有权限访问的文件的相关信息；
+
+        max=N：可缓存的缓存项上限；达到上限后会使用LRU算法实现缓存管理；
+        inactive=time：缓存项的非活动时长，在此处指定的时长内未被命中的或命中的次数少于open_file_cache_min_uses指令所指定的次数的缓存项即为非活动项；
+4、open_file_cache_valid time;
+    缓存项有效性的检查频率；默认为60s; 
+5、open_file_cache_min_uses number;
+    在open_file_cache指令的inactive参数指定的时长内，至少应该被命中多少次方可被归类为活动项；
+6、open_file_cache_errors on | off;
+    是否缓存查找时发生错误的文件一类的信息；
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/nginx基础/" rel="next" title="nginx基础">
+                <i class="fa fa-chevron-left"></i> nginx基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/nginx自动安装脚本/" rel="prev" title="nginx自动安装脚本">
+                nginx自动安装脚本 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编译安装nginx选项："><span class="nav-number">2.</span> <span class="nav-text">编译安装nginx选项：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#程序环境"><span class="nav-number">3.</span> <span class="nav-text">程序环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">4.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置指令"><span class="nav-number">5.</span> <span class="nav-text">配置指令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#正常运行必备的配置："><span class="nav-number">5.1.</span> <span class="nav-text">正常运行必备的配置：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#性能优化相关的配置："><span class="nav-number">5.2.</span> <span class="nav-text">性能优化相关的配置：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#调试、定位问题："><span class="nav-number">5.3.</span> <span class="nav-text">调试、定位问题：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#事件驱动相关的配置"><span class="nav-number">5.4.</span> <span class="nav-text">事件驱动相关的配置:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#与套接字相关的配置："><span class="nav-number">5.5.</span> <span class="nav-text">与套接字相关的配置：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定义路径相关的配置："><span class="nav-number">5.6.</span> <span class="nav-text">定义路径相关的配置：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#定义客户端请求的相关配置-上下文-http-server-location"><span class="nav-number">5.7.</span> <span class="nav-text">定义客户端请求的相关配置    (上下文:http,server,location)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对客户端进行限制的相关配置："><span class="nav-number">5.8.</span> <span class="nav-text">对客户端进行限制的相关配置：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件操作优化的配置-上下文：http，server，location"><span class="nav-number">5.9.</span> <span class="nav-text">文件操作优化的配置           (上下文：http，server，location)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">564k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:33</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

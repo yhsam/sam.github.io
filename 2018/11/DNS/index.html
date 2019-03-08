@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="DNS基本概念：     DNS是Domain Name System的缩写，即域名系统。DNS服务主要功能是将域名转换为相应的IP地址     DNS服务器可以分为3种，即主域名服务器(Master DNS)、辅助域名服务器(Slave DNS)、缓存服务器     Master DNS:         本身提供DNS 服务，并且本身含有区域数据文件，管理和维护所负责解析的域内解析库的服务器">
+<meta name="keywords" content="service">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DNS">
+<meta property="og:url" content="http://yoursite.com/2018/11/DNS/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="DNS基本概念：     DNS是Domain Name System的缩写，即域名系统。DNS服务主要功能是将域名转换为相应的IP地址     DNS服务器可以分为3种，即主域名服务器(Master DNS)、辅助域名服务器(Slave DNS)、缓存服务器     Master DNS:         本身提供DNS 服务，并且本身含有区域数据文件，管理和维护所负责解析的域内解析库的服务器">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/4.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/5.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/8.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/9.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/6.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/7.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/10.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/11.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/12.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/2.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/3.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/DNS/13.jpg">
+<meta property="og:updated_time" content="2018-12-06T10:44:28.621Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DNS">
+<meta name="twitter:description" content="DNS基本概念：     DNS是Domain Name System的缩写，即域名系统。DNS服务主要功能是将域名转换为相应的IP地址     DNS服务器可以分为3种，即主域名服务器(Master DNS)、辅助域名服务器(Slave DNS)、缓存服务器     Master DNS:         本身提供DNS 服务，并且本身含有区域数据文件，管理和维护所负责解析的域内解析库的服务器">
+<meta name="twitter:image" content="http://yoursite.com/2018/11/DNS/4.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/DNS/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>DNS | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/DNS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DNS
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-20 19:53:03" itemprop="dateCreated datePublished" datetime="2018-11-20T19:53:03+08:00">2018-11-20</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a></span>
+
+                
+                
+                  ，
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/linux/service/" itemprop="url" rel="index"><span itemprop="name">service</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">13k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">11 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h3><pre><code>基本概念：
+    DNS是Domain Name System的缩写，即域名系统。DNS服务主要功能是将域名转换为相应的IP地址
+    DNS服务器可以分为3种，即主域名服务器(Master DNS)、辅助域名服务器(Slave DNS)、缓存服务器
+    Master DNS:
+        本身提供DNS 服务，并且本身含有区域数据文件，管理和维护所负责解析的域内解析库的服务器
+    Slave DNS：
+        和Master一起提供DNS服务，当Master服务器上的配置信息修改的时候，从主DNS服务器或其它的从DNS服务器那里“复制”（区域传递）一份解析库；
+        序列号：解析库的版本号；前提：主服务器解析库内容发生变化，其序列递增；
+        刷新时间间隔：从服务器从主服务器请求同步解析库的时间间隔；
+        重试时间间隔：从服务器从主服务器请求同步解析库失败时，再次尝试的时间间隔；
+        过期时长：从服务器始终联系不到主服务器时，多久多后放弃从服务器角度，停止提供服务；
+    缓存服务器(转发器)：
+        没有自己的区域数据文件，只是帮助客户端向外部DNS请求查询，然后将查询的结果保存到它的缓存中。
+        “通知” 机制：主服务器解析库发生变化时，会主动通知从服务器
+    区域传送：
+        全量传送：传送整个解析库
+        增量传送：传递解析库变化的那部分内容
+    端口 ：tcp(用于同步）/udp（用于查询）53
+    本地名称解析配置文件：hosts
+        /etc/hosts
+    DNS域名：
+            根域：.
+            一级域名：com,edu,mil,gov,net,org,int,arpa
+            二级域名： 
+            三级域名：
+</code></pre><p><img src="4.jpg" alt></p>
+<pre><code>工作原理：
+    当客户端输入一个网址时，
+    1.客户端先去查找hosts文件是否有与之相匹配的IP地址，有则返回结果，
+    2.没有则去查找DNS服务的本地缓存，有则返回，
+    3.没有则会发送请求到DNS服务器，有则返回结果，
+    4.没有则DNS服务器，会去查找服务器缓存，有则返回，
+    5.没有DNS服务器则会直接找根，根指向其下面顶级域可能有，这样DNS则会找顶级域，顶级域表示自己也不负责该区域，而自己包含该网址的二级可能有，这样以此查找，查找到负责该区域的域，有该网址的对应IP地址，则返回肯定答案，没有则返回否
+一次完整的查询请求经过的流程：
+    Client --&gt; hosts文件 --&gt; DNS Service
+        Local Cache --&gt; DNS Server (recursion) --&gt; Server Cache --&gt; iteration(迭代) --&gt; 
+</code></pre><p><img src="5.jpg" alt></p>
+<pre><code>DNS查询类型：
+    递归查询 recursion
+    迭代查询 iteration
+名称服务器：域内负责解析本域内的名称的主机；
+    根服务器：13组服务器
+解析类型：
+    Name --&gt; IP
+    IP --&gt; Name
+    注意：正反向解析是两个不同的名称空间，是两棵不同的解析树
+</code></pre><h3 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h3><pre><code>定义的格式：
+语法：name [TTL]   IN  rr_type     value
+注意：
+    (1) TTL可从全局继承；
+    (2) @可用于引用当前区域的名字；
+    (3) 同一个名字可以通过多条记录定义多个不同的值；此时DNS服务器会以轮询方式响应；
+    (4) 同一个值也可能有多个不同的定义名字；通过多个不同的名字指向同一个值进行定义；此仅表示通过多个不同的名字可以找到同一个主机而已
+1.SOA:
+    name [TTL] IN SOA MAIL (VALUE)
+    name: 当前区域的名字，例如“magedu.com.”；
+        value: 有多部分组成
+            (1) 当前区域的主DNS服务器的FQDN，也可以使用当前区域的名字；
+            (2) 录前区域管理员的邮箱地址；但地址中不能使用@符号，一般用.替换，例如linuxedu.magedu.com；
+            (3) (主从服务协调属性的定义以及否定的答案的统一的TTL)
+    例如：
+        $TTL　1d
+        @   IN  SOA  ns1.magedu.com. admin.magedu.com. (
+                        20181101 ;序列号
+                        2H  ;刷新时间
+                        10M ;重试时间
+                        1W  ;过期时间
+                        1D  ;否定答案的TTL值
+                        )
+2.NS记录：
+    name IN NS VALUE
+        name：当前区域的名称
+        VALUE：当前区域的DNS服务器的名称
+    例如：
+        magedu.com.     IN      NS      ns1.magedu.com.
+3.MX: 
+     name: 当前区域的名字
+     value: 当前区域的某邮件服务器(smtp服务器)的主机名；
+            一个区域内，MX记录可有多个；但每个记录的value之前应该有一个数字(0-99)，表示此服务器的优先级；数字越小优先级越高；
+    例如：
+        magedu.com.     IN      MX  10  mx1.magedu.com.
+                        IN      MX  20  mx2.magedu.com.
+    注意：
+        (1) 对MX记录而言，任何一个MX记录后面的服务器名字，都应该在后续有一个A记录
+4.A
+    name: 某主机的FQDN，例如www.magedu.com.
+    value: 主机名对应主机的IP地址；
+
+    例如：
+        mx1.magedu.com.     IN      A   1.1.1.3
+        mx2.magedu.com.     IN      A   1.1.1.3
+
+    注意：
+        *.magedu.com.       IN      A   1.1.1.4
+        magedu.com.         IN      A   1.1.1.4
+        避免用户写错名称时给错误答案，可通过泛域名解析进行解析至某特定地址；
+5.AAAA:
+            name: FQDN
+            value: IPv6
+6.PTR:
+    name: IP，有特定格式，把IP地址反过来写，1.2.3.4，要写作4.3.2.1；而有特定后缀：in-addr.arpa.，所以完整写法为：4.3.2.1.in-addra.arpa.
+    value: FQDN
+    例如：
+        4.3.2.1.in-addr.arpa.   IN  PTR     www.magedu.com
+        简写成：
+        4   IN  PTR     www.magedu.com.
+    注意：网络地址及后缀可省略；主机地址依然需要反着写；
+7.CNAME：
+    name: 别名的FQDN
+    value: 名字的FQDN；
+    例如：
+    web.magedu.com.     IN      CNAME   www.magedu.com.
+</code></pre><p><img src="1.jpg" alt></p>
+<h3 id="DNS服务器"><a href="#DNS服务器" class="headerlink" title="DNS服务器"></a>DNS服务器</h3><pre><code>dns服务，程序包名bind，程序名named
+程序包：
+    bind
+    bind-libs
+    bind-utils
+    bind-chroot: /var/named/chroot/
+    rndc: remote name domain controller，提供辅助性的管理功能；
+            953/tcp
+bind：
+    服务脚本：/etc/rc.d/init.d/named
+            /usr/lib/systemd/system/named.service
+    解析库文件：/var/named/
+    语法检查：named-checkconf
+    主配置文件：/etc/named.conf
+        全局配置：options {}
+        日志子系统配置：logging {}
+        区域定义：本机能够为哪些zone进行解析，就要定义哪些zone；
+            zone &quot;ZONE_NAME&quot; IN {}
+        注意：任何服务程序如果期望其能够通过网络被其它主机访问，至少应该监听在一个能与外部主机通信的IP地址上
+        /etc/named.rfc1912.zones 
+        /etc/rndc.key
+
+    注意：
+        (1) 一台物理服务器可同时为多个区域提供解析；
+        (2) 必须要有根区域文件；named.ca
+        (3) 应该有两个（如果包括ipv6的，应该更多）实现localhost和本地回环地址的解析库；
+</code></pre><h3 id="缓存DNS服务器的配置："><a href="#缓存DNS服务器的配置：" class="headerlink" title="缓存DNS服务器的配置："></a>缓存DNS服务器的配置：</h3><pre><code>监听外部地址即可
+dnssec: 建议关闭dnssec，设为no
+    示例：/etc/named.conf
+        options {
+            listen-on port 53 {{ 外部IP; }};
+            dnssec-enable no;
+            dnssec-validation no;
+        }
+</code></pre><h3 id="主DNS名称服务器配置"><a href="#主DNS名称服务器配置" class="headerlink" title="主DNS名称服务器配置"></a>主DNS名称服务器配置</h3><p><img src="8.jpg" alt></p>
+<pre><code>正向区域：  
+        一般在/etc/named.rfc1912.zones中定义
+        zone &quot;ZONE_NAME&quot; IN {
+                type {master|slave|hint|forward};
+                file &quot;ZONE_NAME.zone&quot;;
+            };
+        示例：
+</code></pre><p><img src="9.jpg" alt></p>
+<p><img src="6.jpg" alt></p>
+<pre><code>    定义区域解析库文件
+        /var/name/yh.com.zone
+        示例：
+        $TTL 86400
+        $ORIGIN yh.com.
+        @   IN  SOA ns1 admin (
+                                2015042201
+                                1H
+                                5M
+                                7D
+                                1D )
+                IN  NS  ns1
+                IN  NS  ns2
+                IN  MX 10   mx1
+                IN  MX 20   mx2
+        mx1     IN      A       192.168.0.1
+        mx2     IN      A       192.168.0.2
+        ns1     IN      A       192.168.0.188
+        ns2     IN      A       192.168.0.189
+        www     IN      A       199.247.21.135
+
+解析库文件语法检查：
+    named-checkzone &quot;zone_name.zone&quot; /var/named/zone.name.zone
+
+反向区域：
+    区域名称：网络地址反写.in-addr.arpa.
+        172.16.100. --&gt; 100.16.172.in-addr.arpa.
+    (1) 定义区域
+            zone &quot;ZONE_NAME&quot; IN {
+                type {master|slave|forward}；
+                file &quot;网络地址.zone&quot;
+            };
+</code></pre><p><img src="7.jpg" alt></p>
+<pre><code>    (2) 区域解析库文件
+        注意：不需要MX和A，以及AAAA记录；以PTR记录为主；
+        示例：
+        $TTL 86400
+        $ORIGIN 0.168.192.in-addr.arpa.
+        @   IN  SOA ns1.magedu.com. admin.magedu.com. (
+                            2015042201
+                            1H
+                            5M
+                            7D
+                            1D )
+    IN      NS      ns1.magedu.com.
+    IN      NS      ns2.magedu.com. #对于反向区域文件来说，从服务器的NS记录是必须写全，否则区域文件的同步会有问题，
+
+注意：正反向解析是两个不同的名称空间，是两棵不同的解析树；
+</code></pre><h3 id="从DNS服务器配置"><a href="#从DNS服务器配置" class="headerlink" title="从DNS服务器配置"></a>从DNS服务器配置</h3><pre><code>主从复制：
+    1、应该为一台独立的名称服务器；
+    2、主服务器的区域解析库文件中必须有一条NS记录是指向从服务器；
+                    IN  NS  ns1
+                    IN  NS  ns2
+    3、从服务器只需要定义区域，而无须提供解析库文件；解析库文件应该放置于/var/named/slaves/目录中;
+    4、主服务器得允许从服务器作区域传送；
+        allow-transfer { ip; };
+    5、主从服务器时间应该同步，可通过ntp进行；
+    6、bind程序的版本应该保持一致；否则，应该从高，主低；
+    定义从区域的方法：
+        zone &quot;ZONE_NAME&quot; IN {
+            type slave;
+            masters { MASTER_IP; };
+            file &quot;slaves/ZONE_NAME.zone&quot;;
+        };
+</code></pre><p><img src="10.jpg" alt></p>
+<p><img src="11.jpg" alt></p>
+<h4 id="DNS支持两种域维护的方式：全量传输（AXFR）和增量传输（IXFR）"><a href="#DNS支持两种域维护的方式：全量传输（AXFR）和增量传输（IXFR）" class="headerlink" title="DNS支持两种域维护的方式：全量传输（AXFR）和增量传输（IXFR）"></a>DNS支持两种域维护的方式：全量传输（AXFR）和增量传输（IXFR）</h4><pre><code>全量传输AXFR
+    全量传输时，DNS从服务器会从DNS主服务器上请求区域文件，其间隔时间由SOA记录中的refresh标签所定义。请求区域文件的过程是DNS从服务器向DNS主服务器发送查询来实现的，如果DNS主服务器中SOA记录中的序列号(serial)大于DNS从服务器SOA记录的序列号，DNS从服务器就会向DNS主服务器发送全量传输请求。全量传输使用TCP的53端口进行传输。
+增量传输IXFR
+    传递非常大的区域文件是非常耗资源的（时间、带宽等），尤其是只有区域中的一个记录改变的时候，没有必要传递整个区域文件，增量传输是允许DNS主服务器和DNS从服务器之间只传输那些改变的记录。
+通告notify
+    DNS从服务器会每隔SOA记录中的设置refresh时间值来向DNS主服务器主服务器发送请求，只有在主服务器的serial大于从服务器的serial时才进行传输，但是倘若refresh值设置得比较大，那么有可能在这段时间中就会积累大量的更新，此时DNS的时效性就会很差。
+    此时notify通告就提供了这样的功能：DNS主服务器的zone文件发生改变后，它立即向从服务器发送一个NOTIFY消息，告诉从服务器我的zone文件发生改变了，接着从服务器马上对比两者的序列号，再采用上面介绍的全量传输或者增量传输的方法请求zone文件。BIND本身支持通告，通告的配置是在named.conf中的zone中的option中配置，配置指令是notify, also-notify和notify-source。
+</code></pre><p><img src="12.jpg" alt></p>
+<h3 id="DNS转发服务器"><a href="#DNS转发服务器" class="headerlink" title="DNS转发服务器"></a>DNS转发服务器</h3><pre><code>注意：被转发的服务器需要能够为请求者做递归，否则，转发请求不予进行；
+(1) 全部转发: 凡是对非本机所有负责解析的区域的请求，统统转发给指定的服务器；
+        Options {
+            forward {first|only}
+            fowwarders { iP; };
+        }
+    first意思是如果请求不能得到响应，则DNS会向根一级级询问，而only如果不能响应就会报无法解析。
+
+(2) 区域转发：仅转发对特定的区域的请求至某服务器；
+        zone &quot;ZONE_NAME&quot; IN {
+                type forward;
+                forward {first|only} #only表示仅转发 ；first表示先进行转发，如果没查询到结果，那么它自己还会根据根提示向外迭代查询 
+                forwarders { iP; };
+        }
+
+    注意：关闭dnssec功能：
+        dnssec-enable no;
+        dnssec-validation no;
+</code></pre><h3 id="子域"><a href="#子域" class="headerlink" title="子域"></a>子域</h3><pre><code>子域授权:每个域的名称服务器，都是通过其上级名称服务器在解析库进行授权
+正向解析区域子域方法：
+    如果主机不多，则直接加子域的A记录即可，如果主机较多，则可单建一个独立子域。
+    当然也可以把父域和子域分离在两台主机上，此时需在父域主机的zone里上定义
+    name　　NS      dnsN       
+    dns10    A    　IP
+之后在子域的主机上直接像定义父域那样定义zone就OK了，这样就实现的父子域分离，原理就像根域往下指派子域一样
+    类似根域授权tld:
+        .com.   IN      NS      ns1.com.
+        .com.   IN      NS      ns2.com.
+        ns1.com.    IN      A   2.2.2.1
+        ns2.com.    IN      A   2.2.2.2
+
+    magedu.com. 在.com的名称服务器上，解析库中添加资源记录：
+        magedu.com.     IN  NS      ns1.magedu.com.
+        magedu.com.     IN  NS      ns2.magedu.com.
+        ns1.magedu.com.     IN  A   3.3.3.1
+        ns2.magedu.com.     IN  A   3.3.3.2
+</code></pre><h3 id="bind中基础的安全相关的配置："><a href="#bind中基础的安全相关的配置：" class="headerlink" title="bind中基础的安全相关的配置："></a>bind中基础的安全相关的配置：</h3><pre><code>acl: 把一个或多个地址归并为一个集合，并通过一个统一的名称调用；
+    acl acl_name {
+        ip;
+        net/prelen;
+    };
+
+    示例：
+        acl mynet {
+            172.16.0.0/16;
+        }
+
+bind有四个内置的acl:
+    none: 没有一个主机；
+    any: 任意主机；
+    local: 本机；
+    localnet: 本机的IP同掩码运算后得到的网络地址；
+
+注意：只能先定义，后使用；因此，其一般定义在配置文件中options的前面；
+
+访问控制的指令：
+    allow-query { ip; }： 允许查询的主机；白名单；
+    allow-transfer { ip; }：允许区域传送的主机；白名单；
+    allow-recursion { ip; }: 允许递归的主机；建议全局建议
+    allow-update { ip; }: 允许更新区域数据库中的内容；一般为none
+</code></pre><h3 id="智能dns"><a href="#智能dns" class="headerlink" title="智能dns"></a>智能dns</h3><p><img src="2.jpg" alt></p>
+<pre><code>CDN: Content Delivery Network
+</code></pre><p><img src="3.jpg" alt></p>
+<pre><code>view:视图：实现智能DNS
+    一个bind服务器可定义多个view，每个view中可定义一个或多个zone；
+    每个view用一来匹配一组客户端；
+    多个view内可能需要对同一个区域进行解析，但使用不同的区域解析库文件；
+
+    view VIEW_NAME {
+            match-clients { ip; };
+        }
+        注意：
+            (1) 一旦启用了view，所有的zone都只能定义在view中；
+            (2) 仅有必要在匹配到允许递归请求的客户所在view中定义根区域；
+            (3) 客户端请求到达时，是自上而下检查每个view所服务的客户端列表；
+
+1.配置/etc.named.conf
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">acl <span class="string">"telecom"</span>&#123;</span><br><span class="line">    192.168.0.0/25;</span><br><span class="line">            &#125;;</span><br><span class="line">acl <span class="string">"unicom"</span>&#123;</span><br><span class="line">    192.168.0.128/25;</span><br><span class="line">            &#125;;</span><br><span class="line">options&#123;</span><br><span class="line">            ...</span><br><span class="line">&#125;;</span><br><span class="line">logging&#123;</span><br><span class="line">            ...</span><br><span class="line">&#125;;</span><br><span class="line"> include <span class="string">"/etc/named.rfc1912.zones"</span>;</span><br><span class="line">include <span class="string">"/etc/named.root.key"</span>;</span><br></pre></td></tr></table></figure>
+<pre><code>2.配置/etc/named.rfc1912.zones
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">view  telecom &#123;</span><br><span class="line">match-clients &#123; telecom;&#125;;</span><br><span class="line">zone <span class="string">"."</span> IN &#123;</span><br><span class="line">        <span class="built_in">type</span> hint;</span><br><span class="line">        file <span class="string">"named.ca"</span>;</span><br><span class="line">&#125;;</span><br><span class="line">zone <span class="string">"yh.com"</span> IN &#123;</span><br><span class="line">        <span class="built_in">type</span> master;</span><br><span class="line">        file <span class="string">"yh.com.zone.telecom"</span>;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">view unicom &#123;</span><br><span class="line">match-clients &#123; unicom;&#125;;</span><br><span class="line">zone <span class="string">"."</span> IN &#123;</span><br><span class="line">        <span class="built_in">type</span> hint;</span><br><span class="line">        file <span class="string">"named.ca"</span>;</span><br><span class="line">&#125;;</span><br><span class="line">zone <span class="string">"yh.com"</span> IN &#123;</span><br><span class="line">        <span class="built_in">type</span> master;</span><br><span class="line">        file <span class="string">"yh.com.zone.unicom"</span>;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;;</span><br><span class="line">view others &#123;</span><br><span class="line">match-clients &#123; any;&#125;;</span><br><span class="line">zone <span class="string">"."</span> IN &#123;</span><br><span class="line">        <span class="built_in">type</span> hint;</span><br><span class="line">        file <span class="string">"named.ca"</span>;</span><br><span class="line">&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre><code>3.新建  /var/named/yh.com.zone.unicom
+        /var/named/yh.com.zone.telecom
+4.检查相应的配置文件,重启，解析测试
+</code></pre><h3 id="使用DNS支持镜像Web站点"><a href="#使用DNS支持镜像Web站点" class="headerlink" title="使用DNS支持镜像Web站点"></a>使用DNS支持镜像Web站点</h3><pre><code>vi /etc/named.conf
+options {
+    rrset-order { order random; };
+    };
+rrset-order 支持三个参数：fixed, random, cyclic 。
+    fix 会将多个A记录按配置文件的顺序固定给出
+    random 会随机给出
+    cyclic 会循环给出
+
+在区域文件给一个域名添加多个IP地址。
+    vi /var/named/named.91xueit.com.liantong 
+    $TTL 1D
+    91xueit.com. IN  SOA webserver.91xueit.com. han@hotmail.com. (
+            0   ;serial
+            1D  ;refresh
+            1H  ;retry
+            1W  ;expire
+            3H  ;minimum
+    );
+    91xueit.com. IN NS webserver.91xueit.com.
+    91xueit.com. IN MX 10 mail
+
+    webserver    IN A  192.168.80.222
+    www          IN A  22.22.22.22
+                 IN A  33.33.33.33
+                 IN A  44.44.44.44
+</code></pre><p><img src="13.jpg" alt></p>
+<h3 id="DNS工具"><a href="#DNS工具" class="headerlink" title="DNS工具"></a>DNS工具</h3><pre><code>测试命令：dig的使用
+        dig [-t type] name [@SERVER] [query options]
+
+            dig用于测试dns系统，因此，不会查询hosts文件进行解析；
+
+            查询选项：
+                +[no]trace：跟踪解析过程
+                +[no]recurse：进行递归解析
+
+            测试反向解析：
+                dig -x IP @SERVER
+
+            模拟区域传送：
+                dig -t axfr ZONE_NAME @SERVER
+
+                例如：dig -t axfr magedu.com @172.16.100.11
+
+        host命令：
+            host [-t type] name [SERVER]
+
+        nslookup命令：
+             nslookup [-option] [name | -] [server]
+
+             交互式模式：
+                nslookup&gt;
+                    server IP: 指明使用哪个DNS server进行查询；
+                    set q=RR_TYPE: 指明查询的资源记录类型；
+                    NAME: 要查询的名称；
+</code></pre><h3 id="rndc命令"><a href="#rndc命令" class="headerlink" title="rndc命令"></a>rndc命令</h3><pre><code>    953/tcp
+    rndc COMMAND
+COMMAND
+    reload：重载主配置文件和区域解析库文件
+    reload zonename：重载区域解析库文件
+    retransfer zonename: 手动启动区域传送，而不管序列号是否增加
+    notify zonename: 重新对区域传送发通知
+    reconfig: 重载主配置文件
+    querylog: 开启或关闭查询日志文件/var/log/message    
+    trace: 递增debug一个级别
+    trace LEVEL: 指定使用的级别
+    notrace：将调试级别设置为 0
+    flush：清空DNS服务器的所有缓存记录
+</code></pre><h3 id="DNS排错"><a href="#DNS排错" class="headerlink" title="DNS排错"></a>DNS排错</h3><pre><code>NOERROR不代表没有问题，也可以是过时的记录 
+查看是否为权威记录，flags:aa标记判断 被删除的记录仍能返回结果，可能是因为*记录存在 
+    如：*.example.com．  IN A 172.25.254.254 
+注意“.”的使用 
+避免CNAME指向CNAME记录，可能产生回环 
+    test.example.com. IN CNAME lab.example.com. 
+    lab.example.com.  IN CNAME test.example.com.
+正确配置PTR记录，许多服务依赖PTR，如sshd,MTA 
+正确配置轮询round-robin记录 
+</code></pre><h3 id="打开日志功能"><a href="#打开日志功能" class="headerlink" title="打开日志功能"></a>打开日志功能</h3><pre><code>rndc querylog 
+rndc status 
+queryperf -d test.txt -s 127.0.0.1 
+wc -l /var/log/message 
+</code></pre><h3 id="压力测试"><a href="#压力测试" class="headerlink" title="压力测试"></a>压力测试</h3><pre><code>vim test.txt 
+    www.magedu.com A 
+    magedu.com NS 
+    magedu.com MX 
+    pop3.magedu.com A 
+    web.magedu.com A 
+queryperf -d test.txt -s 127.0.0.1 
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/service/" rel="tag"><i class="fa fa-tag"></i> service</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/Ansible/" rel="next" title="Ansible">
+                <i class="fa fa-chevron-left"></i> Ansible
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/Mysql引擎/" rel="prev" title="Mysql引擎">
+                Mysql引擎 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS"><span class="nav-number">1.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#资源记录"><span class="nav-number">2.</span> <span class="nav-text">资源记录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS服务器"><span class="nav-number">3.</span> <span class="nav-text">DNS服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存DNS服务器的配置："><span class="nav-number">4.</span> <span class="nav-text">缓存DNS服务器的配置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主DNS名称服务器配置"><span class="nav-number">5.</span> <span class="nav-text">主DNS名称服务器配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从DNS服务器配置"><span class="nav-number">6.</span> <span class="nav-text">从DNS服务器配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DNS支持两种域维护的方式：全量传输（AXFR）和增量传输（IXFR）"><span class="nav-number">6.1.</span> <span class="nav-text">DNS支持两种域维护的方式：全量传输（AXFR）和增量传输（IXFR）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS转发服务器"><span class="nav-number">7.</span> <span class="nav-text">DNS转发服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#子域"><span class="nav-number">8.</span> <span class="nav-text">子域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind中基础的安全相关的配置："><span class="nav-number">9.</span> <span class="nav-text">bind中基础的安全相关的配置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#智能dns"><span class="nav-number">10.</span> <span class="nav-text">智能dns</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用DNS支持镜像Web站点"><span class="nav-number">11.</span> <span class="nav-text">使用DNS支持镜像Web站点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS工具"><span class="nav-number">12.</span> <span class="nav-text">DNS工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rndc命令"><span class="nav-number">13.</span> <span class="nav-text">rndc命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS排错"><span class="nav-number">14.</span> <span class="nav-text">DNS排错</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#打开日志功能"><span class="nav-number">15.</span> <span class="nav-text">打开日志功能</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压力测试"><span class="nav-number">16.</span> <span class="nav-text">压力测试</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">564k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:33</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="xtrabackupPercona   [官网]&amp;lt;www.percona.com&amp;gt; percona-server           InnoDB --&amp;gt; XtraDB   Xtrabackup       percona提供的mysql数据库备份工具，惟一开源的能够对innodb和xtradb数据库进行热备的工具     支持对innodb进行热备、增量备份、差量备份。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql备份与还原（二）">
+<meta property="og:url" content="http://yoursite.com/2018/11/mysql备份与还原（二）/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="xtrabackupPercona   [官网]&amp;lt;www.percona.com&amp;gt; percona-server           InnoDB --&amp;gt; XtraDB   Xtrabackup       percona提供的mysql数据库备份工具，惟一开源的能够对innodb和xtradb数据库进行热备的工具     支持对innodb进行热备、增量备份、差量备份。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/11/mysql备份与还原（二）/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/mysql备份与还原（二）/2.jpg">
+<meta property="og:updated_time" content="2018-12-11T12:30:32.042Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql备份与还原（二）">
+<meta name="twitter:description" content="xtrabackupPercona   [官网]&amp;lt;www.percona.com&amp;gt; percona-server           InnoDB --&amp;gt; XtraDB   Xtrabackup       percona提供的mysql数据库备份工具，惟一开源的能够对innodb和xtradb数据库进行热备的工具     支持对innodb进行热备、增量备份、差量备份。">
+<meta name="twitter:image" content="http://yoursite.com/2018/11/mysql备份与还原（二）/1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/mysql备份与还原（二）/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>mysql备份与还原（二） | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/mysql备份与还原（二）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mysql备份与还原（二）
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-11-26 10:05:49" itemprop="dateCreated datePublished" datetime="2018-11-26T10:05:49+08:00">2018-11-26</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">6.9k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">6 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="xtrabackup"><a href="#xtrabackup" class="headerlink" title="xtrabackup"></a>xtrabackup</h3><pre><code>Percona  
+</code></pre><p>[官网]&lt;<a href="http://www.percona.com&gt;" target="_blank" rel="noopener">www.percona.com&gt;</a></p>
+<pre><code>percona-server          
+InnoDB --&gt; XtraDB 
+
+Xtrabackup  
+    percona提供的mysql数据库备份工具，惟一开源的能够对innodb和xtradb数据库进行热备的工具
+    支持对innodb进行热备、增量备份、差量备份。
+    支持对myisam进行温备，因为在备份myisam表时，会对myisam表添加读锁，而且不能对myisam表进行增量备份，每次备份myisam数据都是全量，即使名义上是增量，但是实际上仍然是全量
+    是一种客户端工具，通过mysql协议连接mysql服务器
+
+    数据库中既有myisam表又有innodb表时，xtrabackup在备份时，会先备份inndb数据，备份完innodb数据后，再备份非innodb数据，当我们需要将备份的数据prepare时，只操作innodb数据即可，非innodb数据不用动，prepare完成后，innodb的一致性时间点与非innodb数据的一致性时间点是相同的
+</code></pre><p>[手册]<a href="https://www.percona.com/doc/percona-xtrabackup/LATEST/index.html" target="_blank" rel="noopener">https://www.percona.com/doc/percona-xtrabackup/LATEST/index.html</a></p>
+<pre><code>特点： 
+     备份还原过程快速、可靠 
+     备份过程不会打断正在执行的事务 
+     能够基于压缩等功能节约磁盘空间和流量 
+     自动实现备份检验 
+     开源，免费 
+</code></pre><p><img src="1.jpg" alt></p>
+<pre><code>安装xtrabackup
+        1. yum install percona-xtrabackup 在EPEL源中
+        2. 通过官网网站下载安装，需要解决依赖包
+</code></pre><p><a href="https://www.percona.com/downloads/XtraBackup/LATEST/" target="_blank" rel="noopener">https://www.percona.com/downloads/XtraBackup/LATEST/</a></p>
+<pre><code>安装2.3版本之前的XtraBackup后，我们会有两个主要的备份工具：xtrabackup与innobackupex
+    innobackupex:   Perl 脚本，它对xtrabackup这个C程序进行了封装，在备份innodb表时，此脚本会调用xtrabackup这个C程序
+    xtrabackup: C/C++ 编译的二进制，是专门用来备份InnoDB表的，和mysqlserver没有交互
+    xbcrypt 加密解密备份工具
+    xbstream 流传打包传输工具，类似tar
+
+    使用innobackupex进行备份，则可以备份innodb或xtradb的表，同时也能够备份myisam表
+
+centos7默认2.4版本
+    xtrabackup版本升级到2.4后，相比之前的2.1有了比较大的变化： 
+    innobackupex 功能全部集成到xtrabackup里面，只有一个binary程序，另外为了兼容考虑，innobackupex作为xtrabackup的软链接，即xtrabackup现在支持非Innodb表备份，并且 Innobackupex 在下一版本中移除，建议通过xtrabackup替换innobackupex 
+
+常用选项
+    xtrabackup [option] PATH
+</code></pre><p>[选项说明]<a href="https://www.percona.com/doc/percona-xtrabackup/LATEST/genindex.html" target="_blank" rel="noopener">https://www.percona.com/doc/percona-xtrabackup/LATEST/genindex.html</a> </p>
+<pre><code>    --user，用户
+    --password，密码
+    --host，备份数据库地址
+    --databases，数据库名，如有多个数据库，彼此需要以空格隔开
+    --incremental，创建一个增量备份，需要指定--incremental-basedir
+    --increment-basedir，指定为前一次全备份或增量备份的目录
+    --incremental-dir：还原时增量备份的目录
+    --include=name，包含的表名 格式：databasename.tablename 
+    --target-dir，指定备份的路径
+
+备份过程：
+    1. 整理数据库Prepare
+        xtrabackup --prepare [options] BACKUP-PATH(新版本)
+        innobackupex --apply-log [options] BACKUP-PATH(旧版本)
+            --apply-log，备份完成后，无法确定备份的数据的是否包含未提交的事务或已经提交但尚未同步至数据文件的事务，此选项作用是通过回滚未提交的事务及同步已经提交的事务至数据文件使数据文件处于一致性状态
+            --use-memory，和--apply-log一起使用，指定整理数据库时的使用内存的大小,单位字节，也可1MB,1M,1G,1GB等
+            --redo-only，--apply-log-only(新版本)，此选项在prepare base full backup，往其中合并增量备份时候使用，但不包括对最后一个增量备份的合并
+            --export：表示开启可导出单独的表之后再导入其他Mysql
+    2. 复制数据库
+        xtrabackup --copy-back [options] --target-dir BACKUP-PATH(新版本)
+        innobackupex --move-back [options] BACKUP-PATH(旧版本)
+            --copy-back：做数据恢复时将备份数据文件拷贝到MySQL服务器的datadir 
+            --move-back：这个选项与--copy-back相似，唯一的区别是它不拷贝文件，而是移动文件到目的地。这个选项移除backup文件，用时候必须小心。
+                使用场景：没有足够的磁盘空间同事保留数据文件和Backup副本 
+还原注意事项： 
+    1.datadir 目录必须为空。除非指定innobackupex --force-non-emptydirectorires选项指定，否则--copy-backup选项不会覆盖 
+    2.在restore之前,必须shutdown MySQL实例，不能将一个运行中的实例 restore到datadir目录中 
+    3.由于文件属性会被保留，大部分情况下需要在启动实例之前将文件的属主改为mysql，这些文件将属于创建备份的用户
+        chown -R mysql:mysql /data/mysql 
+    以上需要在用户调用innobackupex之前完成
+    --force-non-empty-directories：指定该参数时候，使得innobackupex -copy-back或--move-back选项转移文件到非空目录，已存在的文件不会被覆盖。如果--copy-back和--move-back文件需要从备份目录拷贝一个在 datadir已经存在的文件，会报错失败
+
+生成相关文件
+    使用innobackupex备份时，其会调用xtrabackup备份所有的InnoDB表，复制所有关 于表结构定义的相关文件(.frm)、以及MyISAM、MERGE、CSV和ARCHIVE表的相关 文件，同时还会备份触发器和数据库配置信息相关的文件。这些文件会被保存至一个以 时间命名的目录中,在备份时，innobackupex还会在备份目录中创建如下文件： 
+        (1)xtrabackup_info：innobackupex工具执行时的相关信息，包括版本，备份选项，备份时长，备份LSN(log sequence number日志序列号)，BINLOG的位置
+        (2)xtrabackup_checkpoints：备份类型（如完全或增量）、备份状态（如是否已经为 prepared状态）和LSN范围信息,每个InnoDB页(通常为16k大小)都会包含一个日志序列号LSN。LSN是整个数据库系统的系统版本号，每个页面相关的LSN能够表明此页面 最近是如何发生改变的 
+        (3)xtrabackup_binlog_info：MySQL服务器当前正在使用的二进制日志文件及至备份 这一刻为止二进制日志事件的位置，可利用实现基于binlog的恢复 
+        (4)backup-my.cnf：备份命令用到的配置选项信息
+        (5)xtrabackup_logfile：备份生成的日志文件 
+</code></pre><h4 id="示例：新版xtrabackup"><a href="#示例：新版xtrabackup" class="headerlink" title="示例：新版xtrabackup"></a>示例：新版xtrabackup</h4><pre><code>xtrabackup完全备份及还原 
+    1 在原主机做完全备份到/backups     
+        xtrabackup --backup --target-dir=/backups/
+        scp -rp /backups/    目标主机:/backups 
+    2 在目标主机上     
+    1）预准备：确保数据一致，提交完成的事务，回滚未完成的事务      
+        xtrabackup --prepare --target-dir=/backups/    
+    2)  停止目标主机mysql服务，并清空数据库目录
+        systemctl stop mariadb
+        rm /var/lib/mysql/* -rf
+    3）复制到数据库目录       注意：数据库目录必须为空，MySQL服务不能启动
+        xtrabackup --copy-back --target-dir=/backups/     
+    4）还原属性
+        chown -R mysql:mysql /var/lib/mysql   
+    5）启动服务      
+        systemctl start mariadb 
+
+xtrabackup完全，增量备份及还原 
+    备份过程      
+    1）完全备份：
+        xtrabackup --backup --target-dir=/backups/base      
+    2）第一次修改数据      
+    3）第一次增量备份      
+        xtrabackup --backup --target-dir=/backups/inc1 --incrementalbasedir=/backups/base      
+    4）第二次修改数据      
+    5）第二次增量         
+        xtrabackup --backup --target-dir=/backups/inc2 --incrementalbasedir=/backups/inc1      
+    6）备份过程目标主机生成三个备份目录 /backups/{base，inc1，inc2}  
+        scp -rp /backups/ 目标主机:/backups/
+
+    还原过程 ：在目标主机
+    1）预准备完成备份，此选项--apply-log-only  阻止回滚未完成的事务 
+        xtrabackup --prepare --apply-log-only --target-dir=/backups/base 
+    2）合并第1次增量备份到完全备份， 
+        xtrabackup --prepare --apply-log-only --target-dir=/backups/base --incremental-dir=/backups/inc1
+    3）合并第2次增量备份到完全备份：最后一次还原不需要加选项--apply-log-only 
+        xtrabackup --prepare --target-dir=/backups/base --incremental-dir=/backups/inc2
+    4）复制到数据库目录，注意数据库目录必须为空，MySQL服务不能启动
+        xtrabackup --copy-back --target-dir=/backups/base 
+    5）还原属性：
+        chown -R mysql:mysql /var/lib/mysql 
+    6）启动服务：
+        systemctl start mariadb 
+</code></pre><h4 id="旧版xtrabackup"><a href="#旧版xtrabackup" class="headerlink" title="旧版xtrabackup"></a>旧版xtrabackup</h4><pre><code>xtrabackup完全备份及还原 
+    1 在原主机   
+        innobackupex  /backups  
+        scp -rp /backups/ 目标主机:/backups 
+    2 在目标主机  
+</code></pre><p><img src="2.jpg" alt></p>
+<pre><code>    1）整理数据
+        innobackupex --apply-log /backups/2018-02-23_11-55-57
+    2）停止MySQL服务，并清空MySQL数据目录 
+        systemctl stop mariadb  
+        rm  -rf /var/lib/mysql/* 
+    3）复制数据库目录 
+        innobackupex  --copy-back /backups/2018-02-23_11-55-57
+    4）更改属性，并重启服务  
+        chown -R mysql.mysql /var/lib/mysql/  
+        systemctl start mariadb 
+
+xtrabackup完全，增量备份及还原 
+    备份过程
+    1 在原主机  
+        innobackupex  /backups  
+        mkdir /backups/inc{1,2}   
+    修改数据库内容  
+        innobackupex  --incremental /backups/inc1 --incremental-basedir=/backups/2018-02-23_11-55-57（完全备份生成的路径）  
+    再次修改数据库内容后执行
+        innobackupex  --incremental /backups/inc2 --incremental-basedir=/backups/inc1/2018-12-11_06-02-51/（上次增量备份生成的路径） 
+    拷贝到目标主机
+        scp -rp /backups/ 目标主机:/backups 
+    还原过程
+    2 在目标主机  不启动mariadb  
+        rm -rf /var/lib/mysql/* 
+    预准备完成备份
+        innobackupex  --apply-log --redo-only /data/2018-02-23_14-21-42/
+    合并第1次增量备份到完全备份
+        innobackupex  --apply-log --redo-only /data/2018-02-23_14-21-42/ --incremental-dir=/data/inc1/2018-02-23_14-26-17 
+    合并第2次增量备份到完全备份
+        innobackupex  --apply-log  /data/2018-02-23_14-21-42/ --incrementaldir=/data/inc2/2018-02-23_14-28-29/ 
+    复制到数据库目录，注意数据库目录必须为空，MySQL服务不能启动
+        innobackupex  --copy-back /data/2018-02-23_14-21-42/
+    更改属性
+        chown -R mysql.mysql /var/lib/mysql/  
+        systemctl start mariadb 
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/mysql备份与还原（一）/" rel="next" title="mysql备份与还原（一）">
+                <i class="fa fa-chevron-left"></i> mysql备份与还原（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/mysql主从复制/" rel="prev" title="mysql主从复制">
+                mysql主从复制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">10</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#xtrabackup"><span class="nav-number">1.</span> <span class="nav-text">xtrabackup</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#示例：新版xtrabackup"><span class="nav-number">1.1.</span> <span class="nav-text">示例：新版xtrabackup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#旧版xtrabackup"><span class="nav-number">1.2.</span> <span class="nav-text">旧版xtrabackup</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">564k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:33</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
