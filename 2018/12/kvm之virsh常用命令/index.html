@@ -98,16 +98,17 @@
 
 
 
-  <meta name="description" content="点滴青春">
-<meta property="og:type" content="website">
-<meta property="og:title" content="濡沫流年">
-<meta property="og:url" content="http://yoursite.com/archives/2019/01/page/2/index.html">
+  <meta name="description" content="virsh管理kvmvirsh的详细命令解析 常用命令 domain     virsh start 启动一个虚拟机     virsh suspend 暂停     virsh resume 恢复     virsh save 将虚拟机的当前运行状态保存到宿主机磁盘     virsh restore 恢复虚拟机的状态     virsh destory 删除虚拟机运行状态     virsh">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kvm之virsh常用命令">
+<meta property="og:url" content="http://yoursite.com/2018/12/kvm之virsh常用命令/index.html">
 <meta property="og:site_name" content="濡沫流年">
-<meta property="og:description" content="点滴青春">
+<meta property="og:description" content="virsh管理kvmvirsh的详细命令解析 常用命令 domain     virsh start 启动一个虚拟机     virsh suspend 暂停     virsh resume 恢复     virsh save 将虚拟机的当前运行状态保存到宿主机磁盘     virsh restore 恢复虚拟机的状态     virsh destory 删除虚拟机运行状态     virsh">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-09T13:15:59.773Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="濡沫流年">
-<meta name="twitter:description" content="点滴青春">
+<meta name="twitter:title" content="kvm之virsh常用命令">
+<meta name="twitter:description" content="virsh管理kvmvirsh的详细命令解析 常用命令 domain     virsh start 启动一个虚拟机     virsh suspend 暂停     virsh resume 恢复     virsh save 将虚拟机的当前运行状态保存到宿主机磁盘     virsh restore 恢复虚拟机的状态     virsh destory 删除虚拟机运行状态     virsh">
 
 
 
@@ -116,7 +117,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2019/01/page/2/">
+  <link rel="canonical" href="http://yoursite.com/2018/12/kvm之virsh常用命令/">
 
 
 
@@ -126,7 +127,7 @@
   };
 </script>
 
-  <title>归档 | 濡沫流年</title>
+  <title>kvm之virsh常用命令 | 濡沫流年</title>
   
 
 
@@ -178,7 +179,7 @@
   <canvas id="canvas"></canvas>
 </div>
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -284,7 +285,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
 
     
     
@@ -372,145 +373,278 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
-          
-        很好! 目前共计 101 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
-
-        
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/kvm之virsh常用命令/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
         
-          <a class="post-title-link" href="/2019/01/kvm之virsh常用命令/" itemprop="url">
-            
-              <span itemprop="name">kvm之virsh常用命令</span>
-            
-          </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">kvm之virsh常用命令
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-01-02T21:08:10+08:00" content="2019-01-02">
-          01-02
-        </time>
-      </div>
+              
+            
+          </h1>
+        
 
-    </header>
-  </article>
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-28 21:08:10" itemprop="dateCreated datePublished" datetime="2018-12-28T21:08:10+08:00">2018-12-28</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
 
 
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">1.6k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">1 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/01/tomcat基础/" itemprop="url">
-            
-              <span itemprop="name">tomcat基础</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-01-02T20:25:25+08:00" content="2019-01-02">
-          01-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
+      
+        <h4 id="virsh管理kvm"><a href="#virsh管理kvm" class="headerlink" title="virsh管理kvm"></a>virsh管理kvm</h4><p><a href="https://blog.csdn.net/xxoo00xx00/article/details/49802367" target="_blank" rel="noopener">virsh的详细命令解析</a></p>
+<pre><code>常用命令
+domain
+    virsh start 启动一个虚拟机
+    virsh suspend 暂停
+    virsh resume 恢复
+    virsh save 将虚拟机的当前运行状态保存到宿主机磁盘
+    virsh restore 恢复虚拟机的状态
+    virsh destory 删除虚拟机运行状态
+    virsh shutdown 关闭虚拟机
+    virsh undefined 取消一个域
+    virsh autostart 随着宿主机启动而启动
+    virsh attach-disk &lt;domain&gt; PATH/IMG_FILE &lt;target&gt; 向一个域添加一个虚拟磁盘
+    virsh detach-disk &lt;domain&gt; &lt;target&gt; 移除一个域中的虚拟硬盘
+        dumpxml XML 中的域信息
+monitor
+    virsh domblklist 显示域的虚拟磁盘设备
+    virsh domiflist 显示域的虚拟网卡
+    virsh domblkinfo &lt;domain&gt; &lt;device&gt; 显示域的虚拟磁盘设备的详细信息
+    virsh domblkstat &lt;domain&gt; &lt;device&gt; 显示域的虚拟磁盘设备的状态
+    virsh domifstat &lt;domain&gt; &lt;interface&gt; 显示域的虚拟网卡的状态
+Network
+    virsh net-list 显示虚拟网络的列表
+    virsh net-dumpxml 显示虚拟网络的xml文件
+    virsh net-create file.xml 从file.xml创建一个网络
+    virsh net-autostart net_NAME 自动启动net_Name网络
+    virsh net-start 开始一个(以前定义的)不活跃的网络
+
+示例：
+1,查看运行的虚拟机
+    virsh list
+2,查看所有的虚拟机（关闭和运行的虚拟机）
+    virsh list –all
+3,连接虚拟机
+    virsh console +域名（虚拟机的名称）
+4，退出虚拟机
+    ctrl+]
+5,关闭虚拟机
+    virsh shutdown +域名
+    virsh destroy +域名
+        这种方式的关闭，是一种删除的方式，只是在virsh list中删除了该虚拟机。
+6，挂起虚拟机
+    virsh suspend +域名
+7，恢复被挂起的虚拟机
+    virsh resume +域名
+8，子机随宿主主机（母机）启动而启动
+    virsh autostart + 域名
+9，取消自动启动
+    virsh auotstart –disable +域名
+10，彻底删除虚拟机
+    删除虚拟机 virsh destroy +域名
+    解除标记 virsh undefine +域名
+    删除虚拟机文件
+11,启动虚拟机并进入该虚拟机
+    virsh start 域名 –console
+12.查看虚拟机信息
+    virsh dominfo 域名
+重启
+    virsh reboot 域名
+查看虚拟机信息
+    virsh dominfo 域名
+查看虚拟机磁盘
+    virsh domblklist 域名
+查看虚拟网卡
+    virsh domiflist 域名
+更改虚拟机配置,libvirt使用xml文件来定义虚拟机配置
+    virsh edit 域名
+</code></pre>
+      
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/kvm虚拟机网卡与磁盘管理/" rel="next" title="kvm虚拟机网卡与磁盘管理">
+                <i class="fa fa-chevron-left"></i> kvm虚拟机网卡与磁盘管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/kvm批量启动vm脚本/" rel="prev" title="kvm批量启动vm脚本">
+                kvm批量启动vm脚本 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2019/01/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/archives/2019/01/">1</a><span class="page-number current">2</span>
-  </nav>
+  </article>
 
 
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -530,8 +664,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -646,6 +789,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#virsh管理kvm"><span class="nav-number">1.</span> <span class="nav-text">virsh管理kvm</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -805,6 +965,10 @@
 
 
   
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
 
   
 
@@ -820,6 +984,8 @@
 
   
 
+
+  
 
 
   

@@ -98,17 +98,17 @@
 
 
 
-  <meta name="description" content="virsh管理kvmvirsh的详细命令解析 常用命令 domain     virsh start 启动一个虚拟机     virsh suspend 暂停     virsh resume 恢复     virsh save 将虚拟机的当前运行状态保存到宿主机磁盘     virsh restore 恢复虚拟机的状态     virsh destory 删除虚拟机运行状态     virsh">
+  <meta name="description" content="获取到所有的虚拟机名称，保存到文件  virsh list --all | awk &amp;apos;{print $2}&amp;apos; | sed -n &amp;apos;3,$p&amp;apos; | grep -v &amp;apos;^$&amp;apos; &amp;gt; list.txt 批量启动、关闭cat start.sh 12345678910#! /bin/bash### start all vmfile=/root/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="kvm之virsh常用命令">
-<meta property="og:url" content="http://yoursite.com/2019/01/kvm之virsh常用命令/index.html">
+<meta property="og:title" content="kvm批量启动vm脚本">
+<meta property="og:url" content="http://yoursite.com/2018/12/kvm批量启动vm脚本/index.html">
 <meta property="og:site_name" content="濡沫流年">
-<meta property="og:description" content="virsh管理kvmvirsh的详细命令解析 常用命令 domain     virsh start 启动一个虚拟机     virsh suspend 暂停     virsh resume 恢复     virsh save 将虚拟机的当前运行状态保存到宿主机磁盘     virsh restore 恢复虚拟机的状态     virsh destory 删除虚拟机运行状态     virsh">
+<meta property="og:description" content="获取到所有的虚拟机名称，保存到文件  virsh list --all | awk &amp;apos;{print $2}&amp;apos; | sed -n &amp;apos;3,$p&amp;apos; | grep -v &amp;apos;^$&amp;apos; &amp;gt; list.txt 批量启动、关闭cat start.sh 12345678910#! /bin/bash### start all vmfile=/root/">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-01-16T06:02:57.268Z">
+<meta property="og:updated_time" content="2019-03-09T13:16:23.180Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="kvm之virsh常用命令">
-<meta name="twitter:description" content="virsh管理kvmvirsh的详细命令解析 常用命令 domain     virsh start 启动一个虚拟机     virsh suspend 暂停     virsh resume 恢复     virsh save 将虚拟机的当前运行状态保存到宿主机磁盘     virsh restore 恢复虚拟机的状态     virsh destory 删除虚拟机运行状态     virsh">
+<meta name="twitter:title" content="kvm批量启动vm脚本">
+<meta name="twitter:description" content="获取到所有的虚拟机名称，保存到文件  virsh list --all | awk &amp;apos;{print $2}&amp;apos; | sed -n &amp;apos;3,$p&amp;apos; | grep -v &amp;apos;^$&amp;apos; &amp;gt; list.txt 批量启动、关闭cat start.sh 12345678910#! /bin/bash### start all vmfile=/root/">
 
 
 
@@ -117,7 +117,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/01/kvm之virsh常用命令/">
+  <link rel="canonical" href="http://yoursite.com/2018/12/kvm批量启动vm脚本/">
 
 
 
@@ -127,7 +127,7 @@
   };
 </script>
 
-  <title>kvm之virsh常用命令 | 濡沫流年</title>
+  <title>kvm批量启动vm脚本 | 濡沫流年</title>
   
 
 
@@ -393,7 +393,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/kvm之virsh常用命令/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/kvm批量启动vm脚本/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="sam yang">
@@ -410,7 +410,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">kvm之virsh常用命令
+          <h1 class="post-title" itemprop="name headline">kvm批量启动vm脚本
 
               
             
@@ -434,7 +434,7 @@
                 
               
 
-              <time title="创建时间：2019-01-02 21:08:10" itemprop="dateCreated datePublished" datetime="2019-01-02T21:08:10+08:00">2019-01-02</time>
+              <time title="创建时间：2018-12-29 18:04:27" itemprop="dateCreated datePublished" datetime="2018-12-29T18:04:27+08:00">2018-12-29</time>
             
 
             
@@ -467,7 +467,7 @@
                 
                   <span class="post-meta-item-text">本文字数：</span>
                 
-                <span title="本文字数">1.6k</span>
+                <span title="本文字数">494</span>
               
 
               
@@ -501,74 +501,13 @@
       
 
       
-        <h4 id="virsh管理kvm"><a href="#virsh管理kvm" class="headerlink" title="virsh管理kvm"></a>virsh管理kvm</h4><p><a href="https://blog.csdn.net/xxoo00xx00/article/details/49802367" target="_blank" rel="noopener">virsh的详细命令解析</a></p>
-<pre><code>常用命令
-domain
-    virsh start 启动一个虚拟机
-    virsh suspend 暂停
-    virsh resume 恢复
-    virsh save 将虚拟机的当前运行状态保存到宿主机磁盘
-    virsh restore 恢复虚拟机的状态
-    virsh destory 删除虚拟机运行状态
-    virsh shutdown 关闭虚拟机
-    virsh undefined 取消一个域
-    virsh autostart 随着宿主机启动而启动
-    virsh attach-disk &lt;domain&gt; PATH/IMG_FILE &lt;target&gt; 向一个域添加一个虚拟磁盘
-    virsh detach-disk &lt;domain&gt; &lt;target&gt; 移除一个域中的虚拟硬盘
-        dumpxml XML 中的域信息
-monitor
-    virsh domblklist 显示域的虚拟磁盘设备
-    virsh domiflist 显示域的虚拟网卡
-    virsh domblkinfo &lt;domain&gt; &lt;device&gt; 显示域的虚拟磁盘设备的详细信息
-    virsh domblkstat &lt;domain&gt; &lt;device&gt; 显示域的虚拟磁盘设备的状态
-    virsh domifstat &lt;domain&gt; &lt;interface&gt; 显示域的虚拟网卡的状态
-Network
-    virsh net-list 显示虚拟网络的列表
-    virsh net-dumpxml 显示虚拟网络的xml文件
-    virsh net-create file.xml 从file.xml创建一个网络
-    virsh net-autostart net_NAME 自动启动net_Name网络
-    virsh net-start 开始一个(以前定义的)不活跃的网络
+        <pre><code>获取到所有的虚拟机名称，保存到文件
 
-示例：
-1,查看运行的虚拟机
-    virsh list
-2,查看所有的虚拟机（关闭和运行的虚拟机）
-    virsh list –all
-3,连接虚拟机
-    virsh console +域名（虚拟机的名称）
-4，退出虚拟机
-    ctrl+]
-5,关闭虚拟机
-    virsh shutdown +域名
-    virsh destroy +域名
-        这种方式的关闭，是一种删除的方式，只是在virsh list中删除了该虚拟机。
-6，挂起虚拟机
-    virsh suspend +域名
-7，恢复被挂起的虚拟机
-    virsh resume +域名
-8，子机随宿主主机（母机）启动而启动
-    virsh autostart + 域名
-9，取消自动启动
-    virsh auotstart –disable +域名
-10，彻底删除虚拟机
-    删除虚拟机 virsh destroy +域名
-    解除标记 virsh undefine +域名
-    删除虚拟机文件
-11,启动虚拟机并进入该虚拟机
-    virsh start 域名 –console
-12.查看虚拟机信息
-    virsh dominfo 域名
-重启
-    virsh reboot 域名
-查看虚拟机信息
-    virsh dominfo 域名
-查看虚拟机磁盘
-    virsh domblklist 域名
-查看虚拟网卡
-    virsh domiflist 域名
-更改虚拟机配置,libvirt使用xml文件来定义虚拟机配置
-    virsh edit 域名
-</code></pre>
+virsh list --all | awk &apos;{print $2}&apos; | sed -n &apos;3,$p&apos; | grep -v &apos;^$&apos; &gt; list.txt
+</code></pre><h3 id="批量启动、关闭"><a href="#批量启动、关闭" class="headerlink" title="批量启动、关闭"></a>批量启动、关闭</h3><pre><code>cat start.sh
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"><span class="comment">### start all vm</span></span><br><span class="line">file=/root/VM/list.txt</span><br><span class="line"></span><br><span class="line">cat <span class="variable">$file</span> | <span class="keyword">while</span> <span class="built_in">read</span> line</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    /usr/bin/virsh start <span class="variable">$line</span></span><br><span class="line">    sleep 2</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">'vm all started'</span></span><br></pre></td></tr></table></figure>
+<pre><code>cat shutdown.sh
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#! /bin/bash</span></span><br><span class="line"><span class="comment">### shutdown all vm</span></span><br><span class="line">file=/root/VM/list.txt</span><br><span class="line"></span><br><span class="line">cat <span class="variable">$file</span> | <span class="keyword">while</span> <span class="built_in">read</span> line</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    /usr/bin/virsh shutdown <span class="variable">$line</span></span><br><span class="line">    sleep 2</span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">'vm all shutdown'</span></span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -608,8 +547,8 @@ Network
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/tomcat基础/" rel="next" title="tomcat基础">
-                <i class="fa fa-chevron-left"></i> tomcat基础
+              <a href="/2018/12/kvm之virsh常用命令/" rel="next" title="kvm之virsh常用命令">
+                <i class="fa fa-chevron-left"></i> kvm之virsh常用命令
               </a>
             
           </div>
@@ -618,8 +557,8 @@ Network
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/01/kvm批量启动vm脚本/" rel="prev" title="kvm批量启动vm脚本">
-                kvm批量启动vm脚本 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/12/发布环境介绍/" rel="prev" title="发布环境介绍">
+                发布环境介绍 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -800,7 +739,7 @@ Network
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#virsh管理kvm"><span class="nav-number">1.</span> <span class="nav-text">virsh管理kvm</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#批量启动、关闭"><span class="nav-number">1.</span> <span class="nav-text">批量启动、关闭</span></a></li></ol></div>
             
 
           </div>
