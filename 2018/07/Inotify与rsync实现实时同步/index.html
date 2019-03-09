@@ -98,16 +98,21 @@
 
 
 
-  <meta name="description" content="点滴青春">
-<meta property="og:type" content="website">
-<meta property="og:title" content="濡沫流年">
-<meta property="og:url" content="http://yoursite.com/archives/2018/11/page/3/index.html">
+  <meta name="description" content="实现实时同步  要利用监控服务（inotify），监控同步数据服务器目录中信息的变化  发现目录中数据产生变化，就利用rsync服务推送到备份服务器上  实现实时同步的方法      inotify+rsync 方式实现数据同步      sersync ：金山公司周洋在 inotify 软件基础上进行开发的，功能更加强大  inotify+rsync使用方式      inotify 对同步数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Inotify与rsync实现实时同步">
+<meta property="og:url" content="http://yoursite.com/2018/07/Inotify与rsync实现实时同步/index.html">
 <meta property="og:site_name" content="濡沫流年">
-<meta property="og:description" content="点滴青春">
+<meta property="og:description" content="实现实时同步  要利用监控服务（inotify），监控同步数据服务器目录中信息的变化  发现目录中数据产生变化，就利用rsync服务推送到备份服务器上  实现实时同步的方法      inotify+rsync 方式实现数据同步      sersync ：金山公司周洋在 inotify 软件基础上进行开发的，功能更加强大  inotify+rsync使用方式      inotify 对同步数据">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/07/Inotify与rsync实现实时同步/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/Inotify与rsync实现实时同步/2.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/07/Inotify与rsync实现实时同步/3.jpg">
+<meta property="og:updated_time" content="2019-03-09T12:49:07.105Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="濡沫流年">
-<meta name="twitter:description" content="点滴青春">
+<meta name="twitter:title" content="Inotify与rsync实现实时同步">
+<meta name="twitter:description" content="实现实时同步  要利用监控服务（inotify），监控同步数据服务器目录中信息的变化  发现目录中数据产生变化，就利用rsync服务推送到备份服务器上  实现实时同步的方法      inotify+rsync 方式实现数据同步      sersync ：金山公司周洋在 inotify 软件基础上进行开发的，功能更加强大  inotify+rsync使用方式      inotify 对同步数据">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/Inotify与rsync实现实时同步/1.jpg">
 
 
 
@@ -116,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2018/11/page/3/">
+  <link rel="canonical" href="http://yoursite.com/2018/07/Inotify与rsync实现实时同步/">
 
 
 
@@ -126,7 +131,7 @@
   };
 </script>
 
-  <title>归档 | 濡沫流年</title>
+  <title>Inotify与rsync实现实时同步 | 濡沫流年</title>
   
 
 
@@ -178,7 +183,7 @@
   <canvas id="canvas"></canvas>
 </div>
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -284,7 +289,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
 
     
     
@@ -372,145 +377,301 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      
-      <span class="archive-page-counter">
-        
-        
-         
-          
-        很好! 目前共计 101 篇日志。 继续努力。
-      </span>
-      
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2018">2018</h1>
-          </div>
-        
-        
-
-        
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/Inotify与rsync实现实时同步/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
         
-          <a class="post-title-link" href="/2018/11/Ansible/" itemprop="url">
-            
-              <span itemprop="name">Ansible</span>
-            
-          </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Inotify与rsync实现实时同步
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-19T21:33:14+08:00" content="2018-11-19">
-          11-19
-        </time>
-      </div>
+              
+            
+          </h1>
+        
 
-    </header>
-  </article>
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-01 13:19:33" itemprop="dateCreated datePublished" datetime="2018-07-01T13:19:33+08:00">2018-07-01</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
 
 
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">4k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">4 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2018/11/加密与安全/" itemprop="url">
-            
-              <span itemprop="name">加密与安全</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-11-07T21:26:52+08:00" content="2018-11-07">
-          11-07
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
+      
+        <pre><code>实现实时同步 
+要利用监控服务（inotify），监控同步数据服务器目录中信息的变化 
+发现目录中数据产生变化，就利用rsync服务推送到备份服务器上 
+实现实时同步的方法 
+    inotify+rsync 方式实现数据同步 
+    sersync ：金山公司周洋在 inotify 软件基础上进行开发的，功能更加强大 
+inotify+rsync使用方式 
+    inotify 对同步数据目录信息的监控 
+    rsync  完成对数据信息的实时同步 
+    利用脚本进行结合 
+</code></pre><h3 id="Rsync简介"><a href="#Rsync简介" class="headerlink" title="Rsync简介"></a>Rsync简介</h3><pre><code>rsync是linux系统下的数据镜像备份工具。使用快速增量备份工具Remote Sync可以远程同步，支持本地复制，或者与其他SSH、rsync主机同步。
+</code></pre><p>官方网站<a href="http://rsync.samba.org/" target="_blank" rel="noopener">http://rsync.samba.org/</a></p>
+<p><img src="1.jpg" alt></p>
+<h3 id="部署Rsync"><a href="#部署Rsync" class="headerlink" title="部署Rsync"></a>部署Rsync</h3><pre><code>1、在服务器A和服务器B上同时安装rsync服务
+    rpm -q rsync 可以查看系统自带了rsync服务
+    yum install -y rsync
+2.在服务器A 配置
+    vim /etc/rsyncd.conf
+        uid = root
+        gid = root    
+        address = 192.168.80.20           #监听地址
+        use chroot = yes                 #禁锢在源目录
+        max connections = 0             #最大连接数不限制 
+        port 873                        #监听的端口
+        ignore errors 
+        log file = /var/log/rsyncd.log
+        pid file = /var/run/rsyncd.pid
+        reverse lookup = no 
+        hosts allow = 192.168.80.0/24  
+
+        [data]                           #共享模块名称
+            path = /backup/     #源目录的实际路径
+            comment = www.abc.cn     #项目描述
+            read only = no          #只读
+            dont compress = *.gz *.tgz *.zip *.z *.Z *.rpm *.deb *.bz2     #同步时不再压缩的文件类型
+            auth users = rsync      #授权账户,默认情况下无需密码就可以连接模块(也就是匿名方式)
+            secrets file = /etc/rsyncd_users   #存放账户信息的数据文件
+3、在服务器A上创建用户认证信息文件，格式：[账号]:[密码]，这里注意一点就是权限必须设置成600
+    mkdir /data
+    echo &quot;rsync:123456&quot; &gt; /etc/rsyncd_users  
+    chmod 600 /etc/rsyncd_users
+4.服务器A端启动rsync服务  
+    rsync -daemon           
+    echo &quot;/usr/bin/rsync -daemon&quot; &gt;&gt; /etc/rc.local  实现开机启动 
+
+5.客户端B配置
+(1).为了在同步过程中不需要输入密码，需要创建一个密码文件
+    echo &quot;123456&quot; &gt;&gt;/etc/rsync.pass  
+    chmod 600 /etc/rsync.pass  
+(2).测试
+    推送到服务器A
+        rsync -avz --password-file=/etc/rsync.pass /data rsync@192.16.80.20::backup 
+    访问rsync同步源，并下载到本地 /opt 目录下进行备份
+    格式一：
+        rsync -avz rsync@192.168.80.20::data /opt/   
+    格式二：
+        rsync -avz rsync://rsync@192.168.80.20/data /opt/
+    这两种方法都需要进行交互 输入密码后即可进行备份。
+    免交互进行备份
+        rsync -az --delete --password-file=/etc/rsync.pass rsync@192.168.80.20::data /opt     
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-v, -verbose 详细模式输出</span><br><span class="line">-z, -compress 对备份的文件在传输时进行压缩处理</span><br><span class="line">-r, -recursive 对子目录以递归模式处理</span><br><span class="line">-t, -<span class="built_in">times</span> 保持文件时间信息</span><br><span class="line">-o, -owner 保持文件属主信息</span><br><span class="line">-p, -perms 保持文件权限</span><br><span class="line">-g, -group 保持文件属组信息</span><br><span class="line">-delete 删除那些DST中SRC没有的文件</span><br><span class="line">-exclude=PATTERN 指定排除不需要传输的文件模式</span><br><span class="line">-progress 在传输时现实传输过程 </span><br><span class="line">-password-file=FILE 从FILE中得到密码,这个文件必须是600权限</span><br></pre></td></tr></table></figure>
+<h3 id="配置-rsync-inotify-实时同步"><a href="#配置-rsync-inotify-实时同步" class="headerlink" title="配置 rsync + inotify 实时同步"></a>配置 rsync + inotify 实时同步</h3><p><img src="2.jpg" alt></p>
+<pre><code>1、一旦同步源出现变化，立即启动备份
+2、只要同步源无变化，则不执行备份
+避免了按固定周期备份时存在的延迟性、周期过密等问题
+</code></pre><h3 id="Inotify简介"><a href="#Inotify简介" class="headerlink" title="Inotify简介"></a>Inotify简介</h3><pre><code>Inotify 是一个Linux特性，从版本2.6.13开始提供，它监控文件系统操作，比如读取、写入和创建。Inotify反应灵敏，用法非常简单，并且比cron任务的繁忙轮询高效得多。学习如何将 inotify 集成到您的应用程序中，并发现一组可用来进一步自动化系统治理的命令行工具。
+ll /proc/sys/fs/inotify   #列出下面的文件，说明服务器内核支持inotify
+    -rw-r-r- 1 root root 0 Dec  7 10:10 max_queued_events 
+    -rw-r-r- 1 root root 0 Dec  7 10:10 max_user_instances 
+    -rw-r-r- 1 root root 0 Dec  6 05:54 max_user_watches 
+</code></pre><h3 id="配置Inotify"><a href="#配置Inotify" class="headerlink" title="配置Inotify"></a>配置Inotify</h3><pre><code>1、在服务器A上调整inotify内核参数
+    vim /etc/sysctl.conf
+        fs.inotify.max_queued_events = 16384    ##监控事件队列
+        fs.inotify.max_user_instances = 1024    ##最多监控实例数
+        fs.inotify.max_user_watches = 1048576    ##每个实例最多监控文件数
+2、使调整inotify内核参数立刻生效
+    sysctl -p
+3、安装Inotify-Tool工具
+</code></pre><p>inotify参考文档<a href="https://github.com/rvoicilas/inotify-tools/wiki" target="_blank" rel="noopener">https://github.com/rvoicilas/inotify-tools/wiki</a></p>
+<pre><code>    yum install -y inotify-tools        注：epel源 
+4.打开两个终端，一个终端执行创建删除等操作，另一个执行Inotify-Tool工具，测试Inotify-Tool工具时候正常
+inotifywait -mrq -e modify,create,move,delete /var/www/html
+
+    inotifywait：用于持续监控，实时输出结果
+    inotifywatch：用于短期监控，任务完成后再出结果
+</code></pre><p><img src="3.jpg" alt></p>
+<pre><code>5.接下来编写触发时同步脚本
+inotify.sh
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash </span></span><br><span class="line">SRC=<span class="string">'/data/'</span></span><br><span class="line">DEST=<span class="string">'rsync@192.168.80.20::backup'</span></span><br><span class="line">inotifywait  -mrq --timefmt <span class="string">'%Y-%m-%d %H:%M'</span> --format <span class="string">'%T %w %f'</span> -e create,delete,moved_to,close_write <span class="variable">$&#123;SRC&#125;</span> |<span class="keyword">while</span> <span class="built_in">read</span> DATE TIME DIR FILE</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    FILEPATH=<span class="variable">$&#123;DIR&#125;</span><span class="variable">$&#123;FILE&#125;</span></span><br><span class="line">    rsync -az --delete --password-file=/etc/rsync.pass <span class="variable">$SRC</span> <span class="variable">$DEST</span> &amp;&amp; <span class="built_in">echo</span> <span class="string">"At <span class="variable">$&#123;TIME&#125;</span> on <span class="variable">$&#123;DATE&#125;</span>, file <span class="variable">$FILEPATH</span> was backuped up via rsync"</span> &gt;&gt; /var/<span class="built_in">log</span>/changelist.log</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<pre><code>chmod +x inotify.sh
+</code></pre>
+      
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/NFS/" rel="next" title="NFS">
+                <i class="fa fa-chevron-left"></i> NFS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/https机制/" rel="prev" title="https机制">
+                https机制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/archives/2018/11/page/2/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/archives/2018/11/">1</a><a class="page-number" href="/archives/2018/11/page/2/">2</a><span class="page-number current">3</span>
-  </nav>
+  </article>
 
 
+  </div>
 
 
           </div>
           
+
+  
+
+
 
         </div>
         
@@ -530,8 +691,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -646,6 +816,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rsync简介"><span class="nav-number">1.</span> <span class="nav-text">Rsync简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署Rsync"><span class="nav-number">2.</span> <span class="nav-text">部署Rsync</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-rsync-inotify-实时同步"><span class="nav-number">3.</span> <span class="nav-text">配置 rsync + inotify 实时同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Inotify简介"><span class="nav-number">4.</span> <span class="nav-text">Inotify简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Inotify"><span class="nav-number">5.</span> <span class="nav-text">配置Inotify</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
@@ -805,6 +992,10 @@
 
 
   
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
 
   
 
@@ -820,6 +1011,8 @@
 
   
 
+
+  
 
 
   
