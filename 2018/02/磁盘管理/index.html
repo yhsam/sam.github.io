@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="硬盘接口类型并行：     IDE：133MB/s在实际应用中也被称为ATA，早期普通计算机使用的接口类型，现已淘汰     SCSI：640MB/s使用与早期服务器上的接口类型，逐渐被代替 串口：     SATA：6Gbps即serial ATA;稳定性较强，仍是目前大多数服务器使用的接口类型     SAS：6Gbps向下兼容SATA硬盘，传输速率较高，但因其昂贵的价格，没有普及使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="磁盘管理">
+<meta property="og:url" content="http://yoursite.com/2018/02/磁盘管理/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="硬盘接口类型并行：     IDE：133MB/s在实际应用中也被称为ATA，早期普通计算机使用的接口类型，现已淘汰     SCSI：640MB/s使用与早期服务器上的接口类型，逐渐被代替 串口：     SATA：6Gbps即serial ATA;稳定性较强，仍是目前大多数服务器使用的接口类型     SAS：6Gbps向下兼容SATA硬盘，传输速率较高，但因其昂贵的价格，没有普及使用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-09T11:48:22.419Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="磁盘管理">
+<meta name="twitter:description" content="硬盘接口类型并行：     IDE：133MB/s在实际应用中也被称为ATA，早期普通计算机使用的接口类型，现已淘汰     SCSI：640MB/s使用与早期服务器上的接口类型，逐渐被代替 串口：     SATA：6Gbps即serial ATA;稳定性较强，仍是目前大多数服务器使用的接口类型     SAS：6Gbps向下兼容SATA硬盘，传输速率较高，但因其昂贵的价格，没有普及使用">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/磁盘管理/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>磁盘管理 | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/磁盘管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">磁盘管理
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-02-10 00:00:00" itemprop="dateCreated datePublished" datetime="2018-02-10T00:00:00+08:00">2018-02-10</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">12k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">11 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="硬盘接口类型"><a href="#硬盘接口类型" class="headerlink" title="硬盘接口类型"></a>硬盘接口类型</h3><pre><code>并行：
+    IDE：133MB/s在实际应用中也被称为ATA，早期普通计算机使用的接口类型，现已淘汰
+    SCSI：640MB/s使用与早期服务器上的接口类型，逐渐被代替
+串口：
+    SATA：6Gbps即serial ATA;稳定性较强，仍是目前大多数服务器使用的接口类型
+    SAS：6Gbps向下兼容SATA硬盘，传输速率较高，但因其昂贵的价格，没有普及使用
+    USB：480MB/s移动存储设备接口(如u盘，移动硬盘等)
+rpm: rotations per minute，即每分钟转数
+</code></pre><h3 id="设备文件"><a href="#设备文件" class="headerlink" title="设备文件"></a>设备文件</h3><pre><code>磁盘设备的设备文件命名：/dev/DEV_FILE
+SCSI, SATA, SAS, IDE,USB: /dev/sd
+虚拟磁盘：/dev/vd
+不同磁盘标识：a-z,aa,ab…
+/dev/sda, /dev/sdb, ...
+同一设备上的不同分区：1,2, ...
+/dev/sda1, /dev/sda5
+硬盘存储术语
+    head：磁头
+    track：磁道
+    cylinder: 柱面
+    ector: 扇区，512bytes
+</code></pre><h3 id="CHS和LBA"><a href="#CHS和LBA" class="headerlink" title="CHS和LBA"></a>CHS和LBA</h3><pre><code>CHS ：
+    采用24bit位寻址 
+    其中前10位表示cylinder 中间8位表示head 后面6位表示sector 
+    最大寻址空间8GB 
+LBA（logical block addressing）： 
+    一个整数 通过转换成CHS格式完成磁盘具体寻址 
+    ATA-1规范中定义了28位寻址模式 以每扇区512位组来计算 ATA-1所定 义的28位LBA上限达到128 GiB。2002年ATA-6规范采用48位LBA 同样以 每扇区512位组计算容量上限可达128 Petabytes
+
+由于CHS寻址方式的寻址空间在大概8GB以内，所以在磁盘容量小于大概8GB时，可以使用CHS寻址方式或是LBA寻址方式
+在磁盘容量大于大概8GB时则 只能使用LBA寻址方式
+</code></pre><h3 id="分区"><a href="#分区" class="headerlink" title="分区"></a>分区</h3><pre><code>优化I/O性能
+实现磁盘空间配额限制
+提高修复速度
+隔离系统和程序
+安装多个OS
+采用不同文件系统
+
+两种分区方式：MBR，GPT
+按柱面分区
+</code></pre><h4 id="mbr"><a href="#mbr" class="headerlink" title="mbr"></a>mbr</h4><pre><code>主引导记录，偏移地址0000H--0088H，它负责从活动分区中装载，并运行 系统引导程序
+MBR磁盘的第0磁道 0柱面 1扇区 一共512字节  
+    主引导记录 Master Boot Record 占446byte
+    64字节 4个16byte分区
+    2byte magic number 标记
+MBR：4个分区 分区不能超过2T 
+mbr分区用4个字节存储分区的总扇区数 最大能表示2的32次方的扇区个数 按每扇区512字节计算（2^32*512byte=2199023255552byte=2T
+</code></pre><h3 id="GPT"><a href="#GPT" class="headerlink" title="GPT"></a>GPT</h3><pre><code>GPT:GUID（Globals Unique Identifiers）
+支持128个分区，使用64位，支持8Z（ 512Byte/block ）64Z （ 4096Byte/block）
+使用128位UUID(Universally Unique Identifier) 表示磁盘和分区 
+GPT分区表自动备份在头和尾两份，并有CRC校验位
+UEFI (统一扩展固件接口)硬件支持GPT，使操作系统启动
+</code></pre><h3 id="管理分区"><a href="#管理分区" class="headerlink" title="管理分区"></a>管理分区</h3><pre><code>创建分区使用
+    fdisk：创建MBR分区
+    gdisk：创建GPT分区
+    parted：高级分区操作
+重新设置内存中的内核分区表版本
+    partprobe
+dmesg   列出加载到内核中的所有驱动
+lsblk   查看生效的块设备（分区表）
+    -f：列出文件系统
+blkid   查看磁盘UUID
+</code></pre><h4 id="parted"><a href="#parted" class="headerlink" title="parted"></a>parted</h4><pre><code>parted的操作都是实时生效的，小心使用
+用法：parted [选项]... [设备 [命令 [参数]...]...]
+parted /dev/sdb mklabel gpt|msdos
+parted /dev/sdb print   列出磁盘sdb分区信息
+parted /dev/sdb mkpart primary 1 200 （默认M）
+parted /dev/sdb rm 1
+parted –l 列出分区信息
+</code></pre><h4 id="分区工具fdisk和gdisk"><a href="#分区工具fdisk和gdisk" class="headerlink" title="分区工具fdisk和gdisk"></a>分区工具fdisk和gdisk</h4><pre><code>gdisk /dev/sdb 类fdisk 的GPT分区工具
+fdisk -l [-u] [device...] 查看分区
+fdisk /dev/sdb 管理分区
+子命令：
+    p 分区列表
+    t 更改分区类型
+    n 创建新分区
+    d 删除分区
+    v 校验分区
+    u 转换单位
+    w 保存并退出
+    q 不保存并退出
+</code></pre><h4 id="同步分区表"><a href="#同步分区表" class="headerlink" title="同步分区表"></a>同步分区表</h4><pre><code>查看内核是否已经识别新的分区
+    cat /proc/partations
+centos6通知内核重新读取硬盘分区表
+新增分区用
+    partx -a /dev/DEVICE
+    kpartx -a /dev/DEVICE -f: force
+删除分区用
+    partx -d --nr M-N /dev/DEVICE
+CentOS 5，7: 使用partprobe
+    partprobe [/dev/DEVICE]
+
+删除分区表：dd if=/dev/zero of=/dev/sdb bs=1 count=512
+</code></pre><h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><pre><code>文件系统是操作系统用于明确存储设备或分区上的文件的方法和数据结构
+在存储设备上组织文件的方法。
+操作系统中负责管理和存储文件信息的软件结构称为文件管理系统，简称文件系统
+从系统角度来看，文件系统是对文件存储设备的空间进行组织和分配，负责文件存储并对存入的文件进行保护和检索的系统。
+具体地说，它负责为用户建立文件，存入、读出、修改、转储文件，控制文件的存取，安全控制，日志，压缩，加密等
+支持的文件系统：/lib/modules/uname –r/kernel/fs
+各种文件系统：
+https://en.wikipedia.org/wiki/Comparison_of_file_systems
+</code></pre><h4 id="文件系统类型"><a href="#文件系统类型" class="headerlink" title="文件系统类型"></a>文件系统类型</h4><pre><code>Linux文件系统：
+    ext2(Extended file system) :适用于那些分区容量不是太大，更新也不频繁的情况
+    例如 /boot 分区
+    ext3:是 ext2的改进版本，其支持日志功能，能够帮助系统从非正常关机导致的异常中 恢复。它通常被用作通用的文件系统
+    ext4:是 ext 文件系统的最新版。提供了很多新的特性，包括纳秒级时间戳、创建和使 用巨型文件(16TB)、最大1EB的文件系统，以及速度的提升
+    xfs：SGI，支持最大8EB的文件系统
+    btrfs（Oracle）, reiserfs, jfs（AIX）, swap
+光盘：iso9660
+Windows：FAT32, exFAT,NTFS
+Unix: FFS（fast）, UFS（unix）, JFS2
+网络文件系统：NFS, CIFS
+集群文件系统：GFS2, OCFS2（oracle）
+分布式文件系统： fastdfs,ceph, moosefs, mogilefs, glusterfs, Lustre
+RAW：未经处理或者未经格式化产生的文件系统
+根据其是否支持&quot;journal&quot;功能：
+    日志型文件系统: ext3, ext4, xfs, ...
+    非日志型文件系统: ext2, vfat
+文件系统的组成部分：
+    内核中的模块：ext4, xfs, vfat
+    用户空间的管理工具：mkfs.ext4, mkfs.xfs,mkfs.vfat
+Linux的虚拟文件系统：VFS
+查前支持的文件系统：cat /proc/filesystems
+</code></pre><h4 id="创建文件系统"><a href="#创建文件系统" class="headerlink" title="创建文件系统"></a>创建文件系统</h4><pre><code>mkfs命令： 
+(1)mkfs.FS_TYPE /dev/DEVICE
+    ext4
+    xfs
+    btrfs
+    vfat
+(2)mkfs -t FS_TYPE /dev/DEVICE
+    -L &apos;LABEL&apos; 设定卷标
+mke2fs：ext系列文件系统专用管理工具
+    -t {ext2|ext3|ext4} 指定文件系统类型
+    -b {1024|2048|4096} 指定块大小
+    -L ‘LABEL’ 设置卷标
+    -j 相当于 -t ext3
+    -i # 为数据空间中每多少个字节创建一个inode；不应该小于block大小
+    -N # 指定分区中创建多少个inode
+    -I 一个inode记录占用的磁盘空间大小，128 --4096
+    -m # 默认5%,为管理人员预留空间占总空间的百分比
+    -O FEATURE[,...] 启用指定特性
+    -O ^FEATURE 关闭指定特性
+mkfs.ext3 = mkfs -t ext3 = mke2fs -j = mke2fs -t ext3
+注意：
+centos7版本支持xfs、ext系列文件系统；
+而centos6版本支持ext系列文件系统，若想要使用xfs文件系统，则需要安装工具：xfsprogs
+</code></pre><h4 id="文件系统标签"><a href="#文件系统标签" class="headerlink" title="文件系统标签"></a>文件系统标签</h4><pre><code>指向设备的另一种方法
+与设备无关
+blkid：块设备属性信息查看
+blkid [OPTION]... [DEVICE]
+    -U UUID 根据指定的UUID来查找对应的设备
+    -L LABEL 根据指定的LABEL来查找对应的设备
+e2label：管理ext系列文件系统的LABEL
+e2label DEVICE [LABEL]
+findfs ：查找分区
+findfs [options] LABEL=&lt;label&gt;
+findfs [options] UUID=&lt;uuid&gt;
+</code></pre><h4 id="tune2fs"><a href="#tune2fs" class="headerlink" title="tune2fs"></a>tune2fs</h4><pre><code>tune2fs：重新设定ext系列文件系统可调整参数的值
+    -l：查看指定文件系统超级块信息；super block
+    -L &apos;LABEL&apos;：修改卷标
+    -m #：修预留给管理员的空间百分比
+    -j: 将ext2升级为ext3
+    -O: 文件系统属性启用或禁用,–O ^has_journal
+    -o: 调整文件系统的默认挂载选项 –o ^acl
+    -U UUID: 修改UUID号
+注意:centos7系统默认具有acl权限，centos6系统需要手动设置acl功能
+如：tune2fs -o acl /dev/sdb1
+</code></pre><h4 id="文件系统检测和修复"><a href="#文件系统检测和修复" class="headerlink" title="文件系统检测和修复"></a>文件系统检测和修复</h4><pre><code>常发生于死机或者非正常关机之后
+挂载为文件系统标记为“no clean”
+注意：一定在umount下修复
+fsck: 文件系统检查 FS_TYPE一定要与分区上已经文件类型相同 一定要umount状态
+fsck.FS_TYPE    fsck -t FS_TYPE
+    -p: 自动修复错误
+    -r: 交互式修复错误
+e2fsck：ext系列文件专用的检测修复工具
+    -y：自动回答为yes
+    -f：强制修复
+xfs_info    查看xfs文件系统的信息
+</code></pre><h4 id="挂载mount"><a href="#挂载mount" class="headerlink" title="挂载mount"></a>挂载mount</h4><pre><code>挂载:将额外文件系统与根文件系统某现存的目录建立起关联关系，进而使得此目录做为其它文件访问入口的行为
+卸载:为解除此关联关系的过程
+把设备关联挂载点：mount Point
+    mount
+卸载时：可使用设备，也可以使用挂载点
+    umount
+挂载点下原有文件在挂载完成后会被临时隐藏
+挂载点目录一般为空
+
+一个文件夹只能挂载一个设备（只生效一个）
+一个设备可以挂载多个文件夹
+空文件夹充当挂载点
+
+mount
+查看内核追踪到的已挂载的所有设备
+    cat /proc/mounts
+mount:通过查看/etc/mtab文件显示当前已挂载的所有设备
+用法：mount mount [-fnrsvw] [-t vfstype] [-o options] 设备  挂载点
+device：指明要挂载的设备；
+    (1) 设备文件：例如/dev/sda5
+    (2) 卷标：-L &apos;LABEL&apos;, 例如-L &apos;MYDATA&apos;
+     3) UUID, -U &apos;UUID&apos;：例如-U &apos;0c50523c-43f1-45e7-85c0-a126711d406e&apos;
+    (4) 伪文件系统名称：proc, sysfs, devtmpfs, configfs
+dir：挂载点
+    事先存在；建议使用空目录
+    进程正在使用中的设备无法被卸载
+mount常用命令选项
+    -r 只读方式挂载
+    -w 读写挂载 默认
+    -n 不更新/etc/mtab
+    -t 指定文件系统 一般不用 系统可以自动识别
+    -a 自动挂载/etc/fstab中的设备
+    -B | --bind 目录挂载到目录
+    -o：选项
+        acl：启用acl
+        noacl：关闭acl
+        remount：重新挂载
+        ro：只读
+        async：异步模式
+        sync：同步模式
+        loop：可以挂载文件模拟的loop设备
+        atime/noatime：包含目录和文件
+        diratime/nodiratime：目录的访问时间戳
+        auto/noauto：是否支持自动挂载,是否支持-a选项
+        exec/noexec：是否支持将文件系统上运行应用程序
+        dev/nodev：是否支持在此文件系统上使用设备文件
+        suid/nosuid：是否支持suid和sgid权限
+        user/nouser：是否允许普通用户挂载此设备 /etc/fstab使用
+    defaults：相当于rw, suid, dev, exec, auto, nouser, async
+
+示例：
+loop 用文件模拟文件系统(即文件挂载到目录)
+    1.先创建需要大小的文件，如100M大小
+    dd  if=/dev/zero of=/data/p1 bs=1M count=100
+    2.然后创建文件系统
+    mkfs.ext4  /data/p1
+    blkid /data/p1  查看文件类型
+    mkdir /mnt/p1
+    mount -o loop /data/p1  /mnt/p1   
+    centos6中需加上-o loop选项即可挂载，centos7系统下不需要-o loop选项即可挂载
+
+在centos6版本中，使用文件模拟文件系统，挂载时需要启用loop功能(即mount -o loop)
+在centos6中默认启用loop设备默认有8个，超出此范围无法继续使用loop设备
+centos7系统loop设备会自动生成，因此没有此限制
+解决方法：修改内核参数(针对centos6版本)
+在/boot/grub/grub.conf文件中，kernel行最后添加max_loop=N(该数字可自定义)即可，修改完毕重启设备，loop设备即可超过8个。
+
+losetup -a 查看当前挂载的loop设备
+losetup /dev/loop# loopfile 绑定文件到loop设备
+
+如果新增加的loop使用完，可以使用mknod创建特殊文件
+mknod /dev/loop100 b 7 100
+其中b是指块设备；7是指设备主编号；100是指设备次编号
+</code></pre><h4 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h4><pre><code>查看挂载情况
+    findmnt MOUNT_POINT|device
+查看正在访问指定文件系统的进程
+    lsof MOUNT_POINT
+    fuser -v MOUNT_POINT
+终止所有在正访问指定的文件系统的进程
+    fuser -km MOUNT_POINT
+卸载
+    umount DEVICE
+    umount MOUNT_POINT
+注意：在卸载分区前，要先查看是否有其他用户在使用该分区，如果有，则可以终止访问该文件系统的用户，然后卸载
+</code></pre><h4 id="挂载点和-etc-fstab"><a href="#挂载点和-etc-fstab" class="headerlink" title="挂载点和/etc/fstab"></a>挂载点和/etc/fstab</h4><pre><code>配置文件系统体系
+被mount、fsck和其他程序使用
+系统重启时保留文件系统提示
+可以在设备栏使用文件系统卷标
+使用mount -a命令挂载/etc/fstab中的所有文件系统
+
+/etc/fstab每行定义一个要挂载的文件系统
+    1、要挂载的设备或伪文件系统
+      设备文件
+      LABEL：LABEL=&quot;&quot;
+      UUID：UUID=&quot;&quot;
+      伪文件系统名称：proc, sysfs
+    2、挂载点
+    3、文件系统类型：ext4,xfs,nfs,none
+    4、挂载选项：defaults，acl，bind
+    5、转储频率：0：不做备份1：每天转储2：每隔一天转储
+    6、fsck检查的文件系统的顺序：允许的数字是0, 1, 和2
+        0：不自检
+        1：首先自检；一般只有rootfs才用
+        2：非rootfs使用
+注意：在挂载时，尽量使用设备的uuid挂载，，因为设备名称、卷标会被更改，因此使用设备名称挂载不稳定，而每个设备的uuid是唯一的，因此使用uuid挂载比较稳定。
+
+示例：
+实验1：当/etc/fstab表中要挂载的分区被删除
+    当分区被误删除，该分区会被其他分区自动顶替，系统无法正常启动。一旦出现这种情况，系统所有分区默认只有读权限，无法更改fstab表。
+    解决方法：
+    使用(mount -o remount,rw /)重新挂载根分区，并使其具有写权限，更改fstab表，恢复即可。
+    /etc/fstab表中 0 0，最后一个0表示检查次序，如果/etc/fstab表中，最后一项写成&quot;0 0&quot;不检测系统分区，相对来说比较安全，不会出现系统无法启动的情况
+
+实验2：将/home目录迁移到一个独立分区中
+    1、创建分区，创建文件系统(即格式化)，同步分区表  
+    如：该分区为/dev/sda2  
+    2、想要迁移数据，需要把数据复制到该分区中，要想使用该分区，则需要将该分区挂载到一个挂载点才能使用  
+    挂载到一个临时挂载点(如：/mnt/home)  
+    mkdir  /mnt/home   
+    mount /dev/sda2  /mnt/home  
+    复制之前，要保证该分区没有其他人在访问，不再向该分区写入数据  
+    使用命令init 1(单用户模式) 进入维护模式，一旦进入该模式，该设备会被断网，无法远程，需要到物理机进行操作  
+    3、复制文件  
+    cp -a /home /mnt/home  
+    4、挂载永久有效，需要写入/etc/fstab表中  
+    /dev/sda2    /home   xfs   defaults   0 0   
+    注意：此时的挂载点是/home而不是/mnt/home；/mnt/home是临时挂载点，随着系统重启而失效  
+    mount -a  使fstab表立即生效  
+    5、删除原/home下的文件   
+    要删除原/home文件需要将/home取消挂载  umount  /home  
+    删除/home目录  rm -rf /home/*  
+    6、重新挂载/home  
+    mount -a  
+    最后，重启设备  
+</code></pre><h3 id="管理虚拟内存"><a href="#管理虚拟内存" class="headerlink" title="管理虚拟内存"></a>管理虚拟内存</h3><pre><code>交换分区是系统RAM的补充
+基本设置包括：
+    创建交换分区或者文件
+    使用mkswap写入特殊签名
+    在/etc/fstab文件中添加适当的条目
+    使用swapon -a 激活交换空间
+/etc/fstab:pri=value
+free 查看内存和swap的信息
+    -m 以M为单位显示
+    -g 以G为单位显示
+    -h 以人类可以看懂的方式显示
+mkswap /dev/sdb1 -L swap_sdb1 格式化
+swapon DEV|LOOPFILE  激活swap分区
+　　  -s 查看当前的swap信息
+　　  -a 激活fstab表中配置的swap
+swapoff [OPTION]... [DEVICE] 禁用swap分区
+</code></pre><h4 id="SWAP的优先级"><a href="#SWAP的优先级" class="headerlink" title="SWAP的优先级"></a>SWAP的优先级</h4><pre><code>可以指定swap分区0到32767的优先级，值越大优先级越高
+如果用户没有指定，那么核心会自动给swap指定一个优先级，这个优先级从-1开始，每加入一个新的没有用户指定优先级的swap，会给这个优先级减一
+先添加的swap的缺省优先级比较高，除非用户自己指定一个优先级，而用户指定的优先级(是正数)永远高于核心缺省指定的优先级(是负数)
+优化性能：分布存放，高性能磁盘存放
+
+示例：
+1、增加swap分区大小
+使用fdisk命令新建分区，并更改分区id为82
+创建文件系统时使用mkswap 分区名
+将更改写入/etc/fstab配置文件
+swapon -a 使fstab表swap挂载立即生效
+2、去掉新增的swap分区
+swapoff 禁用swap分区
+删除fstab表中swap挂载信息
+删除swap分区
+
+3.实验：增加分区或文件充当swap分区
+创建需求大小的文件
+dd if=/dev/zero if=swapfile bs=1G  count=10
+创建swap文件系统
+mkswap  /swapfile
+写入fstab表
+/swapfile   swap  swap  defaults  0  0
+激活fstab表
+swapon -a   出于安全考虑，把/swapfile文件权限设置为600，即不允许别人对该文件进行写操作
+</code></pre><h3 id="常见工具"><a href="#常见工具" class="headerlink" title="常见工具"></a>常见工具</h3><pre><code>eject 弹出光驱
+　　-t 弹入光驱
+将光盘制作成iso文件
+cp /dev/sr0 /data/centos7.iso 
+dd if=/dev/sr0 of=/data/centos7.iso 
+mkisofs -r -o etc.iso /etc/ 将目录打包成iso文件 但不能引导
+mkdvdiso.sh source /destination/DVD.iso 制作引导光盘
+wodim –v –eject centos.iso 刻录光盘
+lsusb 查看UBS
+
+文件系统空间占用等信息的查看工具：
+df [OPTION]... [FILE]...
+    -H：查看分区信息，大小以10^3来计算
+    -T：文件系统类型
+    -h: 查看分区信息，大小以2^10来计算
+    -i：inodesinstead of blocks，节点数使用情况
+    -P: 对于长格式文件名，以常规方式显示
+    如果文件名过长，一行会错行变成两行显示，加上-P则会恢复成一行显示
+查看某目录总体空间占用状态：
+du 查看文件大小,列出当前目录下每个子目录的大小，文件大小单位为k,默认递归
+du [OPTION]... DIR
+    -h: human-readable
+    -s: summary
+    --max-depth du命令默认递归，使用该选项指定层级
+
+dd  转换和复制文件
+用法：
+dd if=/PATH/FROM/SRC of=/PATH/TO/DEST 
+    bs=#：block size, 复制单元大小
+    count=#：复制多少个bs
+    of=file 写到所命名的文件而不是到标准输出
+    if=file 从所命名文件读取而不是从标准输入
+    bs=size 指定块大小（既是是ibs也是obs)
+    ibs=size 一次读size个byte
+    obs=size 一次写size个byte
+    cbs=size 一次转化size个byte
+    skip=blocks 从开头忽略blocks个ibs大小的块
+    seek=blocks 从开头忽略blocks个obs大小的块
+    count=n 只拷贝n个记录
+    conv=conversion[,conversion...] 用指定的参数转换文件
+    转换参数:
+        ascii转换EBCDIC 为ASCII
+        ebcdic转换ASCII 为EBCDIC
+        lcase把大写字符转换为小写字符
+        ucase把小写字符转换为大写字符
+        nocreat不创建输出文件
+        noerror出错时不停止
+        notrunc不截短输出文件
+        sync 把每个输入块填充到ibs个字节，不足部分用空(NUL)字符补齐
+
+备份MBR
+    dd if=/dev/sda of=/tmp/mbr.bak bs=512 count=1
+破坏MBR中的bootloader：
+    dd if=/dev/zero of=/dev/sda bs=64 count=1 seek=446
+从fileA读取数据128byte写入fileB，从fileA读取数据时，跳过前63byte开始读取；写入fileB时，跳过前31byte开始写入，并且当fileA向fileB文件写入数据结束后，fileB文件内容不会被截断，实现如下：
+    dd if=fileA of=fileB bs=1 count=128 skip=63 seek=31 conv=notrunc
+修复硬盘
+　　dd if=/dev/sda of=/dev/sda
+当硬盘较长时间（比如1,2年）放置不使用后 磁盘上会产生消磁点。当磁头读到这些区域时会遇到困难 并可能导致I/O错误。
+当这种情况影响到硬盘的第一个扇区时可能导致硬盘报废。上边的命令有可能使这些数据起死回生,且这个过程是安全高效的
+
+拷贝内存资料到硬盘
+　　dd if=/dev/mem of=/root/mem.bin bs=1024
+从光盘拷贝iso镜像
+　　dd if=/dev/cdrom of=/root/cd.iso
+销毁磁盘数据
+　　dd if=/dev/urandom of=/dev/sda1
+利用随机的数据填充硬盘，在某些必要的场合可以用来销毁数据，执行此操作以后， /dev/sda1将无法挂载，创建和拷贝操作无法执行
+
+备份：
+    dd if=/dev/sdx of=/dev/sdy
+将本地的/dev/sdx整盘备份到/dev/sdy
+    dd if=/dev/sdx of=/path/to/image
+将/dev/sdx全盘数据备份到指定路径的image文件
+    dd if=/dev/sdx | gzip &gt;/path/to/image.gz
+备份/dev/sdx全盘数据，并利用gzip压缩，保存到指定路径
+
+恢复：
+    dd if=/path/to/image of=/dev/sdx
+将备份文件恢复到指定盘
+    gzip -dc /path/to/image.gz | dd of=/dev/sdx
+将压缩的备份文件恢复到指定盘
+
+测试硬盘写速度
+    dd if=/dev/zero of=/root/1Gb.file bs=1024 count=1000000
+测试硬盘读速度
+    dd if=/root/1Gb.file bs=64k | dd of=/dev/null
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/网络配置/" rel="next" title="网络配置">
+                <i class="fa fa-chevron-left"></i> 网络配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/文本处理工具/" rel="prev" title="文本处理工具">
+                文本处理工具 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">102</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#硬盘接口类型"><span class="nav-number">1.</span> <span class="nav-text">硬盘接口类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设备文件"><span class="nav-number">2.</span> <span class="nav-text">设备文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CHS和LBA"><span class="nav-number">3.</span> <span class="nav-text">CHS和LBA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分区"><span class="nav-number">4.</span> <span class="nav-text">分区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mbr"><span class="nav-number">4.1.</span> <span class="nav-text">mbr</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GPT"><span class="nav-number">5.</span> <span class="nav-text">GPT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理分区"><span class="nav-number">6.</span> <span class="nav-text">管理分区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#parted"><span class="nav-number">6.1.</span> <span class="nav-text">parted</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分区工具fdisk和gdisk"><span class="nav-number">6.2.</span> <span class="nav-text">分区工具fdisk和gdisk</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#同步分区表"><span class="nav-number">6.3.</span> <span class="nav-text">同步分区表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件系统"><span class="nav-number">7.</span> <span class="nav-text">文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件系统类型"><span class="nav-number">7.1.</span> <span class="nav-text">文件系统类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建文件系统"><span class="nav-number">7.2.</span> <span class="nav-text">创建文件系统</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件系统标签"><span class="nav-number">7.3.</span> <span class="nav-text">文件系统标签</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tune2fs"><span class="nav-number">7.4.</span> <span class="nav-text">tune2fs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#文件系统检测和修复"><span class="nav-number">7.5.</span> <span class="nav-text">文件系统检测和修复</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#挂载mount"><span class="nav-number">7.6.</span> <span class="nav-text">挂载mount</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#卸载"><span class="nav-number">7.7.</span> <span class="nav-text">卸载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#挂载点和-etc-fstab"><span class="nav-number">7.8.</span> <span class="nav-text">挂载点和/etc/fstab</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#管理虚拟内存"><span class="nav-number">8.</span> <span class="nav-text">管理虚拟内存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SWAP的优先级"><span class="nav-number">8.1.</span> <span class="nav-text">SWAP的优先级</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见工具"><span class="nav-number">9.</span> <span class="nav-text">常见工具</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">564k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:33</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
