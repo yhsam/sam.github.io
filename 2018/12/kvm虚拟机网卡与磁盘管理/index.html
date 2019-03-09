@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="使用到的指令集： qemu-img virt-sysprep virsh dnsmasq 网络配置[官方文档](https://wiki.libvirt.org/page/VirtualNetworking) brctl命令使用需要安装brctl-utils brctl show：查看现有的虚拟桥设备 brctl addbr BR_NAME：添加虚拟网桥设备  brctl stp BRIDGE_N">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kvm虚拟机网卡与磁盘管理">
+<meta property="og:url" content="http://yoursite.com/2018/12/kvm虚拟机网卡与磁盘管理/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="使用到的指令集： qemu-img virt-sysprep virsh dnsmasq 网络配置[官方文档](https://wiki.libvirt.org/page/VirtualNetworking) brctl命令使用需要安装brctl-utils brctl show：查看现有的虚拟桥设备 brctl addbr BR_NAME：添加虚拟网桥设备  brctl stp BRIDGE_N">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/12/kvm虚拟机网卡与磁盘管理/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/12/kvm虚拟机网卡与磁盘管理/2.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/12/kvm虚拟机网卡与磁盘管理/3.jpg">
+<meta property="og:updated_time" content="2019-03-09T12:28:49.297Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kvm虚拟机网卡与磁盘管理">
+<meta name="twitter:description" content="使用到的指令集： qemu-img virt-sysprep virsh dnsmasq 网络配置[官方文档](https://wiki.libvirt.org/page/VirtualNetworking) brctl命令使用需要安装brctl-utils brctl show：查看现有的虚拟桥设备 brctl addbr BR_NAME：添加虚拟网桥设备  brctl stp BRIDGE_N">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/kvm虚拟机网卡与磁盘管理/1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/kvm虚拟机网卡与磁盘管理/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>kvm虚拟机网卡与磁盘管理 | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/kvm虚拟机网卡与磁盘管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">kvm虚拟机网卡与磁盘管理
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-27 21:49:52" itemprop="dateCreated datePublished" datetime="2018-12-27T21:49:52+08:00">2018-12-27</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">6.5k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">6 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre><code>使用到的指令集：
+qemu-img
+virt-sysprep
+virsh
+dnsmasq
+</code></pre><h3 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h3><pre><code>[官方文档](https://wiki.libvirt.org/page/VirtualNetworking)
+</code></pre><h3 id="brctl命令"><a href="#brctl命令" class="headerlink" title="brctl命令"></a>brctl命令</h3><pre><code>使用需要安装brctl-utils
+brctl show：查看现有的虚拟桥设备
+brctl addbr BR_NAME：添加虚拟网桥设备 
+brctl stp BRIDGE_NAME on：打开stp协议
+brctl addif BRIDGE_NAME IFNAME：将虚拟网卡加入虚拟桥设备
+    1. 添加一对虚拟网卡
+        ip link add brin type veth peer name brout
+    2. 启动添加的网卡
+        ip link set brin up
+        ip link set brout up 
+
+以上方式是在命令行上配置的，是临时存在的，只要重启网络服务可能配置就不存在的
+</code></pre><h3 id="netns：网络名称空间"><a href="#netns：网络名称空间" class="headerlink" title="netns：网络名称空间"></a>netns：网络名称空间</h3><pre><code>netns 可以创建一个完全隔离的新网络环境，这个环境包括一个独立的网卡空间，路由表，ARP表，ip地址表，iptables等。总之，与网络有关的组件都是独立的
+Usage: 
+       ip netns list 查看当前宿主机的所有名称空间
+       ip netns add NAME  添加一个网络名称空间
+        示例：ip netns add r1
+       ip netns delete NAME 删除一个网络名称空间
+        示例：ip netns delete r1
+       ip netns exec NAME cmd ... 执行网络名称空间的命令
+        示例：ip netns exec r1 ifconfig -a
+    ip link set VETH netns NETNS_NAME 将虚拟网卡VETH加入网络名称空间NETNS_NAME
+        ip link set dev net-out name eth0 netns ns1
+        ip link add  type veth peer name net1-out
+
+    删除虚拟网络空间模式，所有和虚拟网络空间有关的虚拟网卡都会被删除。
+
+示例：两个隔离环境虚拟机需要通信
+</code></pre><p><img src="1.jpg" alt></p>
+<pre><code>yum install bridge-utils libvirt libvirt-client virt-install virt-viewer net-tools -y
+1.创建网桥，并激活
+    brctl addbr r1
+    brctl addbr r2
+    ip link set up r1
+    ip link set up r2
+2.创建虚拟机并连接网桥
+virt-install --name vm1 --ram 512 --vcpus=1 --disk /root/VM/cirros-0.3.0-x86_64-disk-1.img --network bridge=r1,model=virtio --force --import --nographics --serial=pty --console=pty
+virt-install --name vm2 --ram 512 --vcpus=1 --disk /root/VM/cirros-0.3.0-x86_64-disk-2.img --network bridge=r2,model=virtio --force --import --nographics --serial=pty --console=pty
+3.创建虚拟网络空间
+    ip netns add route
+4.创建一张虚拟网卡，虚拟网卡分为前半段和后半段，分别添加到网桥与虚拟网络空间
+    ip link add net-1 type veth peer name net-2
+    ip link add net-4 type veth peer name net-3
+    brctl addif r1 net-1
+    brctl addif r2 net-4
+    ip link set net-2 netns route
+    ip link set net-3 netns route
+    ip link set net-1 up&amp;&amp;ip link set net-4 up&amp;&amp;ip netns exec route ifconfig net-3 up&amp;&amp;ip netns exec route ifconfig net-4 up   
+5.配置vm1、vm2、net-2、net-3 ip地址
+    virsh console vm2  (vm1类似)
+    # ip addr add 192.168.20.2/24 dev eth0
+    # ip route add defaulit via 192.168.20.1
+
+    ip netns exec route ip addr add 192.168.10.1/24 dev net-2
+    ip netns exec route ip addr add 192.168.20.1/24 dev net-3
+</code></pre><p><img src="2.jpg" alt></p>
+<pre><code>6.宿主机开启路由转发
+    sysctl -w net.ipv4.ip_forward=1
+7.测试，
+</code></pre><p><img src="3.jpg" alt></p>
+<h4 id="四种网络模型"><a href="#四种网络模型" class="headerlink" title="四种网络模型"></a>四种网络模型</h4><pre><code>1.桥接网络
+    1)CentOS 7创建物理桥，使用内核自带的桥接模块实现：
+        桥接口配置文件保留地址信息；复制物理网卡配置文件
+            TYPE=Bridge
+            Device=BRIDGE_NAME
+
+        物理网卡配置文件：
+            删除地址、掩码和网关等相关的配置，添加
+            BRIDGE=BRIDGE_NAME
+
+    重启网络服务即可：
+
+    2)创建xml文件
+    br.xml
+</code></pre><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">network</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>br<span class="tag">&lt;/<span class="name">name</span>&gt;</span>            //kvm</span><br><span class="line">    <span class="tag">&lt;<span class="name">forward</span> <span class="attr">mode</span>=<span class="string">'bridge'</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">bridge</span> <span class="attr">name</span>=<span class="string">'br0'</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">network</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code>2.nat网络 
+nat.xml
+</code></pre><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">network</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>nat<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">forward</span> <span class="attr">mode</span>=<span class="string">'nat'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bridge</span> <span class="attr">name</span>=<span class="string">'virbr0'</span> <span class="attr">stp</span>=<span class="string">'on'</span> <span class="attr">delay</span>=<span class="string">'0'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ip</span> <span class="attr">address</span>=<span class="string">'192.168.122.1'</span> <span class="attr">netmask</span>=<span class="string">'255.255.255.0'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dhcp</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">range</span> <span class="attr">start</span>=<span class="string">'192.168.122.2'</span> <span class="attr">end</span>=<span class="string">'192.168.122.254'</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dhcp</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ip</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">network</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code>3.route 
+route.xml
+</code></pre><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">network</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>route<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">forward</span> <span class="attr">mode</span>=<span class="string">'route'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bridge</span> <span class="attr">name</span>=<span class="string">'virbr2'</span> <span class="attr">stp</span>=<span class="string">'on'</span> <span class="attr">delay</span>=<span class="string">'0'</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ip</span> <span class="attr">address</span>=<span class="string">'192.168.200.1'</span> <span class="attr">netmask</span>=<span class="string">'255.255.255.0'</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dhcp</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">range</span> <span class="attr">start</span>=<span class="string">'192.168.200.2'</span> <span class="attr">end</span>=<span class="string">'192.168.200.254'</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dhcp</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">ip</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">network</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code>4.isolate 隔离网络
+isolate.xml
+</code></pre><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">network</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>isolate<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bridge</span> <span class="attr">name</span>=<span class="string">'virbr1'</span> <span class="attr">stp</span>=<span class="string">'on'</span> <span class="attr">delay</span>=<span class="string">'0'</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">network</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre><code>注意：网卡mac地址不能冲突
+定义网络：
+    virsh define nat.xml
+    virsh start nat
+</code></pre><h4 id="dnsmasq"><a href="#dnsmasq" class="headerlink" title="dnsmasq"></a>dnsmasq</h4><pre><code>是一款小巧且方便地用于配置DNS服务器和DHCP服务器的工具，适用于小型网络，它提供了DNS解析功能和可选择的DHCP功能
+dnsmasq listen-address=192.168.1.132,127.0.0.1 dhcp-range=192.168.1.50,192.168.1.150,48h dhcp-option=3,192.168.0.1
+</code></pre><h3 id="磁盘管理"><a href="#磁盘管理" class="headerlink" title="磁盘管理"></a>磁盘管理</h3><pre><code>映像文件的实现三种方式;
+    raw
+    cow
+    qcow2
+
+qemu-img command [command options]
+command
+    create 创建一个磁盘映像
+        -f [disk_format]
+            [disk_format]：qcow,qcow2,raw,host_device,host_cdrom,vmdk,vhdx,dmg...
+        [-o otions]
+            # qemu-img create -f qcow2 -o ? /VM/temp.qcow
+            size：
+            preallocation (off,metadata,falloc,full)  
+                预分配模式,metadata：只写入磁盘元数据到磁盘，空间动态增长；full全量划分，空间全部占用
+    info 查看磁盘映像格式的信息
+    convert 磁盘映像的格式装换成其它格式
+    resize 改变磁盘映像的大小
+    check 检查磁盘映像文件的错误
+
+示例：
+转换磁盘格式
+    qemu-img convert -f raw -O qcow2 test01.img test01.qcow2
+</code></pre><h3 id="快照管理"><a href="#快照管理" class="headerlink" title="快照管理"></a>快照管理</h3><pre><code>virsh snapshot-create &lt;domain&gt; 
+1 创建快照：
+    virsh snapshot-create redis-1
+    virsh snapshot-create-as docker test
+2 查看快照
+#virsh snapshot-list redis-1
+ Name                 Creation Time             State
+------------------------------------------------------------
+1546507229           2019-01-03 17:20:29 +0800 running
+tst                  2019-01-03 18:19:01 +0800 shutoff
+
+    ls /var/lib/libvirt/qemu/snapshot/redis-1/
+    virsh list --all
+
+3 销毁关闭虚拟机
+    virsh shtudown docker
+    virsh detstroy docker
+4 恢复虚拟机快照
+    virsh snapshot-revert redis-1 test
+    virsh snapshot-current &lt;domain&gt; [--name] [--security-info] [--snapshotname &lt;string&gt;]
+        恢复到最近一次快照   
+       virsh snapshot-current redis-1 --snapshotname 1546507229 
+5 删除虚拟机快照
+    virsh snapshot-delete redis-1 tst
+</code></pre><h4 id="save和restore"><a href="#save和restore" class="headerlink" title="save和restore"></a>save和restore</h4><pre><code>可以在虚机开机状态下（内存）保存当前的虚机状态为一个文件
+不推荐使用save和restore到生产中
+
+在测试场景中，我们经常需要不断的将vm还原到某个起点，然后重新开始部署和测试。每次都删除/创建vm仍然很慢。
+这个时候，可以使用save/restore方法。
+    virsh save --bypass-cache vm2 /opt/vm2_save --running 
+    上面这个命令将vm2的当前状态保存到/opt/
+    --running参数表示下次restore回来的时候能够自动启动vm2,这个命令会导致vm2被关闭。
+    --bypass-cache加载时避免文件系统缓存
+
+在save之前可以做一些基础工作。
+
+还原：
+    virsh destroy vm2 
+    virsh restore /opt/vm2_save --bypass-cache --running 
+    必须先关闭虚拟机
+</code></pre><h4 id="磁盘热插拔扩展"><a href="#磁盘热插拔扩展" class="headerlink" title="磁盘热插拔扩展"></a>磁盘热插拔扩展</h4><pre><code>qcow2格式的磁盘可以动态增加，创建的镜像类型后缀可以是qcow2，或者可以是img
+虚拟机必须 running
+1.创建一块磁盘
+    qemu-img create -f qcow2 -o preallocation=metadata /VM/vdb.img 1G
+将空盘添加到虚拟机
+    virsh attach-disk redis-1 /root/VM/vdb.img vbd --cache none
+查看虚拟机的磁盘列表
+    查看vm3的磁盘列表
+
+2.拔掉磁盘
+注意：使用virsh指令删除磁盘会直接强制将虚拟机中磁盘删除，如果磁盘已经挂载使用，要停止该磁盘的写操作，否则会造成数据丢失，拔掉的磁盘存储在kvm宿主机的vm实例的镜像目录中，需要使用可以再挂载使用
+    virsh detach-disk redis-1 vdb
+
+在虚拟机中会自动识别其名称，命令是按字母顺序来的
+</code></pre><h3 id="网卡热插拔"><a href="#网卡热插拔" class="headerlink" title="网卡热插拔"></a>网卡热插拔</h3><pre><code>虚拟机redis-1添加一个网卡到物理桥br0上
+virsh attach-interface redis-1 bridge br0
+
+注意：
+    撤销网卡，撤销网卡前先关闭网卡
+    撤销某一块网卡要指定该网卡的MAC，要不会撤销该网卡所在网桥上所有的网卡
+
+查看虚拟机网卡
+    virsh domiflist  redis-1 
+Interface  Type       Source     Model       MAC
+---------------------------------------------------
+vnet0      bridge     br         virtio      52:54:00:47:70:89
+vnet1      bridge     br0        rtl8139     52:54:00:fd:cd:cb
+
+撤销网卡
+virsh detach-interface vm4 bridge --mac 52:54:00:fd:cd:cb
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/虚拟化技术基础/" rel="next" title="虚拟化技术基础">
+                <i class="fa fa-chevron-left"></i> 虚拟化技术基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/iptables之FORWARD和NAT/" rel="prev" title="iptables之FORWARD和NAT">
+                iptables之FORWARD和NAT <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">101</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#网络配置"><span class="nav-number">1.</span> <span class="nav-text">网络配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#brctl命令"><span class="nav-number">2.</span> <span class="nav-text">brctl命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#netns：网络名称空间"><span class="nav-number">3.</span> <span class="nav-text">netns：网络名称空间</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#四种网络模型"><span class="nav-number">3.1.</span> <span class="nav-text">四种网络模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dnsmasq"><span class="nav-number">3.2.</span> <span class="nav-text">dnsmasq</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#磁盘管理"><span class="nav-number">4.</span> <span class="nav-text">磁盘管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#快照管理"><span class="nav-number">5.</span> <span class="nav-text">快照管理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#save和restore"><span class="nav-number">5.1.</span> <span class="nav-text">save和restore</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#磁盘热插拔扩展"><span class="nav-number">5.2.</span> <span class="nav-text">磁盘热插拔扩展</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网卡热插拔"><span class="nav-number">6.</span> <span class="nav-text">网卡热插拔</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">564k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:33</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

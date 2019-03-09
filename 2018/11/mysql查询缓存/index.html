@@ -98,22 +98,22 @@
 
 
 
-  <meta name="description" content="mysql架构   查询执行路径  查询缓存（ Query Cache ）原理    缓存SELECT操作或预处理查询的结果集和SQL语句，当有新的SELECT语句或预处理查询语句请求，先去查询缓存，判断是否存在可用的记录集，判断标准：与缓存的SQL语句，是否完全一样，区分大小写 优缺点:         不需要对SQL语句做任何解析和执行，当然语法解析必须通过在先，直接从 Query Cache">
+  <meta name="description" content="mysql架构  查询执行路径  查询缓存（ Query Cache ）原理    缓存SELECT操作或预处理查询的结果集和SQL语句，当有新的SELECT语句或预处理查询语句请求，先去查询缓存，判断是否存在可用的记录集，判断标准：与缓存的SQL语句，是否完全一样，区分大小写 优缺点:         不需要对SQL语句做任何解析和执行，当然语法解析必须通过在先，直接从 Query Cache中">
 <meta name="keywords" content="DataBase">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql查询缓存">
 <meta property="og:url" content="http://yoursite.com/2018/11/mysql查询缓存/index.html">
 <meta property="og:site_name" content="濡沫流年">
-<meta property="og:description" content="mysql架构   查询执行路径  查询缓存（ Query Cache ）原理    缓存SELECT操作或预处理查询的结果集和SQL语句，当有新的SELECT语句或预处理查询语句请求，先去查询缓存，判断是否存在可用的记录集，判断标准：与缓存的SQL语句，是否完全一样，区分大小写 优缺点:         不需要对SQL语句做任何解析和执行，当然语法解析必须通过在先，直接从 Query Cache">
+<meta property="og:description" content="mysql架构  查询执行路径  查询缓存（ Query Cache ）原理    缓存SELECT操作或预处理查询的结果集和SQL语句，当有新的SELECT语句或预处理查询语句请求，先去查询缓存，判断是否存在可用的记录集，判断标准：与缓存的SQL语句，是否完全一样，区分大小写 优缺点:         不需要对SQL语句做任何解析和执行，当然语法解析必须通过在先，直接从 Query Cache中">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2018/11/mysql查询缓存/1.jpg">
 <meta property="og:image" content="http://yoursite.com/2018/11/mysql查询缓存/2.jpg">
 <meta property="og:image" content="http://yoursite.com/2018/11/mysql查询缓存/3.jpg">
 <meta property="og:image" content="http://yoursite.com/2018/11/mysql查询缓存/4.jpg">
-<meta property="og:updated_time" content="2018-12-06T14:09:40.071Z">
+<meta property="og:updated_time" content="2019-03-09T12:39:17.913Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql查询缓存">
-<meta name="twitter:description" content="mysql架构   查询执行路径  查询缓存（ Query Cache ）原理    缓存SELECT操作或预处理查询的结果集和SQL语句，当有新的SELECT语句或预处理查询语句请求，先去查询缓存，判断是否存在可用的记录集，判断标准：与缓存的SQL语句，是否完全一样，区分大小写 优缺点:         不需要对SQL语句做任何解析和执行，当然语法解析必须通过在先，直接从 Query Cache">
+<meta name="twitter:description" content="mysql架构  查询执行路径  查询缓存（ Query Cache ）原理    缓存SELECT操作或预处理查询的结果集和SQL语句，当有新的SELECT语句或预处理查询语句请求，先去查询缓存，判断是否存在可用的记录集，判断标准：与缓存的SQL语句，是否完全一样，区分大小写 优缺点:         不需要对SQL语句做任何解析和执行，当然语法解析必须通过在先，直接从 Query Cache中">
 <meta name="twitter:image" content="http://yoursite.com/2018/11/mysql查询缓存/1.jpg">
 
 
@@ -440,7 +440,7 @@
                 
               
 
-              <time title="创建时间：2018-11-23 16:52:08" itemprop="dateCreated datePublished" datetime="2018-11-23T16:52:08+08:00">2018-11-23</time>
+              <time title="创建时间：2018-11-22 16:52:08" itemprop="dateCreated datePublished" datetime="2018-11-22T16:52:08+08:00">2018-11-22</time>
             
 
             
@@ -531,9 +531,8 @@
 
       
         <pre><code>mysql架构
-
-
-查询执行路径
+</code></pre><p><a href="5.jpg"></a></p>
+<pre><code>查询执行路径
 </code></pre><p><img src="1.jpg" alt></p>
 <h3 id="查询缓存（-Query-Cache-）原理"><a href="#查询缓存（-Query-Cache-）原理" class="headerlink" title="查询缓存（ Query Cache ）原理"></a>查询缓存（ Query Cache ）原理</h3><pre><code>    缓存SELECT操作或预处理查询的结果集和SQL语句，当有新的SELECT语句或预处理查询语句请求，先去查询缓存，判断是否存在可用的记录集，判断标准：与缓存的SQL语句，是否完全一样，区分大小写
 优缺点:    
@@ -638,8 +637,8 @@ Innodb缓冲池命中率计算：
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/mysql视图、函数、存储过程、触发器/" rel="next" title="mysql视图、函数、存储过程、触发器">
-                <i class="fa fa-chevron-left"></i> mysql视图、函数、存储过程、触发器
+              <a href="/2018/11/mysql日志/" rel="next" title="mysql日志">
+                <i class="fa fa-chevron-left"></i> mysql日志
               </a>
             
           </div>
@@ -648,8 +647,8 @@ Innodb缓冲池命中率计算：
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/11/mysql—insert、update、delete语句/" rel="prev" title="mysql—insert、update、delete语句">
-                mysql—insert、update、delete语句 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/11/mysql事务及并发控制/" rel="prev" title="mysql事务及并发控制">
+                mysql事务及并发控制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
