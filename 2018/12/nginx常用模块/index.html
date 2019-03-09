@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="参考文档 ngx_http_access_module上下文：http, server, location, limit_except 实现基于ip的访问控制功能 1、allow address | CIDR | unix: | all; 2、deny address | CIDR | unix: | all;  自上而下检查，一旦匹配，将生效，条件严格的置前  示例：      location">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx常用模块">
+<meta property="og:url" content="http://yoursite.com/2018/12/nginx常用模块/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="参考文档 ngx_http_access_module上下文：http, server, location, limit_except 实现基于ip的访问控制功能 1、allow address | CIDR | unix: | all; 2、deny address | CIDR | unix: | all;  自上而下检查，一旦匹配，将生效，条件严格的置前  示例：      location">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/12/nginx常用模块/1.jpg">
+<meta property="og:updated_time" content="2019-03-09T12:12:26.476Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="nginx常用模块">
+<meta name="twitter:description" content="参考文档 ngx_http_access_module上下文：http, server, location, limit_except 实现基于ip的访问控制功能 1、allow address | CIDR | unix: | all; 2、deny address | CIDR | unix: | all;  自上而下检查，一旦匹配，将生效，条件严格的置前  示例：      location">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/nginx常用模块/1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/12/nginx常用模块/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>nginx常用模块 | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/nginx常用模块/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">nginx常用模块
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-12-13 12:44:28" itemprop="dateCreated datePublished" datetime="2018-12-13T12:44:28+08:00">2018-12-13</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">7.3k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">7 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://nginx.org/en/docs/" target="_blank" rel="noopener">参考文档</a></p>
+<h3 id="ngx-http-access-module"><a href="#ngx-http-access-module" class="headerlink" title="ngx_http_access_module"></a>ngx_http_access_module</h3><pre><code>上下文：http, server, location, limit_except
+实现基于ip的访问控制功能
+1、allow address | CIDR | unix: | all;
+2、deny address | CIDR | unix: | all;
+
+自上而下检查，一旦匹配，将生效，条件严格的置前 
+示例： 
+    location / {     
+        deny  192.168.1.1;     
+        allow 192.168.1.0/24;         
+        deny  all; } 
+</code></pre><h3 id="ngx-http-auth-basic-module模块"><a href="#ngx-http-auth-basic-module模块" class="headerlink" title="ngx_http_auth_basic_module模块"></a>ngx_http_auth_basic_module模块</h3><pre><code>上下文：http, server, location, limit_except
+实现基于用户的访问控制，使用basic机制进行用户认证；
+1、auth_basic string | off;
+2、auth_basic_user_file file;
+
+   location /admin/ {
+        alias /webapps/app1/data/;
+        auth_basic &quot;Admin Area&quot;;
+        auth_basic_user_file /etc/nginx/.ngxpasswd;
+                    }             
+    注意：口令文件
+        1、明文文本：格式name:password:comment
+        2、加密文本：由htpasswd命令实现,htpasswd命令由httpd-tools所提供；      
+</code></pre><h3 id="ngx-http-stub-status-module模块"><a href="#ngx-http-stub-status-module模块" class="headerlink" title="ngx_http_stub_status_module模块"></a>ngx_http_stub_status_module模块</h3><pre><code>上下文:server, location
+用于输出nginx的基本状态信息；
+
+示例:
+    Active connections: 291 
+    server accepts handled requests
+    16630948 16630948 31070465 
+    Reading: 6 Writing: 179 Waiting: 106    
+
+    Active connections: 活动状态的连接数；
+    accepts：已经接受的客户端请求的总数；
+    handled：已经处理完成的客户端请求的总数；
+    requests：客户端发来的总的请求数；
+    Reading：处于读取客户端请求报文首部的连接的连接数；
+    Writing：处于向客户端发送响应报文过程中的连接数；
+    Waiting：处于等待客户端发出请求的空闲连接数；
+
+    stub_status;
+    配置示例：
+        location  /basic_status {
+            stub_status; 
+            access_log off; #关闭记录日志,因为反向代理如果并发大，会导致IO吃紧
+        }
+</code></pre><h3 id="ngx-http-gzip-module"><a href="#ngx-http-gzip-module" class="headerlink" title="ngx_http_gzip_module"></a>ngx_http_gzip_module</h3><pre><code>上下文:http，server，location
+在CPU等硬件资源不稀缺的情况下，带宽流量的稀缺使得资源压缩必须启用
+启用资源压缩功能，虽然可以大大减小了带宽的消耗，要注意适用的场景；
+    1.比如当前服务器CPU负载较大，压缩功能本身就会消耗更多的CPU资源，如果启用
+        对服务器的压力就会更大
+    2.应该只对文本内容进行压缩，视频、图片、流媒体等本身就已经是有压缩比的资源
+    3.实现逻辑：先使用压缩过滤器过滤出来有很好压缩比的资源(css,js,html)等文本
+        再定义压缩规则
+
+1、gzip on | off;
+    启用或禁用压缩
+    上下文:http，server，location，if in location
+2、gzip_comp_level level;
+    gzip压缩级别，范围为1到9，值越大，压缩效率越高，消耗cpu资源越大
+3、gzip_disable regex ...;
+    对具有与任何指定正则表达式匹配的“User-Agent”标头字段的请求禁用gzipping响应
+4、gzip_min_length length;
+    启用压缩功能的响应报文大小阈值； 
+5、gzip_buffers number size;
+    支持实现压缩功能时为其配置的缓冲区数量及每个缓存区的大小；
+    默认情况下，缓冲区大小等于一个内存页面
+6、gzip_proxied off | expired | no-cache | no-store | private | no_last_modified | no_etag | auth | any ...;
+    nginx作为代理服务器接收到从被代理服务器发送的响应报文后，在何种条件下启用压缩功能的；
+        off：对代理的请求不启用
+        no-cache, no-store，private：表示从被代理服务器收到的响应报文首部的Cache-Control的值为此三者中任何一个，则启用压缩功能；
+7、gzip_types mime-type ...;
+    压缩过滤器，仅对此处设定的MIME类型的内容启用压缩功能；
+8.gzip_http_version ...
+    压缩版本用于设置识别HTTP协议版本,默认1.1
+
+示例：
+    gzip  on;
+    gzip_comp_level 6;
+    gzip_min_length 64;
+    gzip_proxied any;
+    gzip_types text/plain application/x-javascript text/css application/xml;
+</code></pre><h3 id="ngx-http-ssl-module"><a href="#ngx-http-ssl-module" class="headerlink" title="ngx_http_ssl_module"></a>ngx_http_ssl_module</h3><pre><code>上下文:http, server
+代理服务用nginx不采用LVS的一个原因就是LVS不支持SSL的代理，nginx可以实现
+面对客户端使用https协议，面对后端服务器集群使用http协议，所以有时nginx反代也叫https的会话卸载器
+如果是四层调度，https访问必须是客户端与后端服务器之间建立；
+如果两段式连接，对内调度是明文的，把压力放在前端代理服务器上，本身前端调度器CPU资源消耗不是很大
+1.ssl on | off;                 
+2、ssl_certificate file;
+    当前虚拟主机使用PEM格式的证书文件；
+3、ssl_certificate_key file;
+    当前虚拟主机上与其证书匹配的私钥文件；
+4、ssl_protocols [SSLv2] [SSLv3] [TLSv1] [TLSv1.1] [TLSv1.2];
+    支持ssl协议版本，默认为后三个；
+5、ssl_session_cache off | none | [builtin[:size]] [shared:name:size];
+    builtin[:size]：使用OpenSSL内建的缓存，此缓存为每worker进程私有；
+    [shared:name:size]：在各worker之间使用一个共享的缓存；
+6、ssl_session_timeout time;
+    客户端一侧的连接可以复用ssl session cache中缓存 的ssl参数的有效时长；
+7.ssl_ciphers ciphers
+    加密算法
+8.  ssl_protocols [SSLv2] [SSLv3] [TLSv1] [TLSv1.1] [TLSv1.2] [TLSv1.3];
+        启用指定的协议
+
+配置示例：
+    生成私钥和证书：
+        openssl genrsa -out nginx.key 2048
+        openssl req -new -x509 -key nginx.key -out nginx.crt -days 3650 -subj &quot;/CN=www.a.com&quot;
+    配置主体：
+    server {
+        listen 443 ssl;
+        server_name www.a.com;
+        root /vhosts/ssl/htdocs;
+        ssl on;
+        ssl_protocols  TLSv1.1 TLSv1.2;
+        ssl_ciphers  AES128-SHA:AES256-SHA:RC4-SHA:DES-CBC3-SHA:RC4-MD5;
+        ssl_certificate /etc/nginx/ssl/nginx.crt;
+        ssl_certificate_key /etc/nginx/ssl/nginx.key;
+        ssl_session_cache shared:sslcache:20m;
+                    }                           
+    为减少处理器负载，建议使用：
+        设置worker processes等于处理器数，
+        启用 keep-alive连接，
+        启用 shared 会话缓存，
+        禁用builtin会话缓存，
+        并可能增加session_timeout（默认为5分钟）：
+</code></pre><h3 id="ngx-http-rewrite-module"><a href="#ngx-http-rewrite-module" class="headerlink" title="ngx_http_rewrite_module"></a>ngx_http_rewrite_module</h3><pre><code>将用户请求的URI基于regex所描述的模式进行检查，而后完成替换
+url重写:
+    1.客户端访问URL被重写到另外一个路径了
+        http://www.a.com/a/1.jpg ---&gt; http://images.a.com/1.jpg
+    2.全站ssl加密时，将用户访问的http://请求全部被重写到https://的虚拟主机上
+        http://www.a.com/images/1.jpg---&gt;https://www.a.com/1.jpg
+rewirte的处理逻辑：
+    1.将用户请求的URL基于(regex)正则表达式的查找，而后完成替换即可(replacement)
+    2.如果出现server中两个location互相rewrite，则会出现死循环的现象，所以就引入
+        了last和break的两个机制
+    3.last表示接着检查其他rewrite，break表示匹配到当前的rewrite.就不检查其他的
+        rewrite了这样就避免了死循环
+
+1、rewrite regex replacement [flag]
+    上下文:server, location, if
+    将用户请求的URI基于regex所描述的模式进行检查，匹配到时将其替换为replacement指定的新的URI；
+
+    注意：如果在同一级配置块中存在多个rewrite规则，那么会自下而下逐个检查；被某条件规则替换完成后，会重新一轮的替换检查，因此，隐含有循环机制；[flag]所表示的标志位用于控制此循环机制；
+
+    如果replacement是以http://或https://开头，则替换结果会直接以重向返回给客户端；
+        301：permanent,永久重定向；
+        302：redirect,临时重定向；
+
+        [flag]：
+            last：重写完成后停止对当前URI在当前location中后续的其它重写操作，而后对新的URI启动新一轮重写检查；提前重启新一轮循环； 
+            break：重写完成后停止对当前URI在当前location中后续的其它重写操作，而后直接跳转至重写规则配置块之后的其它配置；结束循环；
+            redirect：重写完成后以临时重定向方式直接返回重写后生成的新URI给客户端，由客户端重新发起请求；浏览器的URL地址显示跳转后的地址
+            permanent:重写完成后以永久重定向方式直接返回重写后生成的新URI给客户端，由客户端重新发起请求；浏览器的URL地址显示跳转后的地址
+
+    例：
+        rewrite ^(/download/.*)/media/(.*)\..*$ $1/mp3/$2.mp3
+
+        rewrite  ^/bbs/(.*)$  http://www.magedu.com
+         http://192.168.80.27/bbs/ --&gt; http://www.magedu.com/
+    redirect和permanent区别
+</code></pre><p><img src="1.jpg" alt></p>
+<pre><code>2、return
+    上下文:server, location, if
+    停止处理并将指定的内容返回code给客户端
+    return code [text];
+    return code URL;
+    return URL;
+
+3、rewrite_log on | off;
+    上下文:http,server,location, if
+    是否开启重写日志；
+4、if (condition) { ... }
+    上下文:server, location
+    引入一个新的配置上下文 ；条件满足时，执行配置块中的配置指令；
+
+    condition：
+        比较操作符：
+            ==
+            !=
+            ~：模式匹配，区分字符大小写；
+             ~*：模式匹配，不区分字符大小写；
+            !~：模式不匹配，区分字符大小写；
+            !~*：模式不匹配，不区分字符大小写；
+        文件及目录存在性判断：
+            -e, !-e
+            -f, !-f
+            -d, !-d
+            -x, !-x
+
+    例：
+        if ($http_user_agent ~ MSIE) {
+        rewrite ^(.*)$ /msie/$1 break;
+        }
+
+        if ($http_cookie ~* &quot;id=([^;]+)(?:;|$)&quot;) {
+            set $id $1;
+        }
+
+        if ($request_method = POST) {
+            return 405;
+        }
+
+5、set $variable value;
+    上下文:server, location, if
+    用户自定义变量 ；           
+
+例：
+    location /download/ {
+        if ($forbidden) {
+            return 403;
+    }
+        if ($slow) {
+        limit_rate 10k;
+    }
+
+    rewrite ^/(download/.*)/media/(.*)\..*$ /$1/mp3/$2.mp3 break;
+    }
+</code></pre><h3 id="ngx-http-referer-module"><a href="#ngx-http-referer-module" class="headerlink" title="ngx_http_referer_module"></a>ngx_http_referer_module</h3><pre><code>上下文:server, location
+1、valid_referers none | blocked | server_names | string ...;
+    定义referer首部的合法可用值；用于防盗链
+
+        none：请求报文首部没有referer首部；
+        blocked：请求报文的referer首部没有值；
+        server_names：参数，其可以有值作为主机名或主机名模式；
+            arbitrary_string：直接字符串，但可使用*作通配符；
+            regulare xpression：被指定的正则表达式模式匹配到的字符串；要使用~打头，例如 ~.*\.images\.com；
+
+    配置示例：
+    先定义valid_referers的允许连接网站，再通过if判断如果不是在valid_referers中定义的网站，就返回一张图片或者文字说明
+        valid_referers none block server_names 172.18.0.2 *.a.com *.ma.com ma.*  ~\.mage\.;
+
+        if($invalid_referer) {
+                return http://www.ma.com/invalid.jpg;
+            }
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/mysql其他实践/" rel="next" title="mysql其他实践">
+                <i class="fa fa-chevron-left"></i> mysql其他实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/12/http基础/" rel="prev" title="http协议">
+                http协议 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">101</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-access-module"><span class="nav-number">1.</span> <span class="nav-text">ngx_http_access_module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-auth-basic-module模块"><span class="nav-number">2.</span> <span class="nav-text">ngx_http_auth_basic_module模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-stub-status-module模块"><span class="nav-number">3.</span> <span class="nav-text">ngx_http_stub_status_module模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-gzip-module"><span class="nav-number">4.</span> <span class="nav-text">ngx_http_gzip_module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-ssl-module"><span class="nav-number">5.</span> <span class="nav-text">ngx_http_ssl_module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-rewrite-module"><span class="nav-number">6.</span> <span class="nav-text">ngx_http_rewrite_module</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ngx-http-referer-module"><span class="nav-number">7.</span> <span class="nav-text">ngx_http_referer_module</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">564k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:33</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
