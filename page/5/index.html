@@ -507,12 +507,7 @@
           
             <p>
               LVS官网
-LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器。
-是国人章文嵩博士发起的一个开源项目，它是一款四层负载均衡软件
-从 Linux2.4内核以后，已经完全内置了LVS的各个功能模块，无需给内核打任何补丁，可以直接使用 LVS 提供的各种功能。
-体系架构
-
-
+LVS是Linux Virtual Server的简称，也就是Lin
               ...
             </p>
           <!--noindex-->
@@ -696,9 +691,7 @@ LVS是Linux Virtual Server的简称，也就是Linux虚拟服务器。
           
             <p>
               资源控制默认情况，在Docker容器中没有任何资源限制
-可以从名称空间(namespace)和控制组(cgroups)两个维度来定义
-Cgroup是Control group的简写，是Linux内核提供的一种限制所使用物理资源的机制，这些资源主要包括CPU、内存、blkio    
-Cgroup配置
+可以从名称空间(name
               ...
             </p>
           <!--noindex-->
@@ -884,9 +877,6 @@ Cgroup配置
               Dockerfile
 docker commit实现
     分层机制
-    aufs overlay2
-    cow 写实复制
-    容器在启动时没有指定只读时，会创建一个可写层，可写层附加在它底层依赖的镜像之上，层层链式依赖关系，挂载出镜像栈，并联合挂载在一起，成为一个运行环境，
     
               ...
             </p>
@@ -1071,12 +1061,7 @@ docker commit实现
           
             <p>
               Network
-docker安装后，默认会创建三种网络类型，bridge、host和none，可通过如下命令查看
-
-Docker网络参考文档
-bridge:网络桥接
-    Docker默认的网络设置，此模式会为每一个容器分配Network Namespace
-    当Docker server启
+docker安装后，默认会创建三种网络类型，bridge、hos
               ...
             </p>
           <!--noindex-->
@@ -1259,13 +1244,7 @@ bridge:网络桥接
         
           
             <p>
-              什么是volumeDocker镜像由多个只读层叠加而成，启动容器时，Docker会加载只读镜像层并在镜像栈顶部添加一个读写层
-也存在如下问题：
-    1.存储于联合文件系统中，不易于宿主机访问；
-    2.容器间数据共享不便
-    3.删除容器其数据会丢失
-
-Docker的数据持久化即使数据不
+              什么是volumeDocker镜像由多个只读层叠加而成，启动容器时，Docker
               ...
             </p>
           <!--noindex-->
@@ -1448,11 +1427,7 @@ Docker的数据持久化即使数据不
         
           
             <p>
-              Docker 镜像镜像是构建Docker的基石，用户基于镜像来运行自己的容器。镜像也是Docker生命周期中的“构建”部分
-Docker镜像含有启动容器所需要的文件系统及其内容，因此其用于创建并启动docker容器
-
-1.docker镜像包含了启动容器/虚拟机所依赖的所有文件、文件系统
-    包括
+              Docker 镜像镜像是构建Docker的基石，用户基于镜像来运行自己的容器。镜
               ...
             </p>
           <!--noindex-->
@@ -1637,13 +1612,7 @@ Docker镜像含有启动容器所需要的文件系统及其内容，因此其�
             <p>
               基础命令操作命令参考参考手册
 docker --help 查看帮助
-1.查看docker版本
-    docker info
-    docker version
-2.搜索官方仓库镜像
-    docker search mariadb
-3.根据镜像名称（tag指定版本）拉取镜像
-    docke
+1.查看do
               ...
             </p>
           <!--noindex-->
@@ -1829,9 +1798,7 @@ docker --help 查看帮助
               
 基本概念容器官方文档
 容器(Linux Containers)
-    是一个存放东西的地方，容器存放的东西可能更偏向于应用比如网站、程序甚至是系统环境。比如nginx，mysql，或者其他的服务器
-    是独立运行的一个（或一组）应用，以及它们必需的运行环境
-    是将软件打包成标准化单元，
+    是一个
               ...
             </p>
           <!--noindex-->
@@ -2016,9 +1983,7 @@ docker --help 查看帮助
             <p>
               获取到所有的虚拟机名称，保存到文件
 
-virsh list --all | awk &apos;{print $2}&apos; | sed -n &apos;3,$p&apos; | grep -v &apos;^$&apos; &gt; list.txt
-批量启动、关闭cat start.sh
-
+virsh list --all | aw
               ...
             </p>
           <!--noindex-->
@@ -2205,10 +2170,7 @@ virsh list --all | awk &apos;{print $2}&apos; | sed -n &apos;3,$p&apos; | grep -
 qemu-img
 virt-sysprep
 virsh
-dnsmasq
-网络配置[官方文档](https://wiki.libvirt.org/page/VirtualNetworking)
-brctl命令使用需要安装brctl-utils
-brctl show：查看现有的虚拟桥设
+dns
               ...
             </p>
           <!--noindex-->
@@ -2940,4 +2902,3 @@ brctl show：查看现有的虚拟桥设
 <script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
 <!-- 页面点击小红心 -->
 <script type="text/javascript" src="/js/src/clicklove.js"></script>
-<script type="text/javascript" src="/js/src/tianqi.js"></script>

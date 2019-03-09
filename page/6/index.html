@@ -507,13 +507,7 @@
           
             <p>
               安装1）确保CPU支持HVM
-    grep -E --color=auto &quot;(vmx|svm)&quot; /proc/cpuinfo
-2）装载模块
-    modprobe kvm
-3）验正：
-    存在/dev/kvm 或者 lsmod |grep kvm
-4)安装kvm
-  
+    grep -E --color=auto 
               ...
             </p>
           <!--noindex-->
@@ -696,12 +690,7 @@
         
           
             <p>
-              qemu-kvm 管理kvmqemu-kvm [options] [disk_image]
-选项有很多类别：
-    标准选项、块设备相关选项、显示选项、网络选项、...
-
-    标准选项：
-        -machine [type=]name：-machine help来获取列表，用于指定模
+              qemu-kvm 管理kvmqemu-kvm [options] [disk_i
               ...
             </p>
           <!--noindex-->
@@ -887,11 +876,7 @@
               virsh管理kvmvirsh的详细命令解析
 常用命令
 domain
-    virsh start 启动一个虚拟机
-    virsh suspend 暂停
-    virsh resume 恢复
-    virsh save 将虚拟机的当前运行状态保存到宿主机磁盘
-    virsh resto
+    v
               ...
             </p>
           <!--noindex-->
@@ -1074,14 +1059,7 @@ domain
         
           
             <p>
-              发布环境蓝绿发布（Blue/Green Deployment）定义：蓝绿部署是不停老版本，部署新版本然后进行测试。确认OK后将流量切到新版本，然
-后老版本同时也升级到新版本。
-
-特点：蓝绿部署无需停机，并且风险较小。
-
-部署过程：
-    主：活动环境：负责对外提供服务，版本：v1.0
-      
+              发布环境蓝绿发布（Blue/Green Deployment）定义：蓝绿部署是不
               ...
             </p>
           <!--noindex-->
@@ -1264,9 +1242,7 @@ domain
         
           
             <p>
-              iptables作为网络防火墙网络防火墙往往处于网络的入口或者边缘，那么，如果想要使用iptables充当网络防火墙，iptables所在的主机则需要处于网络入口
-
-当外部网络中的主机与网络内部主机通讯时，不管是由外部主机发往内部主机的报文，还是由内部主机发往外部主机的报文，都需要经过iptable
+              iptables作为网络防火墙网络防火墙往往处于网络的入口或者边缘，那么，如果想
               ...
             </p>
           <!--noindex-->
@@ -1449,9 +1425,7 @@ domain
         
           
             <p>
-              KVMKVM 全称是 基于内核的虚拟机（Kernel-based Virtual Machine），它是一个内核模块，内核2.6.20后包含在内核中，该内核模块使得Linux变成了一个Hypervisor,
-    它由 Quramnet 开发，该公司于 2008年被 Red Hat 收购。
-   
+              KVMKVM 全称是 基于内核的虚拟机（Kernel-based Virtual
               ...
             </p>
           <!--noindex-->
@@ -1634,8 +1608,7 @@ domain
         
           
             <p>
-              虚拟化虚拟化（Virtualization）是一种资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存及存储等，予以抽象、转换后呈现出来，打破实体结构间的不可切割的障碍，使用户可以比原本的组态更好的方式来应用这些资源
-可以实现IT资源的动态分配、灵活调度、跨域共享，提高IT资源利用率，使IT
+              虚拟化虚拟化（Virtualization）是一种资源管理技术，是将计算机的各种
               ...
             </p>
           <!--noindex-->
@@ -1819,9 +1792,7 @@ domain
           
             <p>
               通过iptables引用规则是是需要大写的
-命令格式iptables [-t table] COMMAND chain [-m matchs [per-match-options]] [-j targetname [per-target-options]]
-    -t table：
-       
+命令格式iptables [-t t
               ...
             </p>
           <!--noindex-->
@@ -2004,8 +1975,7 @@ domain
         
           
             <p>
-              安全技术入侵检测与管理系统（Intrusion Detection Systems）：特点是不阻断任何网络访问，量化、定位来自内外网络的威胁情况，主要以提供报告和事后监督为主，提供有针对性的指导措施和安全决策依据。一般采用旁路部署方式 
-入侵防御系统（Intrusion Prevention Sys
+              安全技术入侵检测与管理系统（Intrusion Detection System
               ...
             </p>
           <!--noindex-->
@@ -2189,11 +2159,7 @@ domain
           
             <p>
               实现实时同步 
-要利用监控服务（inotify），监控同步数据服务器目录中信息的变化 
-发现目录中数据产生变化，就利用rsync服务推送到备份服务器上 
-实现实时同步的方法 
-    inotify+rsync 方式实现数据同步 
-    sersync ：金山公司周洋在 inotify 软件基础上
+要利用监控服务（inotify），监控同步数据服务器目录中信息的
               ...
             </p>
           <!--noindex-->
@@ -2925,4 +2891,3 @@ domain
 <script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
 <!-- 页面点击小红心 -->
 <script type="text/javascript" src="/js/src/clicklove.js"></script>
-<script type="text/javascript" src="/js/src/tianqi.js"></script>

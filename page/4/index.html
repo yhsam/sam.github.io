@@ -507,9 +507,7 @@
           
             <p>
               四层调度：nginx(stream module)
-七层调度：nginx(http_upstream module), haproxy(mode http), httpd,
-ngx_http_proxy_module1、proxy_pass URL;
-    上下文:location, if in 
+七层调度：nginx(htt
               ...
             </p>
           <!--noindex-->
@@ -693,10 +691,7 @@ ngx_http_proxy_module1、proxy_pass URL;
           
             <p>
               ngx_http_log_module是用来定义请求日志格式的
-日志对于统计排错来说非常有利的
-
-1.access_log指令
-    access_log path [format [buffer=size] [gzip[=level]] [flush=time] [if=condition]];
+日志对于统计排错
               ...
             </p>
           <!--noindex-->
@@ -880,10 +875,7 @@ ngx_http_proxy_module1、proxy_pass URL;
           
             <p>
               参考文档
-ngx_http_access_module上下文：http, server, location, limit_except
-实现基于ip的访问控制功能
-1、allow address | CIDR | unix: | all;
-2、deny address | CIDR | unix: 
+ngx_http_access_module上下文：http, ser
               ...
             </p>
           <!--noindex-->
@@ -1067,10 +1059,7 @@ ngx_http_access_module上下文：http, server, location, limit_except
           
             <p>
               nginx官方仓库中的nginx的unit file：
-        [Unit]
-        Description=nginx - high performance web server
-        Documentation=http://nginx.org/en/docs/
-   
+        [Uni
               ...
             </p>
           <!--noindex-->
@@ -1255,10 +1244,7 @@ ngx_http_access_module上下文：http, server, location, limit_except
             <p>
               安装官方的预制包
 1.yum安装 ，需要epel
-    yum install nginx -y
-2.编译安装
-    yum groupinstall &quot;Development Tools&quot; &quot;Server Platform Development&quot;
-  
+    yum install
               ...
             </p>
           <!--noindex-->
@@ -1443,8 +1429,7 @@ ngx_http_access_module上下文：http, server, location, limit_except
             <p>
               基础知识1.一个Web请求的处理过程
 
-用户请求--&gt;送达到用户空间--&gt;系统调用--&gt;内核空间--&gt;内核到磁盘上读取网页资源-&gt;返回到用户空间-&gt;响应给用户
-客户端向Web服务请求过程，在这个过程中，有两个I/O过程，一个就是客户端请求的网络I/O，另一个就是W
+用户请求--&gt;送达到用户空间--&
               ...
             </p>
           <!--noindex-->
@@ -1629,10 +1614,7 @@ ngx_http_access_module上下文：http, server, location, limit_except
             <p>
               系统扩展方式：  
     Scale UP：向上扩展,增强  
-    Scale Out：向外扩展,增加设备，调度分配问题，Cluster 
-目前关于网站架构一般比较合理流行的架构方案
-    Web 前端采用 Nginx/HAProxy+Keepalived 作负载均衡器；
-    后端采用 
+    Sca
               ...
             </p>
           <!--noindex-->
@@ -1816,9 +1798,7 @@ ngx_http_access_module上下文：http, server, location, limit_except
           
             <p>
               Compose介绍容器编排工具
-Docker-Compose 是 Docker 的一种编排服务，是一个用于在Docker上定义并运行复杂应用的工具，可以让用户在集群中部署分布式应用。
-通过 Docker-Compose 用户可以很容易地用一个配置文件定义一个多容器的应用，
-可以快捷高效地管理容器的启
+Docker-Compose 是 Docker 
               ...
             </p>
           <!--noindex-->
@@ -2001,12 +1981,7 @@ Docker-Compose 是 Docker 的一种编排服务，是一个用于在Docker上定
         
           
             <p>
-              Docker RegistryRegistry用于保存docker镜像，包括镜像的层次结构和元数据
-用户可自建Registry，也可使用官方的Docker Hub
-
-分类
-    Sponsor Registry：第三方的registry，供客户和Docker社区使用
-    Mirror Regi
+              Docker RegistryRegistry用于保存docker镜像，包括镜像
               ...
             </p>
           <!--noindex-->
@@ -2190,7 +2165,7 @@ Docker-Compose 是 Docker 的一种编排服务，是一个用于在Docker上定
           
             <p>
               RS的预配置脚本：
-#!/bin/bash#vip=10.1.0.5mask='255.255.255.255'case $1 instart)    echo 1 &gt; /proc/sys/net/ipv4/conf/all/arp_ignore    echo 1 &gt; /proc/sy
+#!/bin/bash#vip=10.1.0.5mask='
               ...
             </p>
           <!--noindex-->
@@ -2922,4 +2897,3 @@ Docker-Compose 是 Docker 的一种编排服务，是一个用于在Docker上定
 <script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
 <!-- 页面点击小红心 -->
 <script type="text/javascript" src="/js/src/clicklove.js"></script>
-<script type="text/javascript" src="/js/src/tianqi.js"></script>

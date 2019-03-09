@@ -509,10 +509,7 @@
               MySQL扩展方式1. 横向扩展
 2. 纵向扩展
 MySQL扩展
-    1. 读写分离，分开读服务器和写服务器
-    2. 复制:每个节点都有相同的数据集    
-            向外扩展                 
-            二进制日志               
+    1. 
               ...
             </p>
           <!--noindex-->
@@ -696,12 +693,7 @@ MySQL扩展
           
             <p>
               xtrabackupPercona  
-[官网]&lt;www.percona.com&gt;
-percona-server          
-InnoDB --&gt; XtraDB 
-
-Xtrabackup  
-    percona提供的mysql数据库备份工具，惟一开源的能够对innodb
+[官网]&lt;www.percona.
               ...
             </p>
           <!--noindex-->
@@ -887,12 +879,7 @@ Xtrabackup
               注意备份后，需要还原测试
 备份类型：
     完全备份，备份整个数据集
-    部分备份，只备份数据子集，如部分库或表
-    差异备份  仅备份最近一次完全备份以来变化的数据， 备份较慢，还原简单
-
-增量备份，：仅备份最近一次完全备份或增量备份（如果存在增量）以来变化的数据,备份较快，还原复杂
-
-
+    
               ...
             </p>
           <!--noindex-->
@@ -1077,11 +1064,7 @@ Xtrabackup
             <p>
               日志事务日志 transaction log 
 错误日志 error log 
-通用日志 general log 
-慢查询日志 slow query log 
-二进制日志 binary log 
-中继日志 reley log
-事务日志事务日志默认为顺序地的追加进事务日志文件，ib_logfile0,
+
               ...
             </p>
           <!--noindex-->
@@ -1288,10 +1271,7 @@ Xtrabackup
           
             <p>
               事务事务Transactions：一组原子性的SQL语句，或一个独立工作单元。
-事务主要用于处理操作量大，复杂度高的数据。比如说，在人员管理系统中，你删除一个
-人员，你既需要删除人员的基本资料，也要删除和该人员相关的信息，如信箱，文章等等，
-这样，这些数据库操作语句就构成一个事务
-事务日志：记录事务
+
               ...
             </p>
           <!--noindex-->
@@ -1498,8 +1478,7 @@ Xtrabackup
           
             <p>
               mysqld选项，服务器系统变量和服务器状态变量
-[mysql]https://dev.mysql.com/doc/refman/5.7/en/mysqld-option-tables.html
-[mariadb]https://mariadb.com/kb/en/library/system-va
+[mysql]https://
               ...
             </p>
           <!--noindex-->
@@ -1705,13 +1684,7 @@ Xtrabackup
         
           
             <p>
-              索引索引：是特殊数据结构，定义在查找时作为查找条件的字段，在MySQL又称为键key，索引通过存储引擎实现 
-优点：  
-    索引可以降低服务需要扫描的数据量，减少了IO次数
-    索引可以帮助服务器避免排序和使用临时表  
-    索引可以帮助将随机I/O转为顺序I/O
-缺点：  
-    
+              索引索引：是特殊数据结构，定义在查找时作为查找条件的字段，在MySQL又称为键k
               ...
             </p>
           <!--noindex-->
@@ -1918,11 +1891,7 @@ Xtrabackup
           
             <p>
               查询单表：
-    SELECT select_expr FROM tbl_name [WHERE where_condition]
-        select_expr
-            字段可以使用别名，一旦定义了别名，引用时必须使用别名
-        示例：
-            
+    SELECT select_expr FROM tbl_na
               ...
             </p>
           <!--noindex-->
@@ -2130,8 +2099,7 @@ Xtrabackup
             <p>
               INSERT插入语句
     一次插入一行或多行数据
-    INSERT INTO tablename(列名1,列名2…) VALUES(列值1，列值2...);
-    INSERT INTO tablename SET column_name1 = value1, column_name2 =
+    INSERT IN
               ...
             </p>
           <!--noindex-->
@@ -2342,9 +2310,7 @@ Xtrabackup
 
 查询执行路径
 
-查询缓存（ Query Cache ）原理    缓存SELECT操作或预处理查询的结果集和SQL语句，当有新的SELECT语句或预处理查询语句请求，先去查询缓存，判断是否存在可用的记录集，判断标准：与缓存的SQL语句，是否完全一样，区分大小写
-优缺点:    
-
+查询缓存（ Query Cache ）原理 
               ...
             </p>
           <!--noindex-->
@@ -3076,4 +3042,3 @@ Xtrabackup
 <script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
 <!-- 页面点击小红心 -->
 <script type="text/javascript" src="/js/src/clicklove.js"></script>
-<script type="text/javascript" src="/js/src/tianqi.js"></script>

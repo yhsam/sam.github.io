@@ -531,10 +531,7 @@
             <p>
               视图视图：VIEW,虚表，保存有实表的查询结果 
 创建方法：
-    CREATE VIEW view_name [(column_list)]   AS select_statement [WITH [CASCADED | LOCAL] CHECK OPTION]
-
-查看视图定义：
-    SHO
+    CREAT
               ...
             </p>
           <!--noindex-->
@@ -741,13 +738,7 @@
           
             <p>
               查看帮助
-    MariaDB [(none)]&gt; help create table;
-查看字符集
-    MariaDB [mysql]&gt; show character set;
-查看表结构
-    desc table;
-查看表创建的语句信息
-    show create ta
+    MariaDB [(none)]&gt; help creat
               ...
             </p>
           <!--noindex-->
@@ -954,9 +945,7 @@
           
             <p>
               系统数据库mysql数据库     
-    是mysql的核心数据库，类似于Sql  Server中的master库，主要负责存储数据库的用户、权限设置、关键字等mysql自己需要使用的控制和管理信息 
-performance_schema数据库     
-    MySQL5.5开始新增的数据库
+    是mysql的核心数据库，类似于S
               ...
             </p>
           <!--noindex-->
@@ -1163,10 +1152,7 @@ performance_schema数据库
           
             <p>
               mariadb 多实例1.创建目录并修改权限
-    mkdir /mysql/{3306,3307,3308}/{etc,socket,pid,log,data} -pv
-    chown -R mysql.mysql /mysql/  
-2.创建数据库信息
-    cd /usr/local/
+    mkdir /mysql/
               ...
             </p>
           <!--noindex-->
@@ -1372,13 +1358,7 @@ performance_schema数据库
         
           
             <p>
-              SQL语句种类：DDL（Data Definition Language，数据定义语言）
-用来创建或者删除存储数据用的数据库以及数据库中的表等对象
-    CREATE ：创建数据库和表等对象
-    DROP ： 删除数据库和表等对象
-    ALTER ： 修改数据库和表等对象的结构
-
-DML（
+              SQL语句种类：DDL（Data Definition Language，数据定
               ...
             </p>
           <!--noindex-->
@@ -1584,10 +1564,7 @@ DML（
         
           
             <p>
-              在MySQL/MariaDB中有好几种变量类型：用户自定义变量、系统变量、一般的临时变量(即本地变量，或称为局部变量)。
-用户变量用户变量是基于会话的，也是基于用户的，所以我觉得称之为会话变量更合适，但会话变量一般用来表示系统会话变量(后面会说明)，所以还是称之为用户变量好了。
-
-只有本用户才能引用
+              在MySQL/MariaDB中有好几种变量类型：用户自定义变量、系统变量、一般的
               ...
             </p>
           <!--noindex-->
@@ -1793,10 +1770,7 @@ DML（
         
           
             <p>
-              数据库（database）：一个以某种有组织的方式存储的数据集合，保存有组织的数据的容器（通常是一个文件或一组文件
-数据库管理系统（DBMS：database message system）：数据库是通过DBMS创建和操作的容器
-
-[数据库排名]https://db-engines.com/en/r
+              数据库（database）：一个以某种有组织的方式存储的数据集合，保存有组织的数
               ...
             </p>
           <!--noindex-->
@@ -2004,12 +1978,7 @@ DML（
             <p>
               mysql管理1.MySQL是用RPM包安装的
 启动服务
-    systemctl start mariadb
-    如果在启动状态， 需要重启服务， 可以用以下命令直接重启 ， 而不需要先关闭再启动
-关闭服务
-    systemctl stop mariadb
-重启服务
-    system
+    systemc
               ...
             </p>
           <!--noindex-->
@@ -2216,11 +2185,7 @@ DML（
           
             <p>
               
-https://dev.mysql.com/doc/refman/5.5/en/data-types.html 
-选择正确的数据类型对于获得高性能至关重要，三大原则： 
-    更小的通常更好，尽量使用可正确存储数据的最小数据类型
-    简单就好，简单数据类型的操作通常需要更少的CPU周期
-  
+https://dev.mysql.com/doc/refman/5.5/en
               ...
             </p>
           <!--noindex-->
@@ -2427,13 +2392,7 @@ https://dev.mysql.com/doc/refman/5.5/en/data-types.html
           
             <p>
               MySQL用户账号用户账号有两部分组成：
-    &apos;USERNAME&apos;@&apos;HOST&apos;
-HOST
-    支持通配符：%，表示授权所有主机  _匹配任意单个字符
-用户管理查询用户
-创建用户方法一：使用create user创建
-
-方法二：直接在mysql.use
+    &apos;USERNAME&
               ...
             </p>
           <!--noindex-->
@@ -3165,4 +3124,3 @@ HOST
 <script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
 <!-- 页面点击小红心 -->
 <script type="text/javascript" src="/js/src/clicklove.js"></script>
-<script type="text/javascript" src="/js/src/tianqi.js"></script>
