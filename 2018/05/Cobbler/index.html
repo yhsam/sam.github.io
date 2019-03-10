@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="PXE不支持UEFI 更多使用Cobbler来实现自动化部署 Cobbler快速网络安装linux操作系统的服务，支持众多的Linux发行版：RedHat、Fedora、CentOS、Debian、Ubuntu和SuSE，也可以支持网络安装windows PXE的二次封装，将多种安装参数封装到一个菜单  Python编写  提供了CLI和Web的管理形式  但是实现PXE的原有的httpd，DHC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cobbler">
+<meta property="og:url" content="http://yoursite.com/2018/05/Cobbler/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="PXE不支持UEFI 更多使用Cobbler来实现自动化部署 Cobbler快速网络安装linux操作系统的服务，支持众多的Linux发行版：RedHat、Fedora、CentOS、Debian、Ubuntu和SuSE，也可以支持网络安装windows PXE的二次封装，将多种安装参数封装到一个菜单  Python编写  提供了CLI和Web的管理形式  但是实现PXE的原有的httpd，DHC">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/05/Cobbler/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/Cobbler/13.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/Cobbler/14.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/Cobbler/2.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/Cobbler/16.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/Cobbler/17.jpg">
+<meta property="og:updated_time" content="2019-03-10T06:30:44.006Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cobbler">
+<meta name="twitter:description" content="PXE不支持UEFI 更多使用Cobbler来实现自动化部署 Cobbler快速网络安装linux操作系统的服务，支持众多的Linux发行版：RedHat、Fedora、CentOS、Debian、Ubuntu和SuSE，也可以支持网络安装windows PXE的二次封装，将多种安装参数封装到一个菜单  Python编写  提供了CLI和Web的管理形式  但是实现PXE的原有的httpd，DHC">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/Cobbler/1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/Cobbler/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Cobbler | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/Cobbler/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Cobbler
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-20 12:42:09" itemprop="dateCreated datePublished" datetime="2018-05-20T12:42:09+08:00">2018-05-20</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">7k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">6 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre><code>PXE不支持UEFI
+更多使用Cobbler来实现自动化部署
+</code></pre><h3 id="Cobbler"><a href="#Cobbler" class="headerlink" title="Cobbler"></a>Cobbler</h3><pre><code>快速网络安装linux操作系统的服务，支持众多的Linux发行版：RedHat、Fedora、CentOS、Debian、Ubuntu和SuSE，也可以支持网络安装windows
+PXE的二次封装，将多种安装参数封装到一个菜单 
+Python编写 
+提供了CLI和Web的管理形式
+
+但是实现PXE的原有的httpd，DHCP，tftp服务还是需要提前安装的
+
+cobbler可以同时支持BIOS和UEFI两种：基于PXE技术为基础的整合
+
+BIOS+MBR：分区最多支持2T的
+UEFI+GPT：分区可以支持大于2T的分区
+在之前的工作中，需要建立大于2T的分区时，PXE安装就不合适了
+</code></pre><h3 id="Cobbler工作原理"><a href="#Cobbler工作原理" class="headerlink" title="Cobbler工作原理"></a>Cobbler工作原理</h3><p><img src="1.jpg" alt></p>
+<pre><code>Server端：
+    第一步，启动Cobbler服务
+    第二步，进行Cobbler错误检查，执行cobbler check命令
+    第三步，进行配置同步，执行cobbler sync命令
+    第四步，复制相关启动文件文件到TFTP目录中
+    第五步，启动DHCP服务，提供地址分配
+    第六步，DHCP服务分配IP地址
+    第七步，TFTP传输启动文件
+    第八步，Server端接收安装信息
+    第九步，Server端发送ISO镜像与Kickstart文件
+Client端：
+    第一步，客户端以PXE模式启动
+    第二步，客户端获取IP地址
+    第三步，通过TFTP服务器获取启动文件
+    第四步，进入Cobbler安装选择界面
+    第五步，客户端确定加载信息
+    第六步，根据配置信息准备安装系统
+    第七步，加载Kickstart文件
+    第八步，传输系统安装的其它文件
+    第九步，进行安装系统
+</code></pre><h3 id="基础环境准备"><a href="#基础环境准备" class="headerlink" title="基础环境准备"></a>基础环境准备</h3><pre><code>安装包
+cobbler 基于EPEL源
+cobbler 服务集成
+    前面说过因为是基于PXE的,安装cobbler因为有依赖性，会自动安装下面的服务
+    PXE
+    DHCP
+    rsync
+    Httpd
+    DNS
+    Kickstart
+    syslinux 
+    tftp-server 
+    IPMI 电源管理
+启动cobbler:依赖于httpd，要想启动cobbler,必须先启动httpd
+    systemctl start httpd tftp dhcp
+    systemctl start cobblerd
+然后再检查cobbler环境
+    cobbler check
+</code></pre><h3 id="cobbler的相关配置文件"><a href="#cobbler的相关配置文件" class="headerlink" title="cobbler的相关配置文件"></a>cobbler的相关配置文件</h3><pre><code>安装：yum install cobbler dhcp
+配置文件目录 /etc/cobbler
+    /etc/cobbler/settings : cobbler 主配置文件(下文会对该文件修改4行)
+    /etc/cobbler/iso/: iso模板配置文件
+    /etc/cobbler/pxe: pxe模板文件
+    /etc/cobbler/power: 电源配置文件
+    /etc/cobbler/user.conf: web服务授权配置文件
+    /etc/cobbler/users.digest: web访问的用户名密码配置文件
+    /etc/cobbler/dhcp.template : dhcp服务器的的配置末班
+    /etc/cobbler/dnsmasq.template : dns服务器的配置模板
+    /etc/cobbler/tftpd.template : tftp服务的配置模板
+    /etc/cobbler/modules.conf : 模块的配置文件
+数据目录
+    /var/lib/cobbler/config/: 用于存放distros，system，profiles 等信息配置文件
+    /var/lib/cobbler/triggers/: 用于存放用户定义的cobbler命令
+    /var/lib/cobbler/kickstart/: 默认存放kickstart文件
+    /var/lib/cobbler/loaders/: 存放各种引导程序
+镜像目录
+    /var/www/cobbler/ks_mirror/: 导入的发行版系统的所有数据
+    /var/www/cobbler/images/ : 导入发行版的kernel和initrd镜像用于远程网络启动
+    /var/www/cobbler/repo_mirror/: yum 仓库存储目录
+日志目录
+    /var/log/cobbler/installing: 客户端安装日志
+    /var/log/cobbler/cobbler.log : cobbler日志
+
+/etc/cobbler/settings中重要的参数设置
+    default_password_crypted: &quot;$1$gEc7ilpP$pg5iSOj/mlxTxEslhRvyp/&quot;
+        //修改成用openssl rand passwd -1 生成的口令
+    server: 192.168.34.17  //修改成本地网卡的监听地址server
+    next_server: 192.168.34.17   //修改成tftp服务器的监听地址server
+    manage_dhcp: 1
+    manage_tftpd：1
+    pxe_just_once：1     //下次重启不在重装系统，不会覆盖系统
+</code></pre><h3 id="Cobbler命令介绍"><a href="#Cobbler命令介绍" class="headerlink" title="Cobbler命令介绍"></a>Cobbler命令介绍</h3><pre><code>cobbler check  检查当前设置是否有问题
+cobbler  list   列出所有的cobbler元素
+cobbler  report  列出元素的详细信息
+cobbler  sync  同步配置到数据目录，更改配置最好都要执行下
+cobbler   reposync  同步yum 仓库
+cobbler  distro   查看导入的发行版系统信息
+cobbler  distro  remove –name=      可用于删除菜单选项
+cobbler  system  查看添加的系统信息
+cobbler  profile  查看配置信息
+cobbler   profile   add   可用于添加菜单选项
+    Remove   删除菜单选项，删除关联文件
+    Rename   改名字
+</code></pre><h3 id="安装配置"><a href="#安装配置" class="headerlink" title="安装配置"></a>安装配置</h3><pre><code>配置阿里epel源 wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+1.yum install cobbler cobbler-web dhcp -y
+2.确认httpd、tftp-sever已经启动且已经开机自启systemctl start httpd tftpd
+3.启动cobbler
+    systemctl start cobblerd.service
+4. 初次cobbler check //检查cobbler运行环境
+</code></pre><p><img src="13.jpg" alt></p>
+<pre><code>执行Cobbler check报错解决方式
+    1).修改/etc/cobbler/settings文件中的server参数的值为提供cobbler服务的主机相
+    应的IP地址或主机名：384行，然后重新启动cobbler
+        server: 192.168.34.107
+    2).修改/etc/cobbler/settings文件中的next_server参数的值为提供PXE服务的主机
+    相应的IP地址:272行，指定的tftp的服务器地址
+        next_server: 192.168.34.107
+    3).执行cobbler get-loaders和cobbler sync；
+    联网：执行&quot;cobbler get-loaders&quot;命令即可；
+    cobbler会自动通过互联网把最小化的系统启动文件下载下来放到
+    /var/lib/cobbler/loaders/下，再通过&quot;cobbler sync&quot;命令同步到/var/lib/tftpboot/下
+    不联网：cp /usr/share/syslinux/{pxelinux.0,menu.c32}  /var/lib/tftpboot
+</code></pre><p><img src="14.jpg" alt></p>
+<pre><code>    4).cobbler认为是在centos6上，tftp服务是依赖于xinetd的，提示启动xinetd,在
+    这里，由于是在cnetos7上安装的，这项可以忽略
+    5).执行“chkconfig rsync on”命令即可
+    4,5,6项如果是在centos7上安装的cobbler是不需要修改也可以启动的
+    7).第7项是说安装的操作系统密码cobbler事先已经帮忙设置好了，但是不安全，需要自己
+    去修改一个自定义的密码(通过openssl passwd -1)生成：101行
+        default_password_crypted：修改成自己设置的密码
+    备注：
+    在这个提示里，还有一项建议修改，之前用PXE的时候，搭建的DHCP服务，
+    dhcpd.conf文件时通过模板生成的，但是在cobbler中，可以通过colbber来生成，
+    但是需要改/etc/cobbler/settings一项配置：242行
+    manage_dhcp: 0 改成 manage_dhcp: 1
+    再通过cobbler自带的dhcp模板：/etc/cobbler/dhcp.template，生成dhcpd.conf
+    只需要把这个模板改一下就行了，而不用想PXE那样通过模板生成dhcpd.conf文件
+    把dhcp.template里的网段地址改一下
+        subnet 192.168.34.0 netmask 255.255.255.0 {
+             option subnet-mask         255.255.255.0;
+             range dynamic-bootp        192.168.34.20 192.168.34.100;
+    再通过cobbler sync重新生成/etc/dhcp/dhcpd.conf,并且会开启DHCP服务
+
+5. 再次cobbler check检查cobbler运行环境
+6. cobbler sync，同步配置到数据目录
+
+上面的报错全部解决之后，且httpd,tftp，dhcp,cobbler都启动之后，实际上就已经配置接近完成
+
+7./var/lib/tftpboot的目录结构:上面的第三步完成后就生成下面的所有文件了
+</code></pre><p><img src="2.jpg" alt></p>
+<pre><code>8.这里用import选项将6和7的光盘导入cobbler的主机上
+    mount /dev/sr0 /mnt/   ---&gt;挂载centos7光盘
+    cobbler import --path=/mnt/ --name=Centos-7.5-x86_64 --arch=x86_64
+    cp *.ks /var/lib/cobbler/kickstarts
+    vim /var/lib/cobbler/kickstarts/ks.cfg
+        url --url=$tree
+9.cobbler profile list
+</code></pre><p><img src="16.jpg" alt></p>
+<pre><code>10.将自定义的应答文件和安装版本进行绑定
+    cobbler profile add --name=centos-7.5-x86_64_mini --distro=Centos-7.5-x86_64 --kickstart=/var/lib/cobbler/kickstarts/ks7-mini.cfg
+
+Cobbler安装CentOS 7网卡命名修改
+准备上线CentOS 7.x，在Cobbler上导入后，发现网卡名称变成了eno1这样的，好吧，那就添加两个内核参数上去，让它变回eth0.
+cobbler profile edit --name=CentOS-7.5-x86_64 --kopts=&apos;net.ifnames=0 biosdevname=0&apos;
+</code></pre><h3 id="cobbler的WEB界面"><a href="#cobbler的WEB界面" class="headerlink" title="cobbler的WEB界面"></a>cobbler的WEB界面</h3><pre><code>提供cobbler的基于web管理界面，epel源         
+    yum install cobbler-web 
+    systemctl reload httpd
+    访问浏览器https://IP/cobbler_web
+</code></pre><p><img src="17.jpg" alt></p>
+<pre><code>1.给cobbler加管理员：
+    htdigest -c /etc/cobbler/users.digest Cobbler cobbleradmin
+    Cobbleradmin管理员登录名字
+    cat  /etc/cobbler/users.digest 看到账户已经覆盖原有内容
+
+2.修改cobbler的验证方式
+    vim /etc/cobbler/modules.conf
+        [authentication]
+        module = authn_configfile
+3.创建cobbler账号
+    useradd  -s  /sbin/nologin  cobbleradm
+    vim /etc/cobbler/users.conf（ authn_pam模块的配置文件，验证方法设置）
+    [admins]
+        admin = “cobbleradm”  将useradd创建的用户添加
+        cobbler = “”
+</code></pre><h3 id="Cobbler中自定义应答文件"><a href="#Cobbler中自定义应答文件" class="headerlink" title="Cobbler中自定义应答文件"></a>Cobbler中自定义应答文件</h3><pre><code>1.在cobbler中，应答文件是放在/var/lib/cobbler/kickstarts/中
+2.把之前制作的ks7.cfg拷贝到此目录，但是拷贝完，但cobbler是无法识别这些应答文件是对应的那个发行版本的，所以要绑定
+3.将自定义的应答文件和安装版本进行绑定
+4.这两个应答文件有一项需要修改
+    即url --url=这一项，
+        要改成cobbler的yum源路径，$tree 
+        或者改成具体的地址：即光盘拷贝到cobbler的具体路径
+</code></pre><h3 id="将KS和OS关联，生成启动新的菜单"><a href="#将KS和OS关联，生成启动新的菜单" class="headerlink" title="将KS和OS关联，生成启动新的菜单"></a>将KS和OS关联，生成启动新的菜单</h3><pre><code>在cobberl中
+    distro中记录的是cobbler中安装的发型版本对应的原文件的
+    [root@mini7-1 kickstarts]#cobbler distro list
+        Centos-7.5-x86_64
+在cobberl中
+    profile是对应的各个发型版本的安装方法，就是安装启动界面的选择菜单栏，有多少个
+    就对应多少个菜单栏
+    [root@mini7-1 kickstarts]#cobbler profile list
+   Centos-6.10-x86_64
+   Centos-7.5-x86_64
+
+将自定义的应答文件和安装版本进行绑定：cobbler profile命令绑定
+cobbler profile add --name=centos-7.5-x86_64_mini --distro=Centos-7.5-x86_64 --kickstart=/var/lib/cobbler/kickstarts/ks7-mini.cfg
+
+也可以删除应答文件：
+    cobbler profile remove --name=Centos-7.5-x86_64
+也可以修改带单名
+    cobbler profile rename --name=Centos-7.5-x86_64 --newname=centos-7.5-x86_64_desktop
+查看菜单项对应的具体是哪个应答文件信息
+    cobbler profile report --name=centos-7.5-x86_64_mini
+
+/var/lib/tftpboot/pxelinux.cfg/default会自动生成新的菜单项，从cobbler profile list,也可以看出来
+[root@mini7-1 tftpboot]#cobbler profile list
+   Centos-7.5-x86_64
+   centos-7.5-x86_64_mini
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/系统部署Anaconda、Cobbler/" rel="next" title="系统部署Anaconda、Cobbler">
+                <i class="fa fa-chevron-left"></i> 系统部署Anaconda、Cobbler
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/shell编程基础/" rel="prev" title="shell编程基础">
+                shell编程基础 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Cobbler"><span class="nav-number">1.</span> <span class="nav-text">Cobbler</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cobbler工作原理"><span class="nav-number">2.</span> <span class="nav-text">Cobbler工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础环境准备"><span class="nav-number">3.</span> <span class="nav-text">基础环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cobbler的相关配置文件"><span class="nav-number">4.</span> <span class="nav-text">cobbler的相关配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cobbler命令介绍"><span class="nav-number">5.</span> <span class="nav-text">Cobbler命令介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装配置"><span class="nav-number">6.</span> <span class="nav-text">安装配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cobbler的WEB界面"><span class="nav-number">7.</span> <span class="nav-text">cobbler的WEB界面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cobbler中自定义应答文件"><span class="nav-number">8.</span> <span class="nav-text">Cobbler中自定义应答文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将KS和OS关联，生成启动新的菜单"><span class="nav-number">9.</span> <span class="nav-text">将KS和OS关联，生成启动新的菜单</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">585k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:52</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

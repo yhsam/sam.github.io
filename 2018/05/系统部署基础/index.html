@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="Centos启动流程     加电自检—mbr—grub—kernel—rc.sysinit—-rootfs—-/sbin/init     Anaconda:系统安装程序     Gui：图形窗口     Tui：=基于图形库curses的文本窗口  安装程序启动过程     MBR：isolinux/boot.cat     stage 2：isolinux/isolinux.bin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="系统部署基础">
+<meta property="og:url" content="http://yoursite.com/2018/05/系统部署基础/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="Centos启动流程     加电自检—mbr—grub—kernel—rc.sysinit—-rootfs—-/sbin/init     Anaconda:系统安装程序     Gui：图形窗口     Tui：=基于图形库curses的文本窗口  安装程序启动过程     MBR：isolinux/boot.cat     stage 2：isolinux/isolinux.bin">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/05/系统部署基础/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/系统部署基础/2.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/系统部署基础/3.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/系统部署基础/4.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/系统部署基础/5.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/系统部署基础/6.jpg">
+<meta property="og:updated_time" content="2019-03-10T05:42:02.490Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="系统部署基础">
+<meta name="twitter:description" content="Centos启动流程     加电自检—mbr—grub—kernel—rc.sysinit—-rootfs—-/sbin/init     Anaconda:系统安装程序     Gui：图形窗口     Tui：=基于图形库curses的文本窗口  安装程序启动过程     MBR：isolinux/boot.cat     stage 2：isolinux/isolinux.bin">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/系统部署基础/1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/系统部署基础/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>系统部署基础 | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/系统部署基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">系统部署基础
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-16 13:40:05" itemprop="dateCreated datePublished" datetime="2018-05-16T13:40:05+08:00">2018-05-16</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">4.6k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">4 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre><code>Centos启动流程
+    加电自检—mbr—grub—kernel—rc.sysinit—-rootfs—-/sbin/init
+    Anaconda:系统安装程序
+    Gui：图形窗口
+    Tui：=基于图形库curses的文本窗口
+
+安装程序启动过程
+    MBR：isolinux/boot.cat
+    stage 2：isolinux/isolinux.bin
+    配置文件：isolinux/isolinux.cfg
+        菜单选项：
+            加载内核：isolinux/vmlinuz
+            向内核传递参数：append initrd=initrd.img...
+    装载根文件系统，启动anaconda
+    若是显式指定使用TUI接口：向内核传递text参数即可
+        1. 按tab键
+        2. 按ESC键
+boot引导选项：boot：
+    text，以文本安装方式
+    askmethod，手动指定安装方法
+网络相关引导选项：
+    ip=IP
+    netmask=NETMASK
+    gateway=GW
+    dns=DNS 
+    ifname=NAME:MAC_ADDR
+指定安装源，
+    boot: linux 
+    asmethod   手动指定安装方法
+        Centos6：
+            repo=cdrom:
+            repo=http://host/path
+            repo=frp://USERNAME:password@host/path
+        centos7：
+            inst.repo=cdrom
+            inst.repo=http://host/IP
+            inst.repo=frp://USERNAME:password@host/path
+</code></pre><h3 id="安装系统分成三个阶段：-（安装向导）"><a href="#安装系统分成三个阶段：-（安装向导）" class="headerlink" title="安装系统分成三个阶段： （安装向导）"></a>安装系统分成三个阶段： （安装向导）</h3><h4 id="安装前配置阶段"><a href="#安装前配置阶段" class="headerlink" title="安装前配置阶段"></a>安装前配置阶段</h4><pre><code>安装过程使用的语言
+键盘类型
+安装目标存储设备
+Basic Storage：本地磁盘
+特殊设备：iSCSI
+设定主机名
+配置网络接口
+时区
+管理员密码
+设定分区方式及MBR的安装位置
+创建一个普通用户
+选定要安装的程序包
+</code></pre><h4 id="安装阶段"><a href="#安装阶段" class="headerlink" title="安装阶段"></a>安装阶段</h4><pre><code>在目标磁盘创建分区，执行格式化操作等
+将选定的程序包安装至目标位置
+安装bootloader和initramfs
+</code></pre><h4 id="图形模式首次启动"><a href="#图形模式首次启动" class="headerlink" title="图形模式首次启动"></a>图形模式首次启动</h4><pre><code>iptables
+selinux
+core dump
+</code></pre><h3 id="生成kickstart安装配置文件"><a href="#生成kickstart安装配置文件" class="headerlink" title="生成kickstart安装配置文件"></a>生成kickstart安装配置文件</h3><pre><code>手动生成*.cfg的文件,可对照系统模板修改/root/anaconda-ks.cfg
+图形界面生成：
+    yum install system-config-kickstart
+xshell 显示无法启动x server，可以试下安装xorg-x11-xauth
+</code></pre><p><img src="1.jpg" alt>  </p>
+<pre><code>显示乱码的情况 dejavu-sans-fonts dejavu-serif-fonts
+</code></pre><p><img src="2.jpg" alt></p>
+<pre><code>centos7中system-config-kickstart打开没有rpm组，需要将/etc/yum.repos.d/base.repo中的【base】改名为【development】
+</code></pre><p><img src="3.jpg" alt></p>
+<h4 id="kickstart命令段：指明各种安装前配置，如键盘类型等"><a href="#kickstart命令段：指明各种安装前配置，如键盘类型等" class="headerlink" title="kickstart命令段：指明各种安装前配置，如键盘类型等"></a>kickstart命令段：指明各种安装前配置，如键盘类型等</h4><pre><code>创建逻辑卷
+    # System bootloader configuration
+    bootloader --location=mbr
+    # Clear the Master Boot Record
+    zerombr
+    # Partition clearing information
+    clearpart --all --initlabel
+    # Disk partitioning information
+    part /boot --fstype ext3 --size=400
+    part swap --size=2048
+    part pv.01 --size=1 --grow
+    volgroup vg_rekfan pv.01
+    logvol  /  --vgname=vg_rekfan  --size=40000  --name=lv_root
+    logvol  /var  --vgname=vg_rekfan  --size=50000  --name=lv_var
+    logvol  /tmp  --vgname=vg_rekfan  --size=2048  --name=lv_tmp
+    logvol  /spare  --vgname=vg_rekfan  --size=1  --grow  --name=lv_spare
+程序包段：指明要安装的程序包组或程序包，不安装的程序包等
+    %packages
+    @group_name
+    package
+    -package
+    %end
+脚本段：
+    %pre: 安装前脚本
+    运行环境：运行于安装介质上的微型Linux环境
+    %post: 安装后脚本
+    运行环境：安装完成的系统
+命令段中的命令：
+必备命令:
+    authconfig: 认证方式配置
+    authconfig –useshadow –passalgo=sha512
+    bootloader：bootloader的安装位置及相关配置
+    bootloader –location=mbr –driveorder=sda –
+    append=”crashkernel=auto rhgb quiet”
+    keyboard: 设定键盘类型
+    lang: 语言类型
+    part: 创建分区
+    rootpw: 指明root的密码
+    timezone: 时区
+可选命令:
+    install OR upgrade
+    text: 文本安装界面       
+    reboot 重启
+    user：安装完成后为系统创建新用户
+    url: 指明安装源
+    key –skip 跳过安装号码,适用于rhel版本  
+检查ks文件的语法错误：ksvalidator ksfile
+</code></pre><h3 id="制作引导光盘"><a href="#制作引导光盘" class="headerlink" title="制作引导光盘"></a>制作引导光盘</h3><h4 id="mkisofs"><a href="#mkisofs" class="headerlink" title="mkisofs"></a>mkisofs</h4><pre><code>-o 指定映像文件的名称。 
+-b 指定在制作可开机光盘时所需的开机映像文件。 
+-c 制作可开机光盘时，会将开机映像文件中的no-eltorito-catalog全部内容作成一个文件。 
+-no-emul-boot 非模拟模式启动。 
+-boot-load-size 4 设置载入部分的数量 -boot-info-table 在启动的图像中现实信息 -R 或 -rock    使用 Rock RidgeExtensions  
+-J 或 -joliet    使用 Joliet 格式的目录与文件名称 
+-v 或 -verbose    执行时显示详细的信息 
+-T 或 -translation-table  建立文件名的转换表，适用于不支持Rock RidgeExtensions 的系统上 
+</code></pre><h4 id="系统光盘中isolinux目录"><a href="#系统光盘中isolinux目录" class="headerlink" title="系统光盘中isolinux目录"></a>系统光盘中isolinux目录</h4><pre><code>isolinux.bin：光盘引导程序，在mkisofs的选项中需要明确给出文件路径，这个文件属于SYSLINUX项目 isolinux.cfg：isolinux.bin的配置文件，当光盘启动后（即运行isolinux.bin），会自动去找isolinux.cfg文件
+vesamenu.c32：是光盘启动后的安装图形界面，也属于SYSLINUX项目，menu.c32版本是纯文本的菜单 
+Memtest：内存检测，这是一个独立的程序 
+splash.jgp：光盘启动界面的背景图 vmlinuz是内核映像 
+initrd.img是ramfs (先cpio，再gzip压缩）
+</code></pre><h4 id="制作步骤"><a href="#制作步骤" class="headerlink" title="制作步骤"></a>制作步骤</h4><pre><code>mount /dev/cdrom /mnt
+mkdir -pv /data/iso
+cp -r /mnt/isolinux/ /data/iso
+</code></pre><p><img src="4.jpg" alt></p>
+<pre><code>编辑/data/iso/isolinux/isolinux.cfg
+</code></pre><p><img src="5.jpg" alt></p>
+<pre><code>mkisofs -R -J -T -v --no-emul-boot --boot-load-size 4 --boot-info-table -V&quot;CentOS 6&quot; -b isolinux/isolinux.bin -c isolinux/boot.cat -o /root/myiso.iso /data/iso
+注意：以上相对路径都是相对于光盘的根，和工作目录无关使用创建的光盘半自动化安装系统
+</code></pre><p><img src="6.jpg" alt></p>
+<pre><code>创建u盘启动盘
+注意：制作U盘启动时，可能MBR的512个字节没有，需要用Isohybrid boot.iso做格式装换，写入U盘
+    dd if=/root/myiso.iso /dev/sdb
+
+制作完整版的iso启动
+    复制光盘内容
+        cp -rv /misc/cd /app/centos6
+    将不需要文件删除
+        find /app/centos6/ -name TRANS.TBL -exec rm {} \;
+        rm -f /app/centos6/repodata/*
+    在光盘repodata目录中，有一行没有被压缩的内容，存放着rpm包的信息，不能被删除
+        cp /misc/cd/repodata/43d8fd068164b0f042845474d6a22262798b9f0d1f49ad1bf9f95b953089777d-c6-x86_64-comps.xml  /app/centos6/repodata/
+    重新创建rpm包组信息（生成rpm包的元数据）
+        createrepo -g repodata/43d8fd068164b0f042845474d6a22262798b9f0d1f49ad1bf9f95b953089777d-c6-x86_64-comps.xml ./
+    查看repodata元数据是否生成
+    创建应答文件
+    修改isolinux/isolinux.cfg
+    启动路径修改为cdrom
+    制作为光盘文件
+        mkisofs -R -J -T -v –no-emul-boot –boot-load-size 4 –boot-info-table -V “CentOS 6.9 x86_64 boot” -b isolinux/isolinux.bin -c isolinux/boot.cat -o /root/centos6ks.iso /app/centos6/
+    用制作成的光盘启动计算机
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/DNS/" rel="next" title="DNS">
+                <i class="fa fa-chevron-left"></i> DNS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/DHCP和PXE/" rel="prev" title="DHCP和PXE">
+                DHCP和PXE <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装系统分成三个阶段：-（安装向导）"><span class="nav-number">1.</span> <span class="nav-text">安装系统分成三个阶段： （安装向导）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装前配置阶段"><span class="nav-number">1.1.</span> <span class="nav-text">安装前配置阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装阶段"><span class="nav-number">1.2.</span> <span class="nav-text">安装阶段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图形模式首次启动"><span class="nav-number">1.3.</span> <span class="nav-text">图形模式首次启动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成kickstart安装配置文件"><span class="nav-number">2.</span> <span class="nav-text">生成kickstart安装配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#kickstart命令段：指明各种安装前配置，如键盘类型等"><span class="nav-number">2.1.</span> <span class="nav-text">kickstart命令段：指明各种安装前配置，如键盘类型等</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#制作引导光盘"><span class="nav-number">3.</span> <span class="nav-text">制作引导光盘</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#mkisofs"><span class="nav-number">3.1.</span> <span class="nav-text">mkisofs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#系统光盘中isolinux目录"><span class="nav-number">3.2.</span> <span class="nav-text">系统光盘中isolinux目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#制作步骤"><span class="nav-number">3.3.</span> <span class="nav-text">制作步骤</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">585k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:52</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>

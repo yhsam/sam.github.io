@@ -1,0 +1,1585 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.0.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.0.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.0.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.0.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.0.1',
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="PXE安装只是实现BIOS系统的自动化安装，对于UEFI的不支持，对于UEFI的可以使用cobbler cobbler实现系统自动化安装cobbler自动化系统安装 DHCP官方文档 BIND官网文档 DNS搭建的相关文档 搭建DHCP和在centos7实现基于PXE安装centos7和centos6(centos6上原理类似) PXE+DHCP服务关闭防火墙和SELINUX yum instal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DHCP和PXE">
+<meta property="og:url" content="http://yoursite.com/2018/05/DHCP和PXE/index.html">
+<meta property="og:site_name" content="濡沫流年">
+<meta property="og:description" content="PXE安装只是实现BIOS系统的自动化安装，对于UEFI的不支持，对于UEFI的可以使用cobbler cobbler实现系统自动化安装cobbler自动化系统安装 DHCP官方文档 BIND官网文档 DNS搭建的相关文档 搭建DHCP和在centos7实现基于PXE安装centos7和centos6(centos6上原理类似) PXE+DHCP服务关闭防火墙和SELINUX yum instal">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/05/DHCP和PXE/1.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/DHCP和PXE/7.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/DHCP和PXE/8.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/05/DHCP和PXE/9.jpg">
+<meta property="og:updated_time" content="2019-03-10T05:42:33.112Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DHCP和PXE">
+<meta name="twitter:description" content="PXE安装只是实现BIOS系统的自动化安装，对于UEFI的不支持，对于UEFI的可以使用cobbler cobbler实现系统自动化安装cobbler自动化系统安装 DHCP官方文档 BIND官网文档 DNS搭建的相关文档 搭建DHCP和在centos7实现基于PXE安装centos7和centos6(centos6上原理类似) PXE+DHCP服务关闭防火墙和SELINUX yum instal">
+<meta name="twitter:image" content="http://yoursite.com/2018/05/DHCP和PXE/1.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="濡沫流年" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/DHCP和PXE/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>DHCP和PXE | 濡沫流年</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="bg_content">
+  <canvas id="canvas"></canvas>
+</div>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">濡沫流年</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-music">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/music" rel="section"><i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>music</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/DHCP和PXE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="sam yang">
+      <meta itemprop="description" content="点滴青春">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="濡沫流年">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DHCP和PXE
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-17 12:41:55" itemprop="dateCreated datePublished" datetime="2018-05-17T12:41:55+08:00">2018-05-17</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+
+
+          
+            <div class="post-symbolscount">
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">本文字数：</span>
+                
+                <span title="本文字数">9.3k</span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">8 分钟</span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <pre><code>PXE安装只是实现BIOS系统的自动化安装，对于UEFI的不支持，对于UEFI的可以使用cobbler
+cobbler实现系统自动化安装cobbler自动化系统安装
+</code></pre><p><a href="https://www.isc.org/downloads/DHCP/" target="_blank" rel="noopener">DHCP官方文档</a></p>
+<p><a href="https://www.isc.org/downloads/BIND/" target="_blank" rel="noopener">BIND官网文档</a></p>
+<p><a href="https://www.jianshu.com/p/50c8105fae32" target="_blank" rel="noopener">DNS搭建的相关文档</a><br><img src="1.jpg" alt></p>
+<pre><code>搭建DHCP和在centos7实现基于PXE安装centos7和centos6(centos6上原理类似)
+</code></pre><h3 id="PXE-DHCP服务"><a href="#PXE-DHCP服务" class="headerlink" title="PXE+DHCP服务"></a>PXE+DHCP服务</h3><pre><code>关闭防火墙和SELINUX
+yum install httpd tftp-server dhcp  syslinux  system-config-kickstart -y 
+</code></pre><h3 id="DHCP服务器"><a href="#DHCP服务器" class="headerlink" title="DHCP服务器"></a>DHCP服务器</h3><pre><code>基于UDP协议(dhcp服务器端口：67、dhcp客户端端口：68)
+
+DHCP: （Dynamic Host Configuration Protocol）
+    动态主机配置协议
+    局域网协议，UDP协议(67端口)
+主要用途：
+    用于内部网络和网络服务供应商自动分配IP地址给用户
+    用于内部网络管理员作为对所有电脑作集中管理的手段
+使用场景
+    自动化安装系统
+    解决IPV4资源不足问题
+</code></pre><h4 id="DHCP的工作流程"><a href="#DHCP的工作流程" class="headerlink" title="DHCP的工作流程"></a>DHCP的工作流程</h4><pre><code>1. 客户端发起一个DHCP DISCOVER请求发现当前局域网中DHCP的服务器
+2. DHCP服务器收到客户端请求后，响应DHCP OFFER，确定一个没有使用的IP地址给客户端
+3. 客户端收到后，发送DHCP REQUEST确定使用该地址
+4. 最后DHCP服务器发送DHCP ACK确认客户端的连接后，发送DHCP服务器的相关配置给客户端
+
+地址
+    DHCP DECLINE ：客户端到服务器，指示地址已被使用
+    DHCP RELEASE：客户端到服务器，放弃网络地址和取消
+剩余的租约时间
+    DHCP INFORM：客户端到服务器, 客户端如果需要从DHCP
+    服务器端获取更为详细的配置信息，则发送Inform报文向
+    服务器进行请求，极少用到
+同网段多DHCP服务
+    DHCP服务必须基于本地
+    先到先得的原则
+    续租 
+        50% ：租赁时间达到50%时来续租，刚向DHCP服务器发向新的DHCPREQUEST请求。如果dhcp服务没有拒绝的理由，则回应DHCPACK信息。当DHCP客户端收到该应答信息后，就重新开始新的租用周期
+        87.5%：如果之前DHCPServer没有回应续租请求，等到租约期的7/8时，主机会再发送一次广播请求
+跨网段
+    RFC 1542 Compliant Routers
+    dhcrelay: 中继
+相关协议
+    Arp
+    rarp
+</code></pre><h4 id="DHCP服务器的实现"><a href="#DHCP服务器的实现" class="headerlink" title="DHCP服务器的实现"></a>DHCP服务器的实现</h4><pre><code>Linux DHCP协议的实现程序：dhcp, dnsmasq（dhcp,dns）
+1.实现DHCP的软件有两个：dnsmasp,这个软件是安装系统是默认的一个
+    可以同时提供dns和dhcp两种服务，不是很专业
+    如：ss -ntl 看到的默认就有dnsmasp服务
+    LISTEN     0      5                  192.168.122.1:53  
+    users:((&quot;dnsmasq&quot;,pid=1506,fd=6))
+2.DHCP更专业
+
+Dhcp Server相关配置文件：
+    /etc/dhcp/dhcpd.conf  ---&gt;主要配置文件
+    /usr/lib/systemd/system/dhcpd.service  ---&gt;服务名
+    /usr/sbin/dhcpd        ---&gt;dhcp的主程序
+    /etc/dhcp/dhcpd.conf --&gt; /etc/rc.d/init.d/dhcpd
+    /etc/dhcp/dhcpd6.conf--&gt; /etc/rc.d/init.d/dhcpd6
+    /var/lib/dhcpd/dhcpd.leases   ---&gt;租出去的地址信息库文件
+    /usr/sbin/dhcrelay
+    /etc/rc.d/init.d/dhcrelay
+
+    dhcp server:67/udp
+    dhcp client: 68/udp
+    dhcpv6 client:546/udp
+
+Dhcp client
+    dhclient
+    自动获取的IP信息： /var/lib/dhclient
+</code></pre><h4 id="dhcp配置"><a href="#dhcp配置" class="headerlink" title="dhcp配置"></a>dhcp配置</h4><pre><code>安装DHCP完,默认是启动不了的，因为配置文件dhcpd.conf是空的
+该文件中定义了：
+    1.默认续租时间和最长租期
+    2.DHCP默认分配的网段和分配的IP地址范围
+    3.DHCP服务提供的默认网关地址和DNS地址
+
+1.先通过模板生成新的配置文件
+    cp /usr/share/doc/dhcp*/dhcpd.conf.example /etc/dhcp/dhcpd.conf
+2.配置文件/etc/dhcp/dhcpd.conf
+    全局配置：
+    default-lease-time  //默认租期时间
+    max-lease-time      //最大租期时间
+    子网配置：
+        subnet IPADDR netmask NETMASK { //定义子网
+            range IPRANG;    //定义IP的范围
+            option route IP;    //定义默认网关
+            option domain-name-servers  DNS;//定义默认DNS
+            filename        //定义引导文件名称
+            示例：
+                filename &quot;pxelinux.0&quot;;
+        next-server     //提供引导文件的服务器的IP地址
+            示例：
+                next-server 192.168.56.81;
+        } 
+    单个主机配置：
+        host 名称 {
+            hardware ethernet   //主机的MAC地址
+            fixed-address       //固定分配一个IP地址
+    }
+</code></pre><p><img src="7.jpg" alt></p>
+<pre><code>上面是主要配置内容，在dhcpd.conf中还可以把指定的mac地址与IP绑定
+    host passacaglia {
+        hardware ethernet 00:0c:29:af:45:f7;
+        fixed-address 192.168.56.80
+    }
+
+重新获取地址：dhclient -d，如出现bound new ip表示dhcp服务器正常启动
+</code></pre><p><img src="8.jpg" alt></p>
+<pre><code>地址分配记录  /var/lib/dhcpd/dhcpd.leases
+</code></pre><h3 id="TFTP"><a href="#TFTP" class="headerlink" title="TFTP"></a>TFTP</h3><pre><code>yum install tftp-server，服务器端
+yum install tftp，客户端
+
+ 默认监听 69/udp
+ 默认路径,存放下载上传的路径:系统所需要的文件 /var/lib/tftpboot
+
+centos7和centos6上安装tftp是由区别的
+centos7上需要安装tftp-server服务--&gt;UDP69端口
+    yum install tftp-server
+    systemctl start tftp
+在centos6上安装和telnet是一个道理，都依赖于xinetd
+    chkconfig tftp on--&gt; /etc/xinetd.d/tftp配置文件
+    service restart xinted
+</code></pre><h3 id="http配置"><a href="#http配置" class="headerlink" title="http配置"></a>http配置</h3><pre><code>systemctl enable httpd 
+systemctl start httpd 
+mkdir /var/www/html/7/{os,ksdir} 
+mount /dev/sr0 /var/www/html/7/os 
+准备kickstart文件  
+    /var/www/html/7/ksdir/7.cfg  注意：权限
+</code></pre><h3 id="PXE介绍"><a href="#PXE介绍" class="headerlink" title="PXE介绍"></a>PXE介绍</h3><pre><code>PXE：
+Preboot Excution Environment 预启动执行环境
+Intel公司研发
+基于Client/Server的网络模式，支持远程主机通过网络从远端服务器下载
+映像，并由此支持通过网络启动操作系统
+PXE可以引导和安装Windows,linux等多种操作系统
+</code></pre><p><img src="9.jpg" alt></p>
+<h3 id="实验：在centos7实现基于PXE安装centos7和centos6"><a href="#实验：在centos7实现基于PXE安装centos7和centos6" class="headerlink" title="实验：在centos7实现基于PXE安装centos7和centos6"></a>实验：在centos7实现基于PXE安装centos7和centos6</h3><pre><code>1.安装前准备：关闭防火墙和SELINUX，DHCP服务器静态IP
+2.安装软件包
+    httpd tftp-server dhcp syslinux system-config-kickstart
+    httpd:实现yum源
+    tftp-server：实现网络下载的文件
+    syslinux: 准备pxelinux.0文件 
+        备注：centos6上是安装syslinux-nonlinux
+    system-config-kickstart制作kickstart软件，建议自己制作  
+3.配置文件共享服务：
+    准备centos7&amp;centos6的yum源
+        systemctl enable httpd
+        systemctl start httpd
+        mkdir -pv /var/www/html/centos/{6,7}/os/x86_64
+        mount /dev/sr0 /var/www/html/centos/7/os/x86_64
+        mount /dev/sr1 /var/www/html/centos/6/os/x86_64
+4.准备kickstart文件
+    拷贝已经安装机器上的anaconda文件，按照自定义稍微修改，放到http目录下
+    注意：644权限
+    cp anaconda-ks.cfg /var/www/html/ksdir/ks7-min.cfg
+    cp anaconda-ks.cfg /var/www/html/ksdir/ks7-min.cfg
+
+    ks应答文件的内容可以用system-config-kickstart或者anaconda修改就行了
+    最好是通过system-config-kickstart做一个应答文件，通过界面更深刻理解
+        每一项代表的意义
+    大概内容如下：(最后附件的有详细的ks文件内容)
+        url --url=http://192.168.34.7/centos/7/os/x86_64/
+        text
+        firewall --disabled
+        selinux --disabled
+        clearpart --all --initlabel
+        zerombr
+        reboot
+        %packages
+        @core
+        %end
+
+5.配置tftp服务
+    systemctl enable tftp.socket
+    systemctl start tftp.socket 
+6.配置DHCP服务
+    cp /usr/share/doc/dhcp-4.2.5/dhcpd.conf.example /etc/dhcpd/dhcpd.conf
+    vim /etc/dhcp/dhcpd.conf
+        option domain-name &quot;example.com&quot;;
+        default-lease-time 600;
+        max-lease-time 7200;
+        subnet 192.168.34.0 netmask 255.255.255.0 {
+            range 192.168.34.20 192.168.34.100; 
+            option routers 192.168.34.1;
+            option domain-name-servers 6.6.6.6;
+            next-server 192.168.34.103;
+            filename &quot;pxelinux.0&quot;;   
+        }
+    systemctl enable dhcpd
+    systemctl start dhcpd
+7.准备PXE相关文件
+    放pxelinux.0的专用目录，启动菜单
+        mkdir /var/lib/tftpboot/pxelinux.cfg/
+    分别存放6和7的vmliuz和initrd.img文件    
+        mkdir linux{6,7}
+    拷贝6和7安装必要文件
+        cp /var/www/html/centos/6/os/x86_64/isolinux/{vmlinuz,initrd.img} 
+            /var/lib/tftpboot/linux6/
+        cp /var/www/html/centos/7/os/x86_64/isolinux/{vmlinuz,initrd.img} 
+            /var/lib/tftpboot/linux7/
+    cp /usr/share/syslinux/{pxelinux.0,menu.c32} /var/lib/tftpboot/
+    将光盘里的启动菜单拷贝到并改名为default
+        cp /var/www/html/centos/7/os/x86_64/isolinux.cfg /var/lib/tftpboot/
+            pxelinux.cfg/default 
+拷贝完所有文件,文件列表如下：
+    /var/lib/tftpboot/
+    .
+    ├── linux6
+    │   ├── initrd.img
+    │   └── vmlinuz
+    ├── linux7
+    │   ├── initrd.img
+    │   └── vmlinuz
+    ├── menu.c32
+    ├── pxelinux.0
+    └── pxelinux.cfg
+        └── default
+
+8.准备启动菜单
+菜单项可以自定义多个，如只有mini7和mini6的，还有必须要有本地硬盘启动的菜单项
+vim /var/lib/tftpboot/pxelinux.cfg/default
+    default menu.c32
+    timeout 100
+    menu title PXE Install CentOS
+
+    label mini7
+        menu label ^Auto Install Mini CentOS 7
+        kernel linux7/vmlinuz
+        append initrd=linux7/initrd.img ks=http://192.168.34.7/ksdir/ks7-mini.cfg
+
+    label mini6
+        menu label ^Auto Install Mini CentOS 6
+        kernel linux6/vmlinuz
+        append initrd=linux6/initrd.img ks=http://192.168.34.7/ksdir/ks6-mini.cfg
+
+    label local
+        menu default
+        menu label Boot from ^local drive
+        localboot 0xffff.
+
+9.准备完所有的文件和软件后，启动所有的服务，就可以测试PXE安装了。
+</code></pre><h3 id="centos7和centos6的ks应答文件模板"><a href="#centos7和centos6的ks应答文件模板" class="headerlink" title="centos7和centos6的ks应答文件模板"></a>centos7和centos6的ks应答文件模板</h3><pre><code>通过ystem-config-kickstart做一个应答文件
+也可以修改anaconda-ks.cfg文件   
+</code></pre><h4 id="ks6-mini-cfg"><a href="#ks6-mini-cfg" class="headerlink" title="ks6-mini.cfg"></a>ks6-mini.cfg</h4><pre><code>install
+url --url=http://192.168.34.103/centos/6/os/x86_64/
+    #httpd的yum源路径
+lang en_US.UTF-8
+keyboard us
+text      #纯文本安装
+reboot    #安装完重启
+network --onboot yes --device eth0 --bootproto dhcp --noipv6
+rootpw  --iscrypted $6$6zeqEsKimGywyY3J$ngSoHUIrLaydTMIwnYX9tg4HOeOCXogU03miaQIc8sOwmq5N6.fPk3Jrmouns8VOekZkn0YQjQkt
+JjA57WrZO0
+firewall --service=ssh      关闭防火墙
+authconfig --enableshadow --passalgo=sha512
+selinux --enforcing         关闭selinux
+timezone Asia/Shanghai      时区信息
+bootloader --location=mbr --driveorder=sda --append=&quot;crashkernel=auto rhgb quiet&quot; 
+# The following is the partition information you requested
+# Note that any partitions you deleted are not expressed
+# here so unless you clear all partitions first, this is
+# not guaranteed to work
+clearpart --all        清空分区信息
+zerombr                清空mbr
+#自定义的分区信息
+part /boot --fstype=ext4 --size=1024
+part / --fstype=ext4 --size=50000
+part /data --fstype=ext4 --size=30000
+part swap --size=2048
+#自定义的分区信息
+%packages
+@core
+%end   只安装最基本的核心包，后面也可以加上安装后脚本
+</code></pre><h4 id="ks7-mini-cfg"><a href="#ks7-mini-cfg" class="headerlink" title="ks7-mini.cfg"></a>ks7-mini.cfg</h4><pre><code>auth --enableshadow --passalgo=sha512
+url --url=http://192.168.34.103/centos/7/os/x86_64/
+text
+firstboot --enable                                                                                                  
+ignoredisk --only-use=sda
+keyboard --vckeymap=us --xlayouts=&apos;us&apos;
+lang en_US.UTF-8
+
+network  --bootproto=dhcp --device=ens33 --onboot=off --ipv6=auto --activate
+network  --hostname=centos7.localdomain
+
+rootpw --iscrypted $6$j2QVLmDO2xasQEW0$xEvr1jyj1mHs0HBtCc7jD73r6u4NrQCxwVoAu.SMXhwm8GiKBHq5ETZ2zFxP4rFsNavYbG0u6Gq13
+Igxrn1Ry.
+firewall --disabled
+selinux --disabled
+services --enabled=&quot;chronyd&quot;
+timezone Asia/Shanghai --isUtc
+user --name=test --password=$6$Awcwirg.mougtUlL$Yr1a9e2Vfs2k/Nizdn/ZeiunlsU.rJAmI1vhp1iafeccRt48h3PVIlnVwGvKPPt4dVum
+a/W32jzYIsn1XCrva. --iscrypted --gecos=&quot;test&quot;
+bootloader --append=&quot; crashkernel=auto&quot; --location=mbr --boot-drive=sda
+clearpart --all --initlabel
+zerombr
+reboot
+
+part / --fstype=&quot;xfs&quot; --ondisk=sda --size=51200
+part /boot --fstype=&quot;xfs&quot; --ondisk=sda --size=1024
+part swap --fstype=&quot;swap&quot; --ondisk=sda --size=4096
+part /data --fstype=&quot;xfs&quot; --ondisk=sda --size=30720
+
+%packages
+@core
+%end
+</code></pre>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+  </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/系统部署基础/" rel="next" title="系统部署基础">
+                <i class="fa fa-chevron-left"></i> 系统部署基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/系统部署Anaconda、Cobbler/" rel="prev" title="系统部署Anaconda、Cobbler">
+                系统部署Anaconda、Cobbler <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="sam yang">
+            
+              <p class="site-author-name" itemprop="name">sam yang</p>
+              <div class="site-description motion-element" itemprop="description">点滴青春</div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">104</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">11</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#PXE-DHCP服务"><span class="nav-number">1.</span> <span class="nav-text">PXE+DHCP服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DHCP服务器"><span class="nav-number">2.</span> <span class="nav-text">DHCP服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DHCP的工作流程"><span class="nav-number">2.1.</span> <span class="nav-text">DHCP的工作流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DHCP服务器的实现"><span class="nav-number">2.2.</span> <span class="nav-text">DHCP服务器的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dhcp配置"><span class="nav-number">2.3.</span> <span class="nav-text">dhcp配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TFTP"><span class="nav-number">3.</span> <span class="nav-text">TFTP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http配置"><span class="nav-number">4.</span> <span class="nav-text">http配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PXE介绍"><span class="nav-number">5.</span> <span class="nav-text">PXE介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验：在centos7实现基于PXE安装centos7和centos6"><span class="nav-number">6.</span> <span class="nav-text">实验：在centos7实现基于PXE安装centos7和centos6</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#centos7和centos6的ks应答文件模板"><span class="nav-number">7.</span> <span class="nav-text">centos7和centos6的ks应答文件模板</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ks6-mini-cfg"><span class="nav-number">7.1.</span> <span class="nav-text">ks6-mini.cfg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ks7-mini-cfg"><span class="nav-number">7.2.</span> <span class="nav-text">ks7-mini.cfg</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">sam yang</span>
+
+  
+
+ <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+    <span title="站点总字数">585k</span>
+  
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    
+    <span title="站点阅读时长">8:52</span>
+  
+</div>
+
+ 
+   
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv" style="display:none">
+    本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+    <span class="post-meta-divider"></span>
+</span>
+
+  
+ 
+
+</div>
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+ 
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=7.0.1"></script>
+
+  <script src="/js/src/motion.js?v=7.0.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=7.0.1"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=7.0.1"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=7.0.1"></script>
+<script src="/js/src/post-details.js?v=7.0.1"></script>
+
+
+
+  
+
+
+  <script src="/js/src/next-boot.js?v=7.0.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</div></body>
+</html>
+<!-- 动态背景 -->
+<script type="text/javascript" src="/js/src/dynamic_bg.js"></script>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
